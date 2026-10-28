@@ -60,7 +60,10 @@ def current_attendance(room):
     return {
         row.member_id: row
         for row in room.attendance.filter(schedule_version=room.schedule_version)
-        if row.checked_in_at and row.heartbeat_at and row.heartbeat_at > now - timedelta(seconds=45)
+        if row.checked_in_at
+        and row.heartbeat_at
+        and row.heartbeat_at > now - timedelta(seconds=45)
+        and (not row.lobby_seen_at or row.heartbeat_at >= row.lobby_seen_at)
     }
 
 
@@ -245,7 +248,7 @@ def command(*, actor_id, room_id, data):
             raise DomainError("operation_conflict", "This operation key has different input.", 409)
         return room
     action = data.get("action")
-    ephemeral = action in {"heartbeat", "message", "counter"}
+    ephemeral = action in {"heartbeat", "lobby_heartbeat", "leave", "ping", "message", "counter"}
     if not ephemeral and (
         type(data.get("expected_revision")) is not int
         or data.get("expected_revision") != room.revision
@@ -253,7 +256,7 @@ def command(*, actor_id, room_id, data):
         raise DomainError(
             "room_changed", "The room changed. Review the current terms and try again.", 409
         )
-    if room.state == "closed" and action != "heartbeat":
+    if room.state == "closed" and action not in {"heartbeat", "lobby_heartbeat", "leave"}:
         raise DomainError(
             "room_closed", "This meeting is closed. Its records remain available.", 409
         )
@@ -304,6 +307,38 @@ def command(*, actor_id, room_id, data):
             )
         row.checked_in_at = row.heartbeat_at = timezone.now()
         row.save(update_fields=["checked_in_at", "heartbeat_at", "updated_at"])
+    elif action == "lobby_heartbeat":
+        row.lobby_seen_at = timezone.now()
+        row.save(update_fields=["lobby_seen_at", "updated_at"])
+        return room
+    elif action == "leave":
+        row.checked_in_at = row.heartbeat_at = None
+        row.lobby_seen_at = timezone.now()
+        row.save(update_fields=["checked_in_at", "heartbeat_at", "lobby_seen_at", "updated_at"])
+        event(room, actor_id, "attendance.left")
+    elif action == "ping":
+        last = (
+            room.events.filter(actor_id=actor_id, kind="meeting.ping")
+            .order_by("-created_at")
+            .first()
+        )
+        if last and last.created_at > timezone.now() - timedelta(seconds=60):
+            raise DomainError("ping_cooldown", "Wait one minute before sending another ping.", 429)
+        message = send_message(
+            actor_id=actor_id,
+            thread_id=room.thread_id,
+            body="Meeting ping: please check our waiting room.",
+            operation_id=operation_id,
+        )
+        event(
+            room,
+            actor_id,
+            "meeting.ping",
+            {
+                "message_id": str(message.id),
+                "recipient_id": str(room.participant_id if lender else room.lender_id),
+            },
+        )
     elif action == "heartbeat":
         if row.schedule_version == room.schedule_version and row.checked_in_at:
             row.heartbeat_at = timezone.now()

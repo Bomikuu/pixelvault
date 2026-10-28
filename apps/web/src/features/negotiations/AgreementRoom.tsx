@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   ArrowLeft,
   ArrowRight,
-  CalendarClock,
   Check,
   CheckCheck,
   FileCheck2,
@@ -45,9 +44,9 @@ import {
   MemberAvatar,
 } from "../../components";
 import { label, money } from "../../lib/format";
-import { meetingTime } from "./MeetingList";
+import { RoomSchedule } from "./RoomSchedule";
 import { RoomDocuments } from "./RoomDocuments";
-import { useMeeting } from "./useMeeting";
+import type { useMeeting } from "./useMeeting";
 import type { Meeting } from "./types";
 
 const agendas = [
@@ -62,10 +61,14 @@ const clock = (value: string) =>
     minute: "2-digit",
   }).format(new Date(value));
 
-export function AgreementRoom() {
-  const { id } = useParams();
+export function AgreementRoom({
+  query,
+  onLeave,
+}: {
+  query: ReturnType<typeof useMeeting>;
+  onLeave: () => void;
+}) {
   const { session } = useSession();
-  const query = useMeeting(id);
   const [body, setBody] = useState(""),
     [counter, setCounter] = useState(false),
     [tab, setTab] = useState("conversation"),
@@ -187,6 +190,15 @@ export function AgreementRoom() {
               {room.both_here ? "Both here" : "Waiting for the other person"}
             </span>
           )}
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={query.busy}
+            onClick={onLeave}
+          >
+            <ArrowLeft size={15} />
+            Waiting room & device preview
+          </Button>
           <CallInfo />
         </div>
       </div>
@@ -197,7 +209,12 @@ export function AgreementRoom() {
       )}
       <div className="grid min-h-0 min-w-0 flex-1 gap-4 lg:grid-cols-[210px_minmax(0,1fr)_285px] lg:grid-rows-[minmax(0,1fr)]">
         <aside className="min-h-0 min-w-0 space-y-4 lg:overflow-y-auto lg:overscroll-contain">
-          <Schedule room={room} lender={lender} busy={query.busy} act={act} />
+          <RoomSchedule
+            room={room}
+            lender={lender}
+            busy={query.busy}
+            act={act}
+          />
           <Checklist room={room} />
           <div className="px-4 pb-4">
             <Proposal room={room} lender={lender} busy={query.busy} act={act} />
@@ -575,98 +592,6 @@ export function AgreementRoom() {
 }
 
 type Act = (data: Record<string, unknown>) => Promise<Meeting | null>;
-function Schedule({
-  room,
-  lender,
-  busy,
-  act,
-}: {
-  room: Meeting;
-  lender: boolean;
-  busy: boolean;
-  act: Act;
-}) {
-  const [time, setTime] = useState("");
-  return (
-    <section className="rounded-[14px] border border-border bg-card p-4">
-      <h2 className="flex items-center gap-2 text-sm! font-extrabold!">
-        <CalendarClock className="size-4 text-primary" />
-        Your meeting
-      </h2>
-      <p className="mt-3! text-xs leading-relaxed! text-muted-foreground">
-        {meetingTime(room.scheduled_at)}
-      </p>
-      {lender ? (
-        <form
-          noValidate
-          className="mt-4 grid gap-2"
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (time)
-              void act({
-                action: "schedule",
-                scheduled_at: time.trim().replace(" ", "T") + ":00+08:00",
-              });
-          }}
-        >
-          <Label htmlFor="meeting-time" className="text-xs">
-            Date and time · Manila
-          </Label>
-          <Input
-            className="min-w-0! w-full! text-[11px]!"
-            id="meeting-time"
-            type="text"
-            placeholder="2026-10-28 19:10"
-            aria-describedby="meeting-time-format"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-          />
-          <p
-            id="meeting-time-format"
-            className="text-[10px] text-muted-foreground"
-          >
-            YYYY-MM-DD HH:MM · 24-hour time
-          </p>
-          <Button
-            type="submit"
-            variant="outline"
-            size="sm"
-            disabled={
-              busy ||
-              !/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(time) ||
-              room.state === "closed"
-            }
-          >
-            Propose time
-          </Button>
-        </form>
-      ) : (
-        <Button
-          className="mt-4 w-full!"
-          variant="outline"
-          size="sm"
-          disabled={
-            busy ||
-            !room.scheduled_at ||
-            room.state === "closed" ||
-            room.participants.find((p) => p.id === room.participant.id)
-              ?.schedule_accepted
-          }
-          onClick={() => void act({ action: "accept_schedule" })}
-        >
-          {room.participants.find((p) => p.id === room.participant.id)
-            ?.schedule_accepted
-            ? "Meeting time accepted"
-            : "Accept meeting time"}
-        </Button>
-      )}
-      <p className="mt-3! text-[11px] leading-relaxed! text-muted-foreground">
-        Check in within one hour of the accepted time. Rescheduling requires new
-        check-ins.
-      </p>
-    </section>
-  );
-}
 function Checklist({ room }: { room: Meeting }) {
   const [expanded, setExpanded] = useState(false);
   const steps = [

@@ -193,9 +193,14 @@ def public_profile(*, handle, viewer_id=None):
         )
     from .reputation import xp_progress
 
+    from accounts.presence import activity_summary
+
+    activity_shared = bool(settings and settings.show_activity)
     return {
         "id": str(member.id),
         **public_identity(member),
+        "activity": activity_summary(member) if activity_shared or viewer_id == member.id else None,
+        "activity_shared": activity_shared,
         "bio": member.bio,
         "area": public_area(member),
         "community_level": community_level(member),
@@ -220,6 +225,7 @@ def update_profile(*, actor_id, data):
         "show_reputation",
         "leaderboard_opt_in",
         "show_lending_totals",
+        "show_activity",
     }
     if set(data) - allowed:
         raise DomainError(

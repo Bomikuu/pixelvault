@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-28T12:31:23Z",
+  "generatedAt": "2026-10-28T14:15:13Z",
   "title": "Design System: PixelVault",
   "extensions": {
     "colorMeta": {
@@ -440,7 +440,12 @@
       },
       {
         "name": "The Explore Viewport Rule",
-        "body": "Explore retains navigation but removes the platform header/footer and outer gutters. The map and compact posting feed fill the available viewport. Map actions stay on-map; one button switches offers/recent posts. Compact preview rows use an upper-right heart/count and keep complete costs on offer detail. Ordinary routes retain their headers and member-only area switch; desktop collapse sits beside the app title.",
+        "body": "Explore retains navigation but removes the platform header/footer and outer gutters. Map mode keeps the compact posting feed and map-owned controls. List mode has a full-width toolbar and a centered scrolling column of larger cards with cost examples, labeled likes and full-terms links. Both share search/filter/feed state. Ordinary routes retain their headers and member-only area switch; desktop collapse sits beside the app title.",
+        "section": "components"
+      },
+      {
+        "name": "The Private Lobby Rule",
+        "body": "Every room visit begins in a participant-only lobby with Manila scheduling, independent time acceptance, private rate-limited pings, optional local camera/mic preview and the existing illustrated shared-plan guide. Lobby attendance differs from checked-in room attendance. Device tracks stop on entry, unmount and hiding. No shared AV provider exists. Public profile activity is coarse and off by default; private room attendance remains separate.",
         "section": "components"
       }
     ],

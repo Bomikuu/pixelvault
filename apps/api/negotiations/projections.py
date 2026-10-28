@@ -1,3 +1,6 @@
+from datetime import timedelta
+
+from accounts.presence import coarse_activity
 from agreements.views import agreement_data
 from servicing.projections import member_summary
 from django.utils import timezone
@@ -51,6 +54,19 @@ def snapshot(room, actor_id):
                     row and row.schedule_version == room.schedule_version and row.checked_in_at
                 ),
                 "here": member.id in here,
+                "in_lobby": bool(
+                    row
+                    and row.lobby_seen_at
+                    and row.lobby_seen_at > timezone.now() - timedelta(seconds=45)
+                    and member.id not in here
+                ),
+                "last_seen_label": coarse_activity(
+                    max(value for value in (row.heartbeat_at, row.lobby_seen_at) if value)
+                )["label"]
+                .replace("Last online", "Last here")
+                .replace("Online now", "Last here recently")
+                if row and (row.heartbeat_at or row.lobby_seen_at)
+                else "Not seen in this meeting yet",
             }
         )
     messages = list(
@@ -59,8 +75,26 @@ def snapshot(room, actor_id):
     events = list(
         room.events.select_related("actor").exclude(kind="message.sent").order_by("-sequence")[:60]
     )
+    sent_ping = (
+        room.events.filter(kind="meeting.ping", actor_id=actor_id).order_by("-created_at").first()
+    )
+    received_ping = (
+        room.events.filter(kind="meeting.ping")
+        .exclude(actor_id=actor_id)
+        .select_related("actor")
+        .order_by("-created_at")
+        .first()
+    )
     return {
         **summary(room),
+        "pings": {
+            "last_sent_at": sent_ping.created_at.isoformat() if sent_ping else None,
+            "next_allowed_at": (sent_ping.created_at + timedelta(seconds=60)).isoformat()
+            if sent_ping
+            else None,
+            "last_received_at": received_ping.created_at.isoformat() if received_ping else None,
+            "from_name": received_ping.actor.display_name if received_ping else None,
+        },
         "agenda": room.agenda,
         "proposal": room.proposal,
         "proposal_version": room.proposal_version,

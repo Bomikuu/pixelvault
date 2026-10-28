@@ -1,4 +1,4 @@
-import { AgreementRoom } from "./AgreementRoom";
+import { MeetingGateway } from "./MeetingGateway";
 import { legacyThemeClasses } from "../../app/ThemeToggle";
 import { useSession } from "../../app/session";
 import { Link } from "react-router-dom";
@@ -24,7 +24,7 @@ export function MeetingLayout() {
         id="main-content"
         className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-3 sm:p-5 lg:overflow-hidden"
       >
-        <AgreementRoom />
+        <MeetingGateway />
       </main>
     </div>
   );

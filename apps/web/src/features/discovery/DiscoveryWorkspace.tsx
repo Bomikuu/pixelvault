@@ -11,6 +11,7 @@ import {
 import { Empty, ErrorNotice, Loading, MemberAvatar } from "../../components";
 import { date } from "../../lib/format";
 import { CommunityMap } from "./CommunityMap";
+import { DiscoveryOfferCard } from "./DiscoveryOfferCard";
 import { DiscoveryOfferItem } from "./DiscoveryOfferItem";
 import { ExploreControls } from "./ExploreControls";
 import { DEFAULT_PLACE, distanceKm, publicAreaCenter } from "./geography";
@@ -196,6 +197,8 @@ export function DiscoveryWorkspace({
     <>
       {offers.map((offer) => {
         const center = publicAreaCenter(offer.coarseArea);
+        if (view === "list")
+          return <DiscoveryOfferCard key={offer.id} offer={offer} />;
         return (
           <DiscoveryOfferItem
             key={offer.id}
@@ -273,6 +276,96 @@ export function DiscoveryWorkspace({
       New public lending offers will appear here.
     </Empty>
   );
+  if (view === "list")
+    return (
+      <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
+        <div className="shrink-0 border-b border-border bg-card">
+          <div className="mx-auto w-full max-w-5xl">
+            <ExploreControls
+              layout="list"
+              token={token}
+              search={search}
+              areas={areas}
+              area={area}
+              minimum={minimum}
+              sort={sort}
+              view={view}
+              radius={radius}
+              place={place}
+              locationError={locationError}
+              openNavigation={shell?.openNavigation}
+              setFilter={setFilter}
+              selectPlace={selectPlace}
+              clearPlace={() => {
+                locationRequest.current += 1;
+                setLocating(false);
+                setPlace(DEFAULT_PLACE);
+                setSelectedId(null);
+                setLocationError("");
+                setFilter("radius", "");
+              }}
+            />
+          </div>
+        </div>
+        <section
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
+          aria-label="Lending offer list"
+          tabIndex={0}
+        >
+          <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6">
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 className="text-xl font-extrabold">
+                  {feed === "offers"
+                    ? "Lending offers"
+                    : "Recent community posts"}
+                </h2>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {feed === "offers"
+                    ? resultSummary
+                    : "Public posts across all areas"}{" "}
+                  · {liveStatus}
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                aria-label={
+                  feed === "offers"
+                    ? "Show recent posts"
+                    : "Show lending offers"
+                }
+                onClick={() => setFeed(feed === "offers" ? "recent" : "offers")}
+              >
+                {feed === "offers" ? (
+                  <Newspaper size={16} />
+                ) : (
+                  <HandCoins size={16} />
+                )}
+                {feed === "offers" ? "Recent posts" : "Lending offers"}
+              </Button>
+            </div>
+            {activity.hasUpdates && (
+              <Button
+                className="mb-4"
+                variant="outline"
+                disabled={activity.isFetching}
+                onClick={() => void activity.applyUpdates()}
+              >
+                Show updated postings <RefreshCw size={14} />
+              </Button>
+            )}
+            <div className="space-y-4">
+              {feed === "offers" ? offerContent : recentContent}
+            </div>
+            {hasNext && feed === "offers" && (
+              <p className="mt-4 text-xs text-muted-foreground">
+                Matching loaded posts. Load more to extend your search.
+              </p>
+            )}
+          </div>
+        </section>
+      </div>
+    );
   return (
     <div className="relative grid h-full min-h-0 w-full flex-1 grid-cols-1 grid-rows-[auto_minmax(0,1fr)] overflow-hidden lg:grid-cols-[minmax(0,1fr)_380px]">
       {view === "map" && (

@@ -234,7 +234,17 @@ Explore is a public viewport-layout exception: it retains the desktop navigation
 
 Explore keeps one local/provider search field, one destination-named map/list action and an Any distance / 5 / 10 / 50 km selector. Secondary area/amount/sort choices and discovery information use canonical popovers/dialogs. Location, zoom and fit/retry actions are map-owned overlays, not posting-container controls. One destination-named button switches the offer/recent feed. A compact test-mode notice remains visible.
 
-Offer previews use compact divided rows with avatar/name/area, linked title, available amount, annual reducing rate and payment count. Cost examples and repeated dates/footer links are removed from Explore; complete terms and schedules remain on offer detail. The shared Like control has a compact heart/count variant in the upper-right corner, retaining saving/error/sign-in behavior. Other surfaces retain the labeled Like variant. Hover/focus still highlights grouped approximate markers without moving the camera. See [the community contract](docs/surfaces/community.md) for proximity, state and verification limits.
+Offer previews use compact divided rows with avatar/name/area, linked title, available amount, annual reducing rate and payment count. Cost examples and repeated dates/footer links are removed from map previews; complete terms and schedules remain on offer detail. The shared Like control has a compact heart/count variant in the upper-right corner, retaining saving/error/sign-in behavior. Other surfaces retain the labeled Like variant. Hover/focus still highlights grouped approximate markers without moving the camera. See [the community contract](docs/surfaces/community.md) for proximity, state and verification limits.
+
+List mode uses its own full-width toolbar and a centered scrolling column of larger offer cards, rather than a map sidebar without a map. Cards restore the principal-to-total example, labeled like action, payment plan and full-terms link. Both layouts share search, filters and feed state.
+
+### Meeting lobby and activity
+
+Every room visit starts in a private lobby within the dedicated full-viewport layout. At desktop widths, scheduling, participant attendance and the existing shared-plan illustrated guide sit beside a 380px local device preview and entry panel. Mobile stacks these groups in one scroll area. Each person accepts the current Manila time before their own server-validated check-in. Lobby presence is distinct from room presence. Returning to the lobby removes the user’s active check-in; rescheduling requires fresh acceptance and check-in.
+
+Pings are durable private-conversation messages, limited to one per sender per room per minute. Device access starts only after an explicit local control, is optional for entry, and stops on entering, leaving or hiding the tab. Mic input uses a real local level meter. No shared audio/video provider is configured. The illustrated three-step guide also opens in the canonical info dialog.
+
+Profile activity is an independent, off-by-default public preference under Avatar frames & flair. Public labels are coarse; no exact timestamp is projected. Owners can see their own private label. Meeting participants retain short-lived, room-specific attendance regardless of public sharing. Foreground activity is renewed only for authenticated visible tabs.
 
 ### Offer likes
 

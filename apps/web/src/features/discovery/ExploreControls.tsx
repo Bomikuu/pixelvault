@@ -27,6 +27,7 @@ import { PlaceSearch } from "./PlaceSearch";
 import type { MapPlace } from "./types";
 
 interface Props {
+  layout?: "map" | "list";
   token: string;
   search: string;
   areas: string[];
@@ -43,6 +44,7 @@ interface Props {
   clearPlace: () => void;
 }
 export function ExploreControls({
+  layout = "map",
   token,
   search,
   areas,
@@ -63,7 +65,7 @@ export function ExploreControls({
   return (
     <section
       aria-label="Explore controls"
-      className="space-y-2.5 bg-card p-3 text-card-foreground"
+      className={`space-y-2.5 bg-card p-3 text-card-foreground ${layout === "list" ? "sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-x-4 sm:space-y-0 sm:[&>div:first-of-type]:col-span-2 sm:[&>div:nth-of-type(2)]:col-span-2" : ""}`}
     >
       <h1 className="sr-only">Explore lending offers</h1>
       {openNavigation && (

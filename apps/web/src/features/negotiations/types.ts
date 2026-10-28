@@ -18,6 +18,12 @@ export interface MeetingSummary {
   created_at: string;
 }
 export interface Meeting extends MeetingSummary {
+  pings?: {
+    last_sent_at: string | null;
+    next_allowed_at: string | null;
+    last_received_at: string | null;
+    from_name: string | null;
+  };
   agenda: "funding" | "earnings" | "documents";
   schedule_version: number;
   proposal: {
@@ -43,6 +49,8 @@ export interface Meeting extends MeetingSummary {
     schedule_accepted: boolean;
     checked_in: boolean;
     here: boolean;
+    in_lobby?: boolean;
+    last_seen_label?: string;
   })[];
   messages: { id: string; body: string; sender: Person; created_at: string }[];
   events: {

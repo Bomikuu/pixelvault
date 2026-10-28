@@ -60,6 +60,8 @@ export function MemberProfile() {
   const { handle } = useParams();
   const query = useQuery({
     queryKey: ["profile", handle],
+    refetchInterval: 60_000,
+    refetchIntervalInBackground: false,
     queryFn: () => apiRequest<Profile>(`/community/profiles/${handle}`),
   });
   if (query.isPending) return <Loading />;
@@ -102,6 +104,17 @@ function ProfileView({
             <span>·</span>
             {profile.reputation?.level || profile.community_level || "Newcomer"}
           </p>
+          <div
+            className="mt-2 flex items-center gap-2 text-xs text-muted-foreground"
+            aria-label="Activity status"
+          >
+            <span
+              className={`size-2 shrink-0 rounded-full ${profile.activity?.state === "online" ? "bg-emerald-600 dark:bg-emerald-400" : "bg-muted-foreground/50"}`}
+              aria-hidden="true"
+            />
+            {profile.activity?.label || "Last online not shared"}
+            {own && !profile.activity_shared && <span>· Private</span>}
+          </div>
           <RecommendationSummary summary={profile.recommendation_summary} />
         </div>
         {own && (
@@ -262,6 +275,8 @@ export function OwnProfile() {
   const member = session!.member!;
   const query = useQuery({
     queryKey: ["profile", member.id],
+    refetchInterval: 60_000,
+    refetchIntervalInBackground: false,
     queryFn: () =>
       apiRequest<Profile>(`/community/profiles/${member.handle || member.id}`),
   });

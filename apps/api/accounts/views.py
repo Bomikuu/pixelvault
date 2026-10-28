@@ -42,6 +42,19 @@ def member_data(member):
     }
 
 
+class PresenceView(MemberView):
+    def post(self, request):
+        from django.db.models import Q
+
+        now = timezone.now()
+        Member.objects.filter(pk=request.user.pk).filter(
+            Q(last_active_at__isnull=True) | Q(last_active_at__lte=now - timedelta(seconds=30))
+        ).update(last_active_at=now)
+        response = Response({"recorded": True})
+        response["Cache-Control"] = "private, no-store"
+        return response
+
+
 class SessionView(APIView):
     permission_classes = [AllowAny]
 

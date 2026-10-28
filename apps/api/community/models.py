@@ -13,6 +13,7 @@ class ProfileSettings(Record):
     show_reputation = models.BooleanField(default=True)
     leaderboard_opt_in = models.BooleanField(default=False)
     show_lending_totals = models.BooleanField(default=False)
+    show_activity = models.BooleanField(default=False)
 
 
 class Contribution(Record):

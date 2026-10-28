@@ -1,4 +1,4 @@
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useEffect, type ReactNode } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Session } from "@pixelvault/contracts";
 import { apiRequest, setCsrfToken, post } from "./api";
@@ -26,6 +26,19 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     },
     retry: false,
   });
+  useEffect(() => {
+    if (!query.data?.member?.id) return;
+    const record = () => {
+      if (!document.hidden) void post("/auth/presence", {}).catch(() => {});
+    };
+    record();
+    const timer = window.setInterval(record, 45_000);
+    document.addEventListener("visibilitychange", record);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", record);
+    };
+  }, [query.data?.member?.id]);
   return (
     <SessionContext
       value={{

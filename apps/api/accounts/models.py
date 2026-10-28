@@ -31,6 +31,7 @@ class Member(AbstractUser):
     area = models.CharField(max_length=80, default="Quezon City")
     bio = models.CharField(max_length=400, blank=True)
     avatar_key = models.CharField(max_length=20, choices=AVATAR_CHOICES, default="sprout")
+    last_active_at = models.DateTimeField(null=True, blank=True, editable=False)
     suspended = models.BooleanField(default=False)
     literacy_completed = models.BooleanField(default=False)
     policy_version = models.CharField(max_length=40, default="demo-v1")

@@ -36,6 +36,7 @@ export interface ReputationWorkspace {
     show_reputation: boolean;
     leaderboard_opt_in: boolean;
     show_lending_totals?: boolean;
+    show_activity?: boolean;
   };
   rules: {
     literacy_points: number;
@@ -247,7 +248,13 @@ export interface Review {
   published_at: string;
   response?: string;
 }
+export interface ActivityStatus {
+  state: "online" | "recent" | "today" | "week" | "older" | "unknown";
+  label: string;
+}
 export interface Profile {
+  activity?: ActivityStatus | null;
+  activity_shared?: boolean;
   id: string;
   handle: string;
   display_name: string;

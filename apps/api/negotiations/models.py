@@ -57,6 +57,7 @@ class Attendance(Record):
     schedule_version = models.PositiveIntegerField(default=0)
     checked_in_at = models.DateTimeField(null=True)
     heartbeat_at = models.DateTimeField(null=True)
+    lobby_seen_at = models.DateTimeField(null=True)
 
     class Meta:
         constraints = [

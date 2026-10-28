@@ -4,7 +4,7 @@ import { ApiError, apiRequest, operationId } from "../../app/api";
 import { useSession } from "../../app/session";
 import type { Meeting } from "./types";
 
-export function useMeeting(id: string | undefined) {
+export function useMeeting(id: string | undefined, entered = true) {
   const client = useQueryClient();
   const { session } = useSession();
   const [connection, setConnection] = useState<
@@ -60,6 +60,7 @@ export function useMeeting(id: string | undefined) {
       pending.current = null;
       client.setQueryData(key, data);
       void client.invalidateQueries({ queryKey: ["meetings"] });
+      void client.invalidateQueries({ queryKey: ["threads"] });
     },
     onError: (error) => {
       // An uncertain outcome reuses the exact operation on a manual retry.
@@ -73,19 +74,25 @@ export function useMeeting(id: string | undefined) {
     (p) => p.id === session?.member?.id,
   );
   useEffect(() => {
-    if (!self?.checked_in || !id) return;
-    const interval = window.setInterval(() => {
+    if (!id) return;
+    const renew = () => {
       if (!document.hidden)
         void apiRequest(`/meetings/${id}`, {
           method: "POST",
           body: JSON.stringify({
-            action: "heartbeat",
+            action: entered ? "heartbeat" : "lobby_heartbeat",
             operation_id: operationId(),
           }),
         }).catch(() => setConnection("reconnecting"));
-    }, 15_000);
-    return () => window.clearInterval(interval);
-  }, [id, self?.checked_in]);
+    };
+    renew();
+    const interval = window.setInterval(renew, 15_000);
+    document.addEventListener("visibilitychange", renew);
+    return () => {
+      window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", renew);
+    };
+  }, [id, entered, self?.checked_in]);
   const act = useCallback(
     (data: Record<string, unknown>) => mutation.mutateAsync(data),
     [mutation.mutateAsync],

@@ -37,3 +37,10 @@ Five-line system summary:
 A fresh finish reviewer returned **fix**, followed by one correction batch and one confirmation pass. Its subsequent **ship** disposition scored these four items resolved: earned-badge popup, calculator placement before application, narrow action fit and skip-link contrast. This is approval of that four-item correction list, not whole-application or production acceptance. Browser checks returned no console errors/warnings, and temporary viewport overrides were reset.
 
 The documentation agent encountered model capacity before writing; the root completed this ordinary-extension record using the documenter guidance. Root `DESIGN.md` is preserved. Its pre-existing prose format and absent machine-readable sidecar were not migrated or repaired as a side effect. No defect or hypothetical new visual system was canonized.
+
+
+## Optional coarse activity · 2026-10-28
+
+The user chose optional public activity. `show_activity` defaults false and is editable under Avatar frames & flair. Owners see their own coarse label with “Private” while sharing is off; other viewers see “Last online not shared.” Opted-in public responses expose only a state and coarse label, never `last_active_at`. Labels distinguish Online now (90-second freshness), within the past hour, today, this week and over a week ago; unknown history remains unavailable. Profile responses are private/no-store and foreground profile queries renew every minute. Authenticated visible tabs renew the underlying timestamp, with a server write throttle. Room attendance remains participant-only and independent of this preference.
+
+The bounded visual review confirmed the owner’s private label, another member’s hidden label, the unchecked default control and successful save. The synthetic preference remains off. Automated privacy/regression tests were not run under the user’s visual-only instruction.

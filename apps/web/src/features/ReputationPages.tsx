@@ -51,6 +51,7 @@ export function ReputationSettings() {
   const [showChoice, setShowChoice] = useState<boolean>();
   const [boardChoice, setBoardChoice] = useState<boolean>();
   const [lendingChoice, setLendingChoice] = useState<boolean>();
+  const [activityChoice, setActivityChoice] = useState<boolean>();
   if (query.isPending)
     return <Loading text="Loading your community experience…" />;
   if (query.error) return <ErrorNotice error={query.error} />;
@@ -67,6 +68,7 @@ export function ReputationSettings() {
   const show = showChoice ?? data.settings.show_reputation;
   const board = boardChoice ?? data.settings.leaderboard_opt_in;
   const lending = lendingChoice ?? data.settings.show_lending_totals ?? false;
+  const activity = activityChoice ?? data.settings.show_activity ?? false;
   const eligible = (awards.data?.awards || []).filter(
     (award) => award.eligible && !award.private,
   );
@@ -122,9 +124,11 @@ export function ReputationSettings() {
               show_reputation: show,
               leaderboard_opt_in: board,
               show_lending_totals: lending,
+              show_activity: activity,
             }),
           });
           await refresh();
+          await client.invalidateQueries({ queryKey: ["profile"] });
           await client.invalidateQueries({
             queryKey: ["community-leaderboard"],
           });
@@ -203,6 +207,21 @@ export function ReputationSettings() {
           />
         )}
         <div className="reputation-preferences">
+          <div className="check-field">
+            <Checkbox
+              id="share-profile-activity"
+              checked={activity}
+              onCheckedChange={(checked) => setActivityChoice(checked === true)}
+            />
+            <Label htmlFor="share-profile-activity">
+              Show my approximate last-online status on my public profile
+            </Label>
+          </div>
+          <p className="text-xs leading-relaxed text-muted-foreground">
+            Off by default. Share only labels such as Online now or Last online
+            today, never an exact activity timestamp. Meeting attendance remains
+            visible to the other participant.
+          </p>
           <div className="check-field">
             <Checkbox
               id="show-community-xp"

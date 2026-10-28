@@ -157,6 +157,7 @@ def reputation_details(*, member):
             "show_reputation": preferences.show_reputation if preferences else True,
             "leaderboard_opt_in": preferences.leaderboard_opt_in if preferences else False,
             "show_lending_totals": preferences.show_lending_totals if preferences else False,
+            "show_activity": preferences.show_activity if preferences else False,
         },
         "rules": REPUTATION_RULES,
         "progress": {
@@ -210,12 +211,13 @@ def update_reputation_settings(*, member, data):
             "show_reputation",
             "leaderboard_opt_in",
             "show_lending_totals",
+            "show_activity",
         )
         if key in data
     }
     if not selected:
         return
-    for key in ("show_reputation", "leaderboard_opt_in", "show_lending_totals"):
+    for key in ("show_reputation", "leaderboard_opt_in", "show_lending_totals", "show_activity"):
         if key in selected and not isinstance(selected[key], bool):
             raise DomainError(
                 "invalid_preferences", "Community display preferences must be true or false."

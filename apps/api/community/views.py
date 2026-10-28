@@ -62,11 +62,13 @@ class PublicProfileView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, handle):
-        return Response(
+        response = Response(
             public_profile(
                 handle=handle, viewer_id=request.user.pk if request.user.is_authenticated else None
             )
         )
+        response["Cache-Control"] = "private, no-store"
+        return response
 
 
 class ProfileView(MemberView):
