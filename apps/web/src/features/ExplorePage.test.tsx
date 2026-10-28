@@ -128,7 +128,7 @@ it.each(["map", "list"])(
       await screen.findByRole("img", { name: "Elias Test’s profile photo" }),
     ).toHaveAttribute("src", photo);
     if (view === "map") {
-      await userEvent.click(screen.getByRole("tab", { name: "Recent posts" }));
+      await userEvent.click(screen.getByRole("button", { name: "Show recent posts" }));
       expect(
         await screen.findByRole("img", { name: "Elias Test’s profile photo" }),
       ).toHaveAttribute("src", photo);

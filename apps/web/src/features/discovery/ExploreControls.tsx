@@ -1,4 +1,5 @@
 import {
+  BrandMark,
   Button,
   Input,
   Label,
@@ -14,19 +15,15 @@ import {
 import {
   ArrowDownWideNarrow,
   List,
-  Loader2,
-  LocateFixed,
+  Menu,
   Map as MapIcon,
   MapPin,
-  Minus,
-  Plus,
-  RotateCcw,
   SlidersHorizontal,
   X,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { IllustratedInfoDialog } from "../../components";
 import { PlaceSearch } from "./PlaceSearch";
-import type { MapCommand } from "./geography";
 import type { MapPlace } from "./types";
 
 interface Props {
@@ -39,14 +36,11 @@ interface Props {
   view: string;
   radius: number;
   place: MapPlace;
-  mapReady: boolean;
-  locating: boolean;
   locationError: string;
+  openNavigation?: () => void;
   setFilter: (key: string, value: string) => void;
   selectPlace: (place: MapPlace) => void;
   clearPlace: () => void;
-  locate: () => void;
-  command: (type: MapCommand["type"]) => void;
 }
 export function ExploreControls({
   token,
@@ -58,45 +52,44 @@ export function ExploreControls({
   view,
   radius,
   place,
-  mapReady,
-  locating,
   locationError,
+  openNavigation,
   setFilter,
   selectPlace,
   clearPlace,
-  locate,
-  command,
 }: Props) {
   const activeFilters =
     Number(area !== "all") + Number(!!minimum) + Number(sort !== "recent");
   return (
     <section
       aria-label="Explore controls"
-      className="order-1 space-y-3 rounded-t-2xl border border-border bg-card p-4 text-card-foreground lg:rounded-none lg:border-0 lg:border-b"
+      className="space-y-2.5 bg-card p-3 text-card-foreground"
     >
-      <header className="flex items-start justify-between gap-3">
-        <div>
-          <h1 className="text-xl! font-extrabold leading-tight tracking-tight">
-            Meet your lending community.
-          </h1>
-          <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-            People nearby. Clear terms. A private next step.
-          </p>
+      <h1 className="sr-only">Explore lending offers</h1>
+      {openNavigation && (
+        <div className="flex items-center justify-between gap-2 lg:hidden">
+          <Link to="/explore" aria-label="PixelVault home">
+            <BrandMark className="gap-2! [&>svg]:h-8! [&>svg]:w-7! [&_.brand-word]:text-lg! dark:[&_.brand-word]:text-foreground!" />
+          </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Open navigation"
+            onClick={openNavigation}
+          >
+            <Menu size={20} />
+          </Button>
         </div>
-        <IllustratedInfoDialog
-          title="Nearby, with boundaries."
-          description="Explore public lending intentions by approximate area. Review the complete terms before applying."
-          scene="finding-your-way"
-          triggerLabel="How discovery works"
-          iconOnly
-        >
-          <p>
-            Markers group public city or area centers, never anyone’s home.
-            Radius results measure the distance to those centers. They cover
-            loaded offers; load more to extend your search.
-          </p>
-        </IllustratedInfoDialog>
-      </header>
+      )}
+      <div className="flex min-w-0 items-center justify-between gap-2 text-[10px] text-muted-foreground">
+        <Link to="/help#test-mode" className="shrink-0 text-primary!">
+          Test mode · no real funds
+        </Link>
+        <span className="truncate" title={place.name}>
+          {radius ? `${radius} km around ` : "Center: "}
+          <strong className="font-semibold">{place.name}</strong>
+        </span>
+      </div>
       <PlaceSearch
         token={token}
         value={search}
@@ -213,92 +206,27 @@ export function ExploreControls({
                 </SelectContent>
               </Select>
             </div>
+            <IllustratedInfoDialog
+              title="Nearby, with boundaries."
+              description="Explore public lending intentions by approximate area. Review the complete terms before applying."
+              scene="finding-your-way"
+              triggerLabel="How discovery works"
+              iconOnly
+            >
+              <p>
+                Markers group public city or area centers, never anyone’s home.
+                Radius results measure the distance to those centers. They cover
+                loaded offers; load more to extend your search.
+              </p>
+            </IllustratedInfoDialog>
           </PopoverContent>
         </Popover>
       </div>
-      <div className="space-y-2">
-        <div className="flex min-w-0 items-center justify-between gap-1">
-          <span className="min-w-0 flex-1 text-[11px] text-muted-foreground">
-            <span className="block">
-              {radius ? `${radius} km around` : "Search center"}
-            </span>
-            <strong
-              className="block truncate font-semibold text-foreground"
-              title={place.name}
-            >
-              {place.name}
-            </strong>
-          </span>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-11! shrink-0"
-            aria-label={locating ? "Finding your location" : "Use my location"}
-            title="Use my location"
-            onClick={locate}
-            disabled={locating}
-          >
-            {locating ? (
-              <Loader2
-                size={17}
-                className="animate-spin motion-reduce:animate-none"
-              />
-            ) : (
-              <LocateFixed size={17} />
-            )}
-          </Button>
-          {view === "map" && (
-            <div
-              className="flex shrink-0"
-              role="group"
-              aria-label="Map controls"
-            >
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-11!"
-                aria-label="Zoom out"
-                title="Zoom out"
-                disabled={!mapReady}
-                onClick={() => command("zoom-out")}
-              >
-                <Minus size={17} />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-11!"
-                aria-label="Zoom in"
-                title="Zoom in"
-                disabled={!mapReady}
-                onClick={() => command("zoom-in")}
-              >
-                <Plus size={17} />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-11!"
-                aria-label={mapReady ? "Fit search area" : "Retry map"}
-                title={mapReady ? "Fit search area" : "Retry map"}
-                onClick={() => command(mapReady ? "reset" : "retry")}
-              >
-                <RotateCcw size={16} />
-              </Button>
-            </div>
-          )}
-        </div>
-        {locationError && (
-          <p role="alert" className="text-xs leading-relaxed text-destructive">
-            {locationError}
-          </p>
-        )}
-        {radius > 0 && (
-          <p className="text-[10px] leading-relaxed text-muted-foreground">
-            Distance uses public area centers, not home locations.
-          </p>
-        )}
-      </div>
+      {locationError && (
+        <p role="alert" className="text-xs leading-relaxed text-destructive">
+          {locationError}
+        </p>
+      )}
     </section>
   );
 }

@@ -421,7 +421,7 @@
     {
       "name": "Header area switch",
       "kind": "nav",
-      "description": "The signed-in Community/My dashboard switch lives in the header, with a full-width row below 640px. Guests and unresolved sessions do not render the switch or private workspace actions. Guest mobile navigation is Explore, Leaderboard, Learn and Sign in; member navigation is Explore, Dashboard, Inbox and Profile. Selected segment shown; actual application links use route-aware aria-current.",
+      "description": "The signed-in Community/My dashboard switch lives in ordinary route headers, using a full-width row below 640px. Explore omits the platform header. Guests and unresolved sessions do not render the switch or private workspace actions. Guest mobile navigation is Explore, Leaderboard, Learn and Sign in; member navigation is Explore, Dashboard, Inbox and Profile. Desktop collapse lives beside the app title. Selected segment shown; actual application links use route-aware aria-current.",
       "html": "<nav class=\"ds-area\" aria-label=\"Platform area\"><a class=\"ds-area-link ds-selected\" href=\"#community\" aria-current=\"true\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M22 21v-2a4 4 0 0 0-3-3.87\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"/></svg>Community</a><a class=\"ds-area-link\" href=\"#dashboard\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"9\" rx=\"1\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"5\" rx=\"1\"/><rect x=\"14\" y=\"12\" width=\"7\" height=\"9\" rx=\"1\"/><rect x=\"3\" y=\"16\" width=\"7\" height=\"5\" rx=\"1\"/></svg>My dashboard</a></nav>",
       "css": ".ds-area{display:flex;gap:4px;padding:4px;border:1px solid var(--border,#dbe3ee);border-radius:16px;background:var(--muted,#f1f5f9);font-family:Manrope,sans-serif}.ds-area-link{display:flex;min-height:40px;align-items:center;justify-content:center;gap:8px;border-radius:12px;padding:0 16px;font-size:12px;font-weight:800;color:var(--muted-foreground,#52637b);text-decoration:none;transition:background-color 150ms,color 150ms,box-shadow 150ms}.ds-area-link:hover{background:var(--card,#fff);color:var(--foreground,#0f172a)}.ds-area-link:focus-visible{outline:3px solid var(--ring,#0866ff);outline-offset:3px}.ds-selected,.ds-selected:hover{background:var(--primary,#0866ff);color:var(--primary-foreground,#fff);box-shadow:0 1px 3px 0 rgb(0 0 0 / .1),0 1px 2px -1px rgb(0 0 0 / .1)}@media(max-width:639px){.ds-area{width:100%}.ds-area-link{flex:1;padding:0 8px}}"
     }
@@ -439,8 +439,8 @@
         "section": "components"
       },
       {
-        "name": "The Explore Control Rule",
-        "body": "Explore uses one right-side control/posting container, one local/provider search field, one map/list destination action, an explicit radius selector and a secondary filter popover. Mobile places controls before map and posts. Hover/focus highlights approximate grouped markers without camera movement; device location is optional and ephemeral.",
+        "name": "The Explore Viewport Rule",
+        "body": "Explore retains navigation but removes the platform header/footer and outer gutters. The map and compact posting feed fill the available viewport. Map actions stay on-map; one button switches offers/recent posts. Compact preview rows use an upper-right heart/count and keep complete costs on offer detail. Ordinary routes retain their headers and member-only area switch; desktop collapse sits beside the app title.",
         "section": "components"
       }
     ],
@@ -452,7 +452,7 @@
     ],
     "dos": [
       "**Do** preserve the blue PixelVault identity and use shared semantic light/dark roles.",
-      "**Do** use the recorded shell dimensions and main padding, exposing the header area switch and private destinations only for signed-in members; agreement-room detail uses the dedicated viewport layout described above.",
+      "**Do** use the recorded shell dimensions and main padding, exposing the header area switch and private destinations only for signed-in members; Explore and agreement-room detail follow their dedicated viewport layouts described above.",
       "**Do** keep lending aggregates consent-controlled, exact amounts static, XP ties visible and badge overflow factual.",
       "**Do** offer badge criteria and earned dates in place through canonical controls."
     ],

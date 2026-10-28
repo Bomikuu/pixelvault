@@ -188,9 +188,9 @@ Proposed UI type: self-hosted Manrope, with system sans fallback; the board does
 
 ## Layout
 
-The desktop navigation rail begins at 1024px. Expanded and collapsed widths, and page padding, are recorded in frontmatter. Main content no longer has a narrow maximum-width cap. Rail width and the corresponding content margin move together over 300ms ease-out; reduced motion removes those transitions. The collapsed preference persists under `pixelvault-sidebar-collapsed`, with session-only behavior if storage is blocked. Icon-only destinations retain accessible labels and tooltips.
+The desktop navigation rail begins at 1024px. Its collapse action sits beside the PixelVault title; the compact rail stacks its glyph and expand action. Expanded and collapsed widths, and page padding, are recorded in frontmatter. Main content no longer has a narrow maximum-width cap. Rail width and the corresponding content margin move together over 300ms ease-out; reduced motion removes those transitions. The collapsed preference persists under `pixelvault-sidebar-collapsed`, with session-only behavior if storage is blocked. Icon-only destinations retain accessible labels and tooltips.
 
-For signed-in members, the header owns the Community/My dashboard segmented switch: a bordered muted rounded container, primary selected segment, and compact icons with text. Below 640px it occupies its own full-width header row; larger screens keep it beside the navigation toggle. Guests and unresolved sessions do not render either area-switch variant, workspace destinations or private member actions. Mobile retains the drawer and four-destination bottom navigation appropriate to the session. Route protection remains independent of navigation visibility.
+On ordinary signed-in routes with a platform header, the header owns the Community/My dashboard segmented switch: a bordered muted rounded container, primary selected segment, and compact icons with text. Below 640px it occupies its own full-width header row; larger screens keep it in the header while desktop collapse remains beside the app title. Guests and unresolved sessions do not render either area-switch variant, workspace destinations or private member actions. Mobile retains the drawer and four-destination bottom navigation appropriate to the session. Route protection remains independent of navigation visibility.
 
 Agreement-room detail is the dedicated protected-layout exception: it owns the dynamic viewport height without the platform rail, header, footer or mobile navigation. Room-local return, theme and confirmed sign-out controls retain access to shared navigation and session actions. Desktop columns scroll independently; narrow layouts reflow into one scrolling viewport. This layout retains the incumbent semantic theme and canonical controls; its column dimensions and conversation arrangement belong to [the agreement-room contract](docs/surfaces/agreement-rooms.md).
 
@@ -228,9 +228,13 @@ The latest approved distinct-position treatment supersedes the earlier neutral-p
 
 Two visible badges precede a count derived from the remaining selected public badges. The public showcase cap remains three, so three selected badges produce +1. Never fabricate +3 or enlarge the showcase capacity for presentation.
 
-### Explore control container
+### Explore viewport and compact offers
 
-Explore keeps one shared search field, one destination-named map/list toggle and an Any distance / 5 / 10 / 50 km selector in the desktop right-side posting container. Secondary area/amount/sort choices use the canonical filter popover. Location and zoom/fit/retry actions occupy one compact row; attribution remains map-owned. On narrow screens controls precede the map and postings. Local lender/offer/area filtering and explicit Mapbox place lookup share the field; no lender query is automatically sent to the provider. Offer hover and keyboard focus highlight grouped avatar markers without moving the camera. Radius results and the geodesic map boundary use validated public approximate area centers. Device location is optional, ephemeral and user-triggered. See [the community contract](docs/surfaces/community.md) for state and verification limits.
+Explore is a public viewport-layout exception: it retains the desktop navigation rail but removes the platform header, environment strip, footer, outer content padding, gaps and corner rounding. Desktop map and 380px posting container touch their available viewport boundaries. The mobile utility row retains the app title/drawer action; the map and compact feed use adjacent rows above the existing bottom navigation, with independent feed scrolling. Other routes retain their normal header and content spacing. Theme and confirmed sign-out move into navigation while Explore is active.
+
+Explore keeps one local/provider search field, one destination-named map/list action and an Any distance / 5 / 10 / 50 km selector. Secondary area/amount/sort choices and discovery information use canonical popovers/dialogs. Location, zoom and fit/retry actions are map-owned overlays, not posting-container controls. One destination-named button switches the offer/recent feed. A compact test-mode notice remains visible.
+
+Offer previews use compact divided rows with avatar/name/area, linked title, available amount, annual reducing rate and payment count. Cost examples and repeated dates/footer links are removed from Explore; complete terms and schedules remain on offer detail. The shared Like control has a compact heart/count variant in the upper-right corner, retaining saving/error/sign-in behavior. Other surfaces retain the labeled Like variant. Hover/focus still highlights grouped approximate markers without moving the camera. See [the community contract](docs/surfaces/community.md) for proximity, state and verification limits.
 
 ### Offer likes
 
@@ -241,7 +245,7 @@ List offers and the map sidebar expose the same pill-shaped canonical Like contr
 ### Do:
 
 - **Do** preserve the blue PixelVault identity and use shared semantic light/dark roles.
-- **Do** use the recorded shell dimensions and main padding, exposing the header area switch and private destinations only for signed-in members; agreement-room detail uses the dedicated viewport layout described above.
+- **Do** use the recorded shell dimensions and main padding, exposing the header area switch and private destinations only for signed-in members; Explore and agreement-room detail follow their dedicated viewport layouts described above.
 - **Do** keep lending aggregates consent-controlled, exact amounts static, XP ties visible and badge overflow factual.
 - **Do** offer badge criteria and earned dates in place through canonical controls.
 

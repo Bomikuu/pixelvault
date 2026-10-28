@@ -7,6 +7,7 @@ import type {
 } from "mapbox-gl";
 import { Button } from "@pixelvault/ui";
 import { MapPin, WifiOff } from "lucide-react";
+import { MapControls } from "./MapControls";
 import { MemberAvatar } from "../../components";
 import type { DiscoveryOffer, MapPlace } from "./types";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -14,7 +15,7 @@ import {
   DEFAULT_PLACE,
   publicAreaCenter,
   radiusPolygon,
-  type MapCommand,
+  type MapAction,
 } from "./geography";
 interface OfferGroup {
   key: string;
@@ -56,7 +57,8 @@ export function CommunityMap({
   selectedId,
   highlightedId = null,
   radiusKm = 0,
-  command = null,
+  locating = false,
+  onLocate,
   onReadyChange,
   onSelect,
   place,
@@ -66,7 +68,8 @@ export function CommunityMap({
   selectedId: string | null;
   highlightedId?: string | null;
   radiusKm?: number;
-  command?: MapCommand | null;
+  locating?: boolean;
+  onLocate?: () => void;
   onReadyChange?: (ready: boolean) => void;
   onSelect: (id: string) => void;
   place: MapPlace | null;
@@ -77,7 +80,6 @@ export function CommunityMap({
   const [ready, setReady] = useState(false);
   const [error, setError] = useState("");
   const [attempt, setAttempt] = useState(0);
-  const lastCommand = useRef(command?.sequence ?? 0);
   useEffect(() => {
     onReadyChange?.(ready && !error);
     return () => onReadyChange?.(false);
@@ -286,18 +288,16 @@ export function CommunityMap({
         });
     }
   }, [place, radiusKm, ready]);
-  useEffect(() => {
-    if (!command || command.sequence === lastCommand.current) return;
-    lastCommand.current = command.sequence;
-    if (command.type === "retry") {
+  function runCommand(action: MapAction) {
+    if (action === "retry") {
       setAttempt((current) => current + 1);
       return;
     }
     if (!ready || !map.current) return;
     const instance = map.current;
     const options = { duration: reducedMotion() ? 0 : 300 };
-    if (command.type === "zoom-in") instance.zoomIn(options);
-    else if (command.type === "zoom-out") instance.zoomOut(options);
+    if (action === "zoom-in") instance.zoomIn(options);
+    else if (action === "zoom-out") instance.zoomOut(options);
     else {
       const center = (place ?? DEFAULT_PLACE).center;
       if (radiusKm) {
@@ -317,7 +317,7 @@ export function CommunityMap({
         );
       } else instance.flyTo({ center, zoom: 10.3, ...options });
     }
-  }, [command, ready, place, radiusKm]);
+  }
   return (
     <div
       className="discovery-map"
@@ -325,7 +325,7 @@ export function CommunityMap({
     >
       <div ref={container} className="discovery-map-canvas" />
       {!token ? (
-        <div className="discovery-map-state">
+        <div className="discovery-map-state max-lg:justify-start! max-lg:pt-3! max-lg:[&>svg]:mb-2! max-lg:[&>svg]:size-5! max-lg:[&>h2]:mb-1! max-lg:[&>h2]:text-base! max-lg:[&>p]:text-[11px]! max-lg:[&>p]:leading-relaxed!">
           <MapPin size={32} />
           <h2>Map setup is still needed.</h2>
           <p>
@@ -334,12 +334,15 @@ export function CommunityMap({
           </p>
         </div>
       ) : error ? (
-        <div className="discovery-map-state" role="alert">
+        <div
+          className="discovery-map-state max-lg:justify-start! max-lg:pt-3! max-lg:[&>svg]:mb-2! max-lg:[&>svg]:size-5! max-lg:[&>h2]:mb-1! max-lg:[&>h2]:text-base! max-lg:[&>p]:text-[11px]! max-lg:[&>p]:leading-relaxed!"
+          role="alert"
+        >
           <WifiOff size={28} />
           <h2>The map is unavailable.</h2>
           <p>{error}</p>
-          <p className="mt-3">
-            Use Retry map in the controls, or switch to the list.
+          <p className="mt-3 hidden lg:block">
+            Retry using the map controls, or switch to the list.
           </p>
         </div>
       ) : !ready ? (
@@ -347,7 +350,13 @@ export function CommunityMap({
           Loading the community map…
         </div>
       ) : null}
-      <div className="discovery-map-privacy">
+      <MapControls
+        ready={ready && !error}
+        locating={locating}
+        locate={onLocate}
+        command={runCommand}
+      />
+      <div className="discovery-map-privacy hidden! lg:flex!">
         <MapPin size={14} />
         <span>City and area centers · never home locations</span>
       </div>

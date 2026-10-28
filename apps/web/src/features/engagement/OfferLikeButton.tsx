@@ -10,9 +10,11 @@ type Likes = { count: number; liked: boolean };
 export function OfferLikeButton({
   offerId,
   initial,
+  compact = false,
 }: {
   offerId: string;
   initial?: Likes;
+  compact?: boolean;
 }) {
   const client = useQueryClient();
   const { session } = useSession();
@@ -55,12 +57,19 @@ export function OfferLikeButton({
       ? "count unavailable"
       : `${count} ${count === 1 ? "like" : "likes"}`;
   return (
-    <div className="my-3 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-border pt-3">
+    <div
+      className={
+        compact
+          ? "relative flex shrink-0 flex-col items-end"
+          : "my-3 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-border pt-3"
+      }
+    >
       {session?.member ? (
         <Button
-          variant={likes?.liked ? "secondary" : "outline"}
+          variant={compact ? "ghost" : likes?.liked ? "secondary" : "outline"}
           size="sm"
-          className="min-h-10! gap-2! rounded-full! px-4! transition-[background-color,transform] active:scale-95 motion-reduce:transform-none"
+          className={`${compact ? "h-11! min-w-11 gap-1.5! px-2!" : "min-h-10! gap-2! rounded-full! px-4!"} transition-[background-color,transform] active:scale-95 motion-reduce:transform-none`}
+          aria-busy={mutation.isPending}
           aria-pressed={likes?.liked ?? false}
           aria-label={`${likes?.liked ? "Unlike" : "Like"} offer (${accessibleCount})`}
           disabled={mutation.isPending || !likes || Boolean(query.error)}
@@ -71,28 +80,47 @@ export function OfferLikeButton({
             aria-hidden="true"
             fill={likes?.liked ? "currentColor" : "none"}
           />
-          {mutation.isPending ? "Saving…" : likes?.liked ? "Liked" : "Like"}
+          {!compact &&
+            (mutation.isPending ? "Saving…" : likes?.liked ? "Liked" : "Like")}
           <span className="font-extrabold tabular-nums">{count ?? "—"}</span>
         </Button>
       ) : (
-        <Button asChild variant="outline" className="rounded-full! gap-2!">
+        <Button
+          asChild
+          variant={compact ? "ghost" : "outline"}
+          className={
+            compact ? "h-11! min-w-11 gap-1.5! px-2!" : "rounded-full! gap-2!"
+          }
+        >
           <Link
             to="/sign-in"
+            aria-label={
+              compact ? `Sign in to like offer (${accessibleCount})` : undefined
+            }
             state={{ from: location.pathname + location.search }}
           >
             <Heart size={16} aria-hidden="true" />
-            Like
+            {!compact && "Like"}
             <span className="font-extrabold tabular-nums">{count ?? "—"}</span>
           </Link>
         </Button>
       )}
-      <span className="text-xs text-muted-foreground">
-        {count === undefined
-          ? "Loading likes…"
-          : `${count.toLocaleString("en-PH")} ${count === 1 ? "person likes" : "people like"} this`}
-      </span>
+      {!compact && (
+        <span className="text-xs text-muted-foreground">
+          {count === undefined
+            ? "Loading likes…"
+            : `${count.toLocaleString("en-PH")} ${count === 1 ? "person likes" : "people like"} this`}
+        </span>
+      )}
       {(error || query.error) && (
-        <span className="w-full text-xs text-destructive" role="alert">
+        <span
+          className={
+            compact
+              ? "max-w-48 text-[11px] text-destructive"
+              : "w-full text-xs text-destructive"
+          }
+          role="alert"
+        >
           {error || "Likes couldn't load."}{" "}
           {query.error && (
             <Button

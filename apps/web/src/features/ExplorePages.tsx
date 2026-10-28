@@ -73,7 +73,6 @@ import {
 import { cents, date, label, money, text } from "../lib/format";
 import { DiscoveryWorkspace } from "./discovery/DiscoveryWorkspace";
 import { OfferCalculator } from "./engagement/OfferCalculator";
-import { OfferLikeButton } from "./engagement/OfferLikeButton";
 import { OfferSocial } from "./engagement/OfferSocial";
 import { CoBorrowerApplicationField } from "./connections/CoBorrowerApplicationField";
 import type { CoarseArea, DiscoveryOffer } from "./discovery/types";
@@ -140,76 +139,6 @@ export function useOffers() {
     ),
   };
 }
-export function OfferRow({ offer }: { offer: Offer }) {
-  return (
-    <article className="offer-row border-border! bg-card! text-foreground transition-colors hover:bg-muted! [&_.offer-title]:text-foreground! [&_.offer-title:hover]:text-primary! [&_.offer-terms_strong]:text-foreground! [&_.offer-terms_span]:text-muted-foreground! [&_.offer-terms_small]:text-muted-foreground! [&_.person_small]:text-muted-foreground! [&_.offer-cost-example]:border-border! [&_.offer-cost-example_span]:text-muted-foreground! [&_.offer-cost-example_small]:text-muted-foreground! [&_.offer-bottom]:border-border! [&_.offer-bottom_span]:text-muted-foreground! [&_.offer-bottom>a]:text-primary!">
-      <div className="offer-person">
-        <PersonName
-          person={offer.lender}
-          subtitle={offer.area || "Area not specified"}
-        />
-        <Status value={offer.status} />
-      </div>
-      <Link to={`/offers/${offer.id}`} className="offer-title">
-        {offer.title}
-        <ArrowUpRightIcon />
-      </Link>
-      <div className="offer-terms">
-        <div>
-          <span>Available to lend</span>
-          <strong>{money(offer.available_amount)}</strong>
-        </div>
-        <div>
-          <span>Annual interest</span>
-          <strong>
-            {(offer.annual_rate_bps / 100).toFixed(2)}%{" "}
-            <small>reducing balance</small>
-          </strong>
-        </div>
-        <div>
-          <span>Payment plan</span>
-          <strong>
-            {offer.installment_count} {label(offer.frequency).toLowerCase()}{" "}
-            payments
-          </strong>
-        </div>
-      </div>
-      <div className="offer-cost-example">
-        <span>Cost example</span>
-        <strong>
-          {money(offer.disclosure.principal)} →{" "}
-          {money(offer.disclosure.total_repayment)}
-        </strong>
-        <small>Principal → total repayment · exact dates in full terms</small>
-      </div>
-      <OfferLikeButton offerId={offer.id} initial={offer.likes} />
-      <div className="offer-bottom">
-        <span>
-          <MapPin size={14} />
-          {offer.area || "Area not specified"} · approximate area
-        </span>
-        <Link to={`/offers/${offer.id}`}>
-          View terms & schedule <ArrowRight size={15} />
-        </Link>
-      </div>
-    </article>
-  );
-}
-function ArrowUpRightIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      aria-hidden="true"
-    >
-      <path d="M6 18 18 6M6 6h12v12" />
-    </svg>
-  );
-}
 export function ExplorePage() {
   const query = useOffers();
   const [params, setParams] = useSearchParams();
@@ -267,7 +196,6 @@ export function ExplorePage() {
       setFilter={setFilter}
       setFilters={setFilters}
       onClear={() => setParams({ view })}
-      renderOffer={(offer) => <OfferRow offer={offer} />}
       pending={query.isPending}
       error={query.error}
       retry={() => void query.refetch()}

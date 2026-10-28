@@ -177,7 +177,7 @@ it("offers an honest WebGL fallback and recoverable provider authorization error
   expect(await screen.findByRole("alert")).toHaveTextContent("WebGL enabled");
   unmount();
   state.supported = true;
-  const { rerender } = render(
+  render(
     <CommunityMap
       token="pk.synthetic-test"
       offers={[cityOffer]}
@@ -193,15 +193,6 @@ it("offers an honest WebGL fallback and recoverable provider authorization error
   expect(screen.getByRole("alert")).toHaveTextContent(
     "could not authorize this site",
   );
-  rerender(
-    <CommunityMap
-      token="pk.synthetic-test"
-      offers={[cityOffer]}
-      selectedId={null}
-      onSelect={() => {}}
-      place={null}
-      command={{ type: "retry", sequence: 1 }}
-    />,
-  );
+  await userEvent.click(screen.getByRole("button", { name: "Retry map" }));
   await waitFor(() => expect(state.maps).toHaveLength(2));
 });

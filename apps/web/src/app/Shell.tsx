@@ -82,6 +82,7 @@ export function Shell() {
     }
   });
   const member = session?.member;
+  const isExplore = location.pathname === "/explore";
   const isAdmin = location.pathname.startsWith("/admin") && !!member?.is_staff;
   const visibleCommunity = member
     ? community
@@ -112,18 +113,37 @@ export function Shell() {
   const navigation = (compact: boolean, mobile = false) => (
     <>
       <div
-        className={`flex h-20 shrink-0 items-center ${compact ? "justify-center px-3" : "justify-between px-5"}`}
+        className={`flex shrink-0 items-center gap-2 ${compact ? "h-28 flex-col justify-center px-2" : "h-20 justify-between px-3"}`}
       >
         <Link
           to="/explore"
           aria-label="PixelVault home"
+          className="min-w-0"
           onClick={() => setMenu(false)}
         >
           <BrandMark
             compact={compact}
-            className="dark:[&_.brand-word]:text-foreground!"
+            className="gap-2! dark:[&_.brand-word]:text-foreground! [&>svg]:h-9! [&>svg]:w-7! [&_.brand-word]:text-xl!"
           />
         </Link>
+        {!mobile && (
+          <Button
+            size="icon"
+            variant="ghost"
+            className="size-11! shrink-0"
+            aria-label={collapsed ? "Expand navigation" : "Collapse navigation"}
+            title={collapsed ? "Expand navigation" : "Collapse navigation"}
+            aria-expanded={!collapsed}
+            aria-controls="desktop-navigation"
+            onClick={toggleSidebar}
+          >
+            {collapsed ? (
+              <PanelLeftOpen size={18} />
+            ) : (
+              <PanelLeftClose size={18} />
+            )}
+          </Button>
+        )}
         {mobile && (
           <Button
             variant="ghost"
@@ -184,6 +204,20 @@ export function Shell() {
         ))}
       </nav>
       <div className="shrink-0 border-t border-border p-3">
+        {isExplore && (
+          <div
+            className={`mb-2 flex items-center justify-center gap-1 ${compact ? "flex-col" : ""}`}
+          >
+            <ThemeToggle />
+            {member ? (
+              <SignOutButton />
+            ) : (
+              <ActionLink to="/sign-in" variant="ghost">
+                Sign in
+              </ActionLink>
+            )}
+          </div>
+        )}
         {!compact && (
           <Link
             to="/learn"
@@ -255,7 +289,7 @@ export function Shell() {
   );
   return (
     <div
-      className={`min-h-dvh bg-background text-foreground ${legacyThemeClasses} ${location.pathname === "/explore" && new URLSearchParams(location.search).get("view") !== "list" ? "is-map-workspace" : ""}`}
+      className={`${isExplore ? "h-dvh overflow-hidden" : "min-h-dvh"} bg-background text-foreground ${legacyThemeClasses}`}
     >
       <a className="skip-link" href="#main-content">
         Skip to content
@@ -276,148 +310,138 @@ export function Shell() {
         </DialogContent>
       </Dialog>
       <div
-        className={`flex min-h-dvh min-w-0 flex-col pb-16 transition-[margin-left] duration-300 ease-out motion-reduce:transition-none lg:pb-0 ${collapsed ? "lg:ml-20" : "lg:ml-[244px]"}`}
+        className={`flex ${isExplore ? "h-dvh min-h-0 overflow-hidden" : "min-h-dvh"} min-w-0 flex-col pb-16 transition-[margin-left] duration-300 ease-out motion-reduce:transition-none lg:pb-0 ${collapsed ? "lg:ml-20" : "lg:ml-[244px]"}`}
       >
-        <div className="flex min-h-7 flex-wrap items-center justify-center gap-x-2 gap-y-1 border-b border-border bg-accent px-3 py-1 text-center text-[10px] text-muted-foreground">
-          <span
-            className="size-1.5 rounded-full bg-primary"
-            aria-hidden="true"
-          />
-          <strong>Test environment</strong>
-          <span>Synthetic community. No real funds move.</span>
-          <Link className="hidden text-primary! sm:inline" to="/help#test-mode">
-            About test mode <ArrowUpRight className="inline size-3" />
-          </Link>
-        </div>
-        <header className="flex flex-wrap items-center justify-between gap-x-3 gap-y-3 border-b border-border bg-card px-4 py-3 lg:px-6">
-          <div className="flex items-center gap-3">
-            <Button
-              size="icon"
-              variant="ghost"
-              className="hidden! lg:inline-flex!"
-              aria-label={
-                collapsed ? "Expand navigation" : "Collapse navigation"
-              }
-              aria-expanded={!collapsed}
-              aria-controls="desktop-navigation"
-              onClick={toggleSidebar}
-            >
-              {collapsed ? (
-                <PanelLeftOpen size={20} />
-              ) : (
-                <PanelLeftClose size={20} />
-              )}
-            </Button>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="lg:hidden!"
-              aria-label="Open navigation"
-              onClick={() => setMenu(true)}
-            >
-              <Menu />
-            </Button>
-            {member && (
-              <nav
-                aria-label="Platform area"
-                className="hidden items-center gap-1 rounded-2xl border border-border bg-muted p-1 sm:flex"
+        {!isExplore && (
+          <>
+            <div className="flex min-h-7 flex-wrap items-center justify-center gap-x-2 gap-y-1 border-b border-border bg-accent px-3 py-1 text-center text-[10px] text-muted-foreground">
+              <span
+                className="size-1.5 rounded-full bg-primary"
+                aria-hidden="true"
+              />
+              <strong>Test environment</strong>
+              <span>Synthetic community. No real funds move.</span>
+              <Link
+                className="hidden text-primary! sm:inline"
+                to="/help#test-mode"
               >
-                {[
-                  {
-                    to: "/explore",
-                    label: "Community",
-                    Icon: Users,
-                    selected: active === "community" && !isAdmin,
-                  },
-                  {
-                    to: "/dashboard",
-                    label: "My dashboard",
-                    Icon: LayoutDashboard,
-                    selected: active === "workspace" && !isAdmin,
-                  },
-                ].map(({ to, label, Icon, selected }) => (
-                  <Link
-                    key={to}
-                    to={to}
-                    aria-current={selected ? "true" : undefined}
-                    className={`flex min-h-10 items-center gap-2 rounded-xl px-4 text-xs font-extrabold transition-[background-color,color,box-shadow] ${selected ? "bg-primary text-primary-foreground! shadow-sm" : "text-muted-foreground! hover:bg-card hover:text-foreground!"}`}
-                  >
-                    <Icon size={16} aria-hidden="true" />
-                    {label}
-                  </Link>
-                ))}
-              </nav>
-            )}
-          </div>
-          <div className="flex items-center gap-1 sm:gap-2">
-            <ThemeToggle />
-            {member ? (
-              <>
-                <Link
-                  to="/verification"
-                  className="hidden min-h-10 items-center gap-2 rounded-xl px-3 text-xs font-bold text-foreground! hover:bg-accent xl:flex"
+                About test mode <ArrowUpRight className="inline size-3" />
+              </Link>
+            </div>
+            <header className="flex flex-wrap items-center justify-between gap-x-3 gap-y-3 border-b border-border bg-card px-4 py-3 lg:px-6">
+              <div className="flex items-center gap-3">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="lg:hidden!"
+                  aria-label="Open navigation"
+                  onClick={() => setMenu(true)}
                 >
-                  <ShieldCheck size={16} />
-                  Verification center
-                </Link>
-                <Button asChild variant="ghost" size="icon">
-                  <Link to="/inbox" aria-label="Open messages">
-                    <Bell size={19} />
-                  </Link>
+                  <Menu />
                 </Button>
+                {member && (
+                  <nav
+                    aria-label="Platform area"
+                    className="hidden items-center gap-1 rounded-2xl border border-border bg-muted p-1 sm:flex"
+                  >
+                    {[
+                      {
+                        to: "/explore",
+                        label: "Community",
+                        Icon: Users,
+                        selected: active === "community" && !isAdmin,
+                      },
+                      {
+                        to: "/dashboard",
+                        label: "My dashboard",
+                        Icon: LayoutDashboard,
+                        selected: active === "workspace" && !isAdmin,
+                      },
+                    ].map(({ to, label, Icon, selected }) => (
+                      <Link
+                        key={to}
+                        to={to}
+                        aria-current={selected ? "true" : undefined}
+                        className={`flex min-h-10 items-center gap-2 rounded-xl px-4 text-xs font-extrabold transition-[background-color,color,box-shadow] ${selected ? "bg-primary text-primary-foreground! shadow-sm" : "text-muted-foreground! hover:bg-card hover:text-foreground!"}`}
+                      >
+                        <Icon size={16} aria-hidden="true" />
+                        {label}
+                      </Link>
+                    ))}
+                  </nav>
+                )}
+              </div>
+              <div className="flex items-center gap-1 sm:gap-2">
+                <ThemeToggle />
+                {member ? (
+                  <>
+                    <Link
+                      to="/verification"
+                      className="hidden min-h-10 items-center gap-2 rounded-xl px-3 text-xs font-bold text-foreground! hover:bg-accent xl:flex"
+                    >
+                      <ShieldCheck size={16} />
+                      Verification center
+                    </Link>
+                    <Button asChild variant="ghost" size="icon">
+                      <Link to="/inbox" aria-label="Open messages">
+                        <Bell size={19} />
+                      </Link>
+                    </Button>
 
-                <Link to="/profile" aria-label="My profile">
-                  <MemberAvatar
-                    name={member.display_name}
-                    avatarKey={member.avatar_key}
-                    reputation={member.community_reputation}
-                    photoUrl={member.photo_url}
-                    size={34}
-                  />
-                </Link>
-                <SignOutButton />
-              </>
-            ) : (
-              <ActionLink to="/sign-in" variant="outline">
-                Sign in
-              </ActionLink>
-            )}
-          </div>
-          {member && (
-            <nav
-              aria-label="Platform area"
-              className="flex w-full items-center gap-1 rounded-2xl border border-border bg-muted p-1 sm:hidden"
-            >
-              {[
-                {
-                  to: "/explore",
-                  label: "Community",
-                  Icon: Users,
-                  selected: active === "community" && !isAdmin,
-                },
-                {
-                  to: "/dashboard",
-                  label: "My dashboard",
-                  Icon: LayoutDashboard,
-                  selected: active === "workspace" && !isAdmin,
-                },
-              ].map(({ to, label, Icon, selected }) => (
-                <Link
-                  key={to}
-                  to={to}
-                  aria-current={selected ? "true" : undefined}
-                  className={`flex min-h-10 flex-1 items-center justify-center gap-2 rounded-xl px-2 text-xs font-extrabold transition-colors ${selected ? "bg-primary text-primary-foreground! shadow-sm" : "text-muted-foreground! hover:bg-card"}`}
+                    <Link to="/profile" aria-label="My profile">
+                      <MemberAvatar
+                        name={member.display_name}
+                        avatarKey={member.avatar_key}
+                        reputation={member.community_reputation}
+                        photoUrl={member.photo_url}
+                        size={34}
+                      />
+                    </Link>
+                    <SignOutButton />
+                  </>
+                ) : (
+                  <ActionLink to="/sign-in" variant="outline">
+                    Sign in
+                  </ActionLink>
+                )}
+              </div>
+              {member && (
+                <nav
+                  aria-label="Platform area"
+                  className="flex w-full items-center gap-1 rounded-2xl border border-border bg-muted p-1 sm:hidden"
                 >
-                  <Icon size={16} aria-hidden="true" />
-                  {label}
-                </Link>
-              ))}
-            </nav>
-          )}
-        </header>
+                  {[
+                    {
+                      to: "/explore",
+                      label: "Community",
+                      Icon: Users,
+                      selected: active === "community" && !isAdmin,
+                    },
+                    {
+                      to: "/dashboard",
+                      label: "My dashboard",
+                      Icon: LayoutDashboard,
+                      selected: active === "workspace" && !isAdmin,
+                    },
+                  ].map(({ to, label, Icon, selected }) => (
+                    <Link
+                      key={to}
+                      to={to}
+                      aria-current={selected ? "true" : undefined}
+                      className={`flex min-h-10 flex-1 items-center justify-center gap-2 rounded-xl px-2 text-xs font-extrabold transition-colors ${selected ? "bg-primary text-primary-foreground! shadow-sm" : "text-muted-foreground! hover:bg-card"}`}
+                    >
+                      <Icon size={16} aria-hidden="true" />
+                      {label}
+                    </Link>
+                  ))}
+                </nav>
+              )}
+            </header>
+          </>
+        )}
         <main
           id="main-content"
-          className="main-content max-w-none! px-4! py-6! lg:px-6!"
+          className={`main-content max-w-none! ${isExplore ? "m-0! flex min-h-0 flex-1 flex-col overflow-hidden p-0! [&>*]:animate-none!" : "px-4! py-6! lg:px-6!"}`}
         >
           {error && <ErrorNotice error={error} />}
           {loading ? (
@@ -431,14 +455,16 @@ export function Shell() {
                   <Link to="/cases/new">Contact support</Link>
                 </div>
               )}
-              <Outlet />
+              <Outlet context={{ openNavigation: () => setMenu(true) }} />
             </>
           )}
         </main>
-        <footer className="flex flex-wrap justify-between gap-3 border-t border-border px-4 py-5 text-[11px] text-muted-foreground lg:px-6">
-          <span>PixelVault · Borrow today. Build tomorrow.</span>
-          <Link to="/help#privacy">Privacy & community guidelines</Link>
-        </footer>
+        {!isExplore && (
+          <footer className="flex flex-wrap justify-between gap-3 border-t border-border px-4 py-5 text-[11px] text-muted-foreground lg:px-6">
+            <span>PixelVault · Borrow today. Build tomorrow.</span>
+            <Link to="/help#privacy">Privacy & community guidelines</Link>
+          </footer>
+        )}
       </div>
       <nav
         className="fixed inset-x-0 bottom-0 z-30 grid h-16 grid-cols-4 border-t border-border bg-card lg:hidden"

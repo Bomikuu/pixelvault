@@ -60,7 +60,4 @@ export function radiusPolygon(center: [number, number], km: number) {
   };
 }
 
-export interface MapCommand {
-  type: "zoom-in" | "zoom-out" | "reset" | "retry";
-  sequence: number;
-}
+export type MapAction = "zoom-in" | "zoom-out" | "reset" | "retry";
