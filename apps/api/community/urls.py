@@ -1,0 +1,41 @@
+from django.urls import path
+
+from .views import (
+    AchievementHoldResolutionView,
+    AchievementHoldsView,
+    AreasView,
+    AwardsView,
+    ContributionsView,
+    DiscoveryView,
+    MessagesView,
+    ModerationDecisionView,
+    ModerationQueueView,
+    ProfileView,
+    PublicProfileView,
+    RepaymentSummaryView,
+    ReportView,
+    ReviewAppealView,
+    ReviewResponseView,
+    ReviewsView,
+    ThreadView,
+)
+
+urlpatterns = [
+    path("community/repayment-summary/<uuid:member_id>", RepaymentSummaryView.as_view()),
+    path("admin/achievement-holds", AchievementHoldsView.as_view()),
+    path("admin/achievement-holds/<uuid:hold_id>/resolve", AchievementHoldResolutionView.as_view()),
+    path("community/areas", AreasView.as_view()),
+    path("community/discovery", DiscoveryView.as_view()),
+    path("community/profiles/<str:handle>", PublicProfileView.as_view()),
+    path("community/profile", ProfileView.as_view()),
+    path("community/awards", AwardsView.as_view()),
+    path("community/threads", ThreadView.as_view()),
+    path("community/threads/<uuid:thread_id>/messages", MessagesView.as_view()),
+    path("community/reviews", ReviewsView.as_view()),
+    path("community/reviews/<uuid:review_id>/response", ReviewResponseView.as_view()),
+    path("community/reviews/<uuid:review_id>/appeal", ReviewAppealView.as_view()),
+    path("community/reports", ReportView.as_view()),
+    path("community/contributions", ContributionsView.as_view()),
+    path("admin/moderation", ModerationQueueView.as_view()),
+    path("admin/moderation/<uuid:content_id>", ModerationDecisionView.as_view()),
+]

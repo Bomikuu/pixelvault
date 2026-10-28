@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["apps/web/src/*"],
+      "@pixelvault/ui": ["packages/ui/src/index.ts"],
+      "@pixelvault/contracts": ["packages/contracts/src/api.ts"],
+      "@ui/*": ["packages/ui/src/*"],
+      "@pixelvault/ui/*": ["packages/ui/src/*"]
+    }
+  },
+  "include": ["apps/web", "packages", "vitest.config.ts"]
+}

@@ -1,0 +1,1 @@
+Original geometric hexagonal achievement frames are rendered by ../../BadgeArt.tsx with Lucide line pictograms. They distinguish learning, payment milestones, disclosures, contributions and private recovery; earning is controlled by server evidence, never by the art.
