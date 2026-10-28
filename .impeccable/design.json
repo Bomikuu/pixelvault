@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-28T10:02:42.654114+00:00",
+  "generatedAt": "2026-10-28T11:55:50+00:00",
   "title": "Design System: PixelVault",
   "extensions": {
     "colorMeta": {
@@ -447,7 +447,7 @@
     ],
     "dos": [
       "**Do** preserve the blue PixelVault identity and use shared semantic light/dark roles.",
-      "**Do** use the recorded shell dimensions, main padding and header area switch for connected surfaces.",
+      "**Do** use the recorded shell dimensions, main padding and header area switch for ordinary connected surfaces; agreement-room detail uses the dedicated viewport layout described above.",
       "**Do** keep lending aggregates consent-controlled, exact amounts static, XP ties visible and badge overflow factual.",
       "**Do** offer badge criteria and earned dates in place through canonical controls."
     ],

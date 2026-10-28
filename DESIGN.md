@@ -192,6 +192,8 @@ The desktop navigation rail begins at 1024px. Expanded and collapsed widths, and
 
 The header owns the Community/My dashboard segmented switch: a bordered muted rounded container, primary selected segment, and compact icons with text. Below 640px it occupies its own full-width header row; larger screens keep it beside the navigation toggle. Mobile retains the drawer and four-destination bottom navigation.
 
+Agreement-room detail is the dedicated protected-layout exception: it owns the dynamic viewport height without the platform rail, header, footer or mobile navigation. Room-local return, theme and confirmed sign-out controls retain access to shared navigation and session actions. Desktop columns scroll independently; narrow layouts reflow into one scrolling viewport. This layout retains the incumbent semantic theme and canonical controls; its column dimensions and conversation arrangement belong to [the agreement-room contract](docs/surfaces/agreement-rooms.md).
+
 At desktop widths the podium uses three columns, with the first displayed position in the center; narrow screens stack in server order. The comparison table remains in its named horizontal-scroll region. These surface-specific relationships are detailed in [the leaderboard contract](docs/surfaces/leaderboard.md).
 
 ### Incumbent spacing and responsive contract
@@ -235,7 +237,7 @@ List offers and the map sidebar expose the same pill-shaped canonical Like contr
 ### Do:
 
 - **Do** preserve the blue PixelVault identity and use shared semantic light/dark roles.
-- **Do** use the recorded shell dimensions, main padding and header area switch for connected surfaces.
+- **Do** use the recorded shell dimensions, main padding and header area switch for ordinary connected surfaces; agreement-room detail uses the dedicated viewport layout described above.
 - **Do** keep lending aggregates consent-controlled, exact amounts static, XP ties visible and badge overflow factual.
 - **Do** offer badge criteria and earned dates in place through canonical controls.
 

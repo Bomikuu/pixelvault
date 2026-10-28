@@ -2,6 +2,16 @@
 
 Implemented on 2026-10-28 in the standalone repository `/home/micxsz/projects/pixelvault`, branch `codex/implementation`, after the user instructed implementation. The original planning package remains in PixelCore commit `32a20f7`. Existing PixelCore, PixelFlow, Medframe and DineEase source was preserved.
 
+## Full-viewport meeting rooms and confirmed sign-out
+
+The user's next revision gives `/meetings/:id` a dedicated protected `h-dvh` layout outside the platform Shell. Sidebar, platform header, footer and mobile bottom navigation do not render there. The room retains a return link, theme and session controls, a compact test-mode label, participant status and suspended-account access notice. Desktop columns scroll independently and the conversation composer sits below the tab region; proposal controls move into the room's left column. Mobile uses a single scrolling room inside the viewport. This is an application layout, without a browser Fullscreen API permission request.
+
+Shared `SignOutButton` now owns confirmation for both the regular header and room toolbar. Initial focus is on Stay signed in. Cancel/Escape/outside dismissal do not request logout; submitting blocks duplicate clicks and dismissal, and a failed request is shown in the dialog. Room confirmation warns about the unsent message. No financial or agreement semantics changed.
+
+Verification followed the user's instruction: visual/browser only, no builds, automated tests, typecheck, UI check, contrast check or detector. The browser pass inspected the 1280×720 desktop and 390×844 mobile room, scrolling, light/dark end states, confirmation in both entry points, cancellation and confirmed logout with the existing synthetic borrower account subsequently restored. The document measured exactly the viewport at both inspected sizes. Request failure and duplicate-request paths remain source-only, untested. Captures live under ignored `.runtime/qa/immersive-room/`. Scoped Graphify (stale 205-node frontend graph) and sanitized Jev advisory supported the shared-control/dedicated-route choice; no credentials or personal records were submitted.
+
+Fresh Impeccable review requested reclaiming desktop height so a complete short message fits above the composer. The top row, agenda caption and tab spacing were compacted in one batch. The same reviewer scored the fix resolved in corrected light/dark desktop and mobile captures and returned **ship at the one-fix scope** with no visible regressions. The documenter recorded the dedicated-room layout exception in DESIGN.md and its sidecar; existing tokens and unrelated format drift were preserved.
+
 ## Investor pitch and shared agreement-room phase
 
 The [approved design](specs/2026-10-28-investor-agreement-rooms.md), [implementation plan](plans/2026-10-28-investor-agreement-rooms.md) and [surface/behavior contract](surfaces/agreement-rooms.md) describe this extension. The user selected an interest share attributable to contributed capital, then accepted investor-allocated losses without a capital guarantee and a separate lender-paid platform fee. No numeric investment fee was proposed or selected; none was invented.

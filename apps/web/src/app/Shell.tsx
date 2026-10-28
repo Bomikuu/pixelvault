@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  NavLink,
-  Outlet,
-  Link,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { NavLink, Outlet, Link, useLocation } from "react-router-dom";
 import {
   ArrowUpRight,
   Bell,
@@ -18,7 +12,6 @@ import {
   FileText,
   HandCoins,
   LayoutDashboard,
-  LogOut,
   Menu,
   MessageSquare,
   PanelLeftClose,
@@ -44,6 +37,7 @@ import {
 import { useSession } from "./session";
 import { ActionLink, ErrorNotice, Loading, MemberAvatar } from "../components";
 import { legacyThemeClasses, ThemeToggle } from "./ThemeToggle";
+import { SignOutButton } from "./SignOutButton";
 const community = [
   ["/explore", "Explore offers", Compass],
   ["/how-it-works", "How it works", BookOpen],
@@ -76,9 +70,8 @@ const admin = [
 ] as const;
 
 export function Shell() {
-  const { session, loading, error, signOut } = useSession();
-  const location = useLocation(),
-    navigate = useNavigate();
+  const { session, loading, error } = useSession();
+  const location = useLocation();
   const [menu, setMenu] = useState(false);
   const [collapsed, setCollapsed] = useState(() => {
     try {
@@ -373,17 +366,7 @@ export function Shell() {
                     size={34}
                   />
                 </Link>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  aria-label="Sign out"
-                  onClick={async () => {
-                    await signOut();
-                    navigate("/explore");
-                  }}
-                >
-                  <LogOut size={17} />
-                </Button>
+                <SignOutButton />
               </>
             ) : (
               <ActionLink to="/sign-in" variant="outline">

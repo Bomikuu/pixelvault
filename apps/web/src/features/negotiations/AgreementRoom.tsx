@@ -35,6 +35,8 @@ import {
   Textarea,
 } from "@pixelvault/ui";
 import { useSession } from "../../app/session";
+import { ThemeToggle } from "../../app/ThemeToggle";
+import { SignOutButton } from "../../app/SignOutButton";
 import {
   ActionLink,
   ContextIllustration,
@@ -95,41 +97,50 @@ export function AgreementRoom() {
     query.connection === "live" &&
     room.state === "negotiating";
   return (
-    <div className="min-w-0 text-foreground">
-      <Link
-        to="/meetings"
-        className="mb-5 inline-flex min-h-10 items-center gap-2 text-xs font-bold text-muted-foreground! hover:text-primary!"
-      >
-        <ArrowLeft size={15} />
-        Meeting rooms
-      </Link>
-      <header className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div className="min-w-0">
-          <h1 className="max-w-[38ch] text-2xl! font-extrabold! leading-tight! sm:text-3xl!">
-            {room.kind === "investment"
-              ? "An investment, discussed together."
-              : "A shared plan. Your own decision."}
-          </h1>
-          <Link
-            to={`/offers/${room.offer.id}`}
-            className="mt-2 block text-sm text-muted-foreground! hover:text-primary!"
-          >
-            {room.offer.title}
-            <ArrowRight className="ml-2 inline size-3" />
-          </Link>
+    <div className="flex min-h-full min-w-0 flex-col text-foreground lg:h-full">
+      <div className="mb-4 grid shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-3 lg:grid-cols-[40px_minmax(0,1fr)_auto] lg:gap-y-0">
+        <Link
+          to="/meetings"
+          className="col-start-1 row-start-1 inline-flex min-h-10 items-center gap-2 text-xs font-bold text-muted-foreground! hover:text-primary! lg:w-10 lg:justify-center"
+        >
+          <ArrowLeft size={15} />
+          <span className="lg:sr-only">Meeting rooms</span>
+        </Link>
+        <div className="col-start-2 row-start-1 flex items-center gap-1 lg:col-start-3">
+          <span className="mr-2 text-[10px] text-muted-foreground">
+            Test room · No real funds
+          </span>
+          <ThemeToggle />
+          <SignOutButton inMeeting />
         </div>
-        <div className="flex items-center gap-2 rounded-full border border-border bg-card px-3 py-2 text-xs">
-          <Radio
-            className={`size-3.5 ${query.connection === "live" ? "text-[#047857] dark:text-[#6ee7b7]" : "text-muted-foreground"}`}
-          />
-          {query.connection === "live"
-            ? "Live room"
-            : query.connection === "connecting"
-              ? "Connecting…"
-              : "Reconnecting · updates may be delayed"}
-        </div>
-      </header>
-      <div className="mb-5 grid gap-4 rounded-[14px] border border-border bg-card p-4 lg:grid-cols-[minmax(0,1fr)_auto]">
+        <header className="col-span-2 row-start-2 flex min-w-0 flex-wrap items-start justify-between gap-3 lg:col-span-1 lg:col-start-2 lg:row-start-1">
+          <div className="min-w-0">
+            <h1 className="max-w-[38ch] text-2xl! font-extrabold! leading-tight! sm:text-3xl! lg:text-2xl!">
+              {room.kind === "investment"
+                ? "An investment, discussed together."
+                : "A shared plan. Your own decision."}
+            </h1>
+            <Link
+              to={`/offers/${room.offer.id}`}
+              className="mt-2 block text-sm text-muted-foreground! hover:text-primary!"
+            >
+              {room.offer.title}
+              <ArrowRight className="ml-2 inline size-3" />
+            </Link>
+          </div>
+          <div className="flex items-center gap-2 rounded-full border border-border bg-card px-3 py-2 text-xs">
+            <Radio
+              className={`size-3.5 ${query.connection === "live" ? "text-[#047857] dark:text-[#6ee7b7]" : "text-muted-foreground"}`}
+            />
+            {query.connection === "live"
+              ? "Live room"
+              : query.connection === "connecting"
+                ? "Connecting…"
+                : "Reconnecting · updates may be delayed"}
+          </div>
+        </header>
+      </div>
+      <div className="mb-4 grid shrink-0 gap-4 rounded-[14px] border border-border bg-card p-3 lg:grid-cols-[minmax(0,1fr)_auto]">
         <div className="grid grid-cols-2 items-center gap-x-3 gap-y-4 sm:flex sm:flex-wrap sm:gap-x-6">
           {room.participants.map((person) => (
             <div key={person.id} className="flex min-w-0 items-center gap-3">
@@ -184,14 +195,17 @@ export function AgreementRoom() {
           <ErrorNotice error={localError || query.actionError} />
         </div>
       )}
-      <div className="grid min-w-0 gap-5 xl:grid-cols-[210px_minmax(0,1fr)_285px]">
-        <aside className="min-w-0 space-y-5">
+      <div className="grid min-h-0 min-w-0 flex-1 gap-4 lg:grid-cols-[210px_minmax(0,1fr)_285px] lg:grid-rows-[minmax(0,1fr)]">
+        <aside className="min-h-0 min-w-0 space-y-4 lg:overflow-y-auto lg:overscroll-contain">
           <Schedule room={room} lender={lender} busy={query.busy} act={act} />
           <Checklist room={room} />
+          <div className="px-4 pb-4">
+            <Proposal room={room} lender={lender} busy={query.busy} act={act} />
+          </div>
         </aside>
-        <section className="min-w-0 overflow-hidden rounded-[14px] border border-border bg-card">
-          <div className="border-b border-border bg-muted/50 p-4">
-            <p className="mb-3! text-xs text-muted-foreground">
+        <section className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded-[14px] border border-border bg-card">
+          <div className="shrink-0 border-b border-border bg-muted/50 p-3">
+            <p className="mb-3! text-xs text-muted-foreground lg:sr-only lg:mb-0!">
               {lender
                 ? "Choose the agenda to discuss"
                 : "The lender leads the agenda. You can respond or counter."}
@@ -214,8 +228,12 @@ export function AgreementRoom() {
               ))}
             </div>
           </div>
-          <Tabs value={tab} onValueChange={setTab} className="gap-0!">
-            <TabsList className="m-4! grid! h-auto! w-auto! grid-cols-3! p-1!">
+          <Tabs
+            value={tab}
+            onValueChange={setTab}
+            className="min-h-0 flex-1 gap-0!"
+          >
+            <TabsList className="m-3! grid! h-auto! w-auto! shrink-0 grid-cols-3! p-1!">
               <TabsTrigger
                 className="min-h-10! gap-1! px-1! text-[11px]!"
                 value="conversation"
@@ -239,16 +257,10 @@ export function AgreementRoom() {
               </TabsTrigger>
             </TabsList>
             <TabsContent
-              className="mt-0! min-w-0 p-4 pt-0"
+              className="mt-0! min-h-0 min-w-0 p-4 pt-0 lg:overflow-y-auto"
               value="conversation"
             >
-              <Proposal
-                room={room}
-                lender={lender}
-                busy={query.busy}
-                act={act}
-              />
-              <div className="mt-5 flex items-center justify-between gap-2">
+              <div className="flex items-center justify-between gap-2">
                 <h2 className="text-base! font-extrabold!">
                   Your conversation
                 </h2>
@@ -258,7 +270,7 @@ export function AgreementRoom() {
                 </span>
               </div>
               <div
-                className="my-5 max-h-[480px] space-y-4 overflow-y-auto px-0.5 py-1"
+                className="my-4 max-h-[480px] space-y-4 overflow-y-auto px-0.5 py-1 lg:max-h-none lg:overflow-visible"
                 role="log"
                 aria-label="Room conversation"
                 aria-live="polite"
@@ -324,65 +336,11 @@ export function AgreementRoom() {
                   </div>
                 )}
               </div>
-              <form
-                noValidate
-                className="grid gap-3"
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  if (!body.trim()) {
-                    setLocalError(new Error("Write a message before sending."));
-                    return;
-                  }
-                  const result = await act({
-                    action: counter ? "counter" : "message",
-                    body,
-                  });
-                  if (result) {
-                    setBody("");
-                    setCounter(false);
-                  }
-                }}
-              >
-                <Label htmlFor="room-message">
-                  {counter
-                    ? "Describe your counterproposal"
-                    : "Message the other participant"}
-                </Label>
-                <Textarea
-                  id="room-message"
-                  value={body}
-                  onChange={(e) => setBody(e.target.value)}
-                  className="min-h-24 resize-none"
-                  maxLength={4000}
-                  placeholder="Keep the discussion here, alongside the current terms."
-                />
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    aria-pressed={counter}
-                    onClick={() => setCounter((v) => !v)}
-                  >
-                    {counter ? "Switch to message" : "Make a counterproposal"}
-                  </Button>
-                  <Button
-                    type="submit"
-                    disabled={
-                      query.busy || room.state === "closed" || !body.trim()
-                    }
-                  >
-                    <Send size={16} />
-                    {query.busy
-                      ? "Sending…"
-                      : counter
-                        ? "Send counterproposal"
-                        : "Send message"}
-                  </Button>
-                </div>
-              </form>
             </TabsContent>
-            <TabsContent className="mt-0! p-4 pt-0" value="agreement">
+            <TabsContent
+              className="mt-0! min-h-0 overflow-y-auto p-4 pt-0"
+              value="agreement"
+            >
               <Contract
                 room={room}
                 memberId={memberId}
@@ -392,7 +350,10 @@ export function AgreementRoom() {
                 act={act}
               />
             </TabsContent>
-            <TabsContent className="mt-0! p-4 pt-0" value="documents">
+            <TabsContent
+              className="mt-0! min-h-0 overflow-y-auto p-4 pt-0"
+              value="documents"
+            >
               <RoomDocuments
                 room={room}
                 memberId={memberId}
@@ -405,8 +366,67 @@ export function AgreementRoom() {
               />
             </TabsContent>
           </Tabs>
+          {tab === "conversation" && (
+            <form
+              noValidate
+              className="grid shrink-0 gap-2 border-t border-border bg-card p-4 pt-3"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (!body.trim()) {
+                  setLocalError(new Error("Write a message before sending."));
+                  return;
+                }
+                const result = await act({
+                  action: counter ? "counter" : "message",
+                  body,
+                });
+                if (result) {
+                  setBody("");
+                  setCounter(false);
+                }
+              }}
+            >
+              <Label htmlFor="room-message">
+                {counter
+                  ? "Describe your counterproposal"
+                  : "Message the other participant"}
+              </Label>
+              <Textarea
+                id="room-message"
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                className="h-16! min-h-16! resize-none"
+                maxLength={4000}
+                placeholder="Keep the discussion here, alongside the current terms."
+              />
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  aria-pressed={counter}
+                  onClick={() => setCounter((v) => !v)}
+                >
+                  {counter ? "Switch to message" : "Make a counterproposal"}
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={
+                    query.busy || room.state === "closed" || !body.trim()
+                  }
+                >
+                  <Send size={16} />
+                  {query.busy
+                    ? "Sending…"
+                    : counter
+                      ? "Send counterproposal"
+                      : "Send message"}
+                </Button>
+              </div>
+            </form>
+          )}
         </section>
-        <aside className="min-w-0 space-y-5">
+        <aside className="min-h-0 min-w-0 space-y-4 lg:overflow-y-auto lg:overscroll-contain">
           <section className="rounded-[14px] border border-border bg-card p-5">
             <h2 className="text-base! font-extrabold!">
               The proposal at a glance
@@ -674,12 +694,12 @@ function Checklist({ room }: { room: Meeting }) {
   const visibleSteps = room.kind === "investment" ? steps.slice(0, 4) : steps;
   return (
     <section className="rounded-[14px] border border-border bg-card p-4">
-      <h2 className="hidden text-sm! font-extrabold! xl:block">
+      <h2 className="hidden text-sm! font-extrabold! lg:block">
         Agreement checklist
       </h2>
       <Button
         variant="ghost"
-        className="w-full! justify-between! px-0! text-sm! xl:hidden!"
+        className="w-full! justify-between! px-0! text-sm! lg:hidden!"
         aria-expanded={expanded}
         aria-controls="room-checklist"
         onClick={() => setExpanded((value) => !value)}
@@ -691,7 +711,7 @@ function Checklist({ room }: { room: Meeting }) {
       </Button>
       <ol
         id="room-checklist"
-        className={`mt-4! list-none! gap-4 p-0! xl:grid ${expanded ? "grid" : "hidden"}`}
+        className={`mt-4! list-none! gap-4 p-0! lg:grid ${expanded ? "grid" : "hidden"}`}
       >
         {visibleSteps.map((step, index) => (
           <li key={step.text} className="flex gap-2.5 text-xs">
@@ -712,7 +732,7 @@ function Checklist({ room }: { room: Meeting }) {
         </p>
       )}
       <p
-        className={`mt-4! border-t border-border pt-3 text-[10px] leading-relaxed! text-muted-foreground xl:block ${expanded ? "block" : "hidden"}`}
+        className={`mt-4! border-t border-border pt-3 text-[10px] leading-relaxed! text-muted-foreground lg:block ${expanded ? "block" : "hidden"}`}
       >
         A checklist tick is not evidence of identity, a signature or settlement.
       </p>
