@@ -41,7 +41,7 @@ Use information-rich rows for comparing offers and managing loans. A listing sho
 
 ## Brand expression and social features
 
-The user-supplied illustration reference expands the supporting artwork with thin charcoal outlines, isometric object planes, sparse stippling and cobalt/teal/coral/mustard fills. Original editorial scenes, six named achievement illustrations and eight fictional profile portraits share this vocabulary. Financial controls and the blue PixelVault mark retain their established design. See [illustration surface](docs/surfaces/illustrations.md) and [artwork catalog](docs/brand/artwork-catalog.svg).
+The user-supplied illustration reference expands the supporting artwork with thin charcoal outlines, isometric object planes, sparse stippling and cobalt/teal/coral/mustard fills. Original editorial scenes, ten named achievement illustrations and eight fictional profile portraits share this vocabulary. Financial controls and the blue PixelVault mark retain their established design. See [illustration surface](docs/surfaces/illustrations.md) and [artwork catalog](docs/brand/artwork-catalog.svg).
 
 Profile covers, an equipped badge shelf (up to three public selections) and one-time milestone feedback carry personality. Badge artwork must be original and readable at 24/48px. Criteria, earned date and source are available by focus or tap, not hover alone. Motion is normally 150–250ms; milestone feedback may last up to 600ms, once, with a static reduced-motion equivalent.
 
@@ -55,6 +55,8 @@ At narrow widths, stack comparison rows into consistently labeled blocks; never 
 
 ## Planning and verification limits
 
-Surface-specific priorities live in [surfaces/community.md](docs/surfaces/community.md), [surfaces/workspace.md](docs/surfaces/workspace.md), and [surfaces/admin.md](docs/surfaces/admin.md). The implementation follows code-first design with shared Shadcn controls and automated component/contrast checks. No build, browser inspection or visual test was run. No Impeccable workflow preference was stored.
+Surface-specific priorities live in [surfaces/community.md](docs/surfaces/community.md), [surfaces/workspace.md](docs/surfaces/workspace.md), and [surfaces/admin.md](docs/surfaces/admin.md). The implementation follows code-first design with shared Shadcn controls and automated component/contrast checks. The initial implementation used automated verification only. The user subsequently authorized desktop/mobile browser inspection for the community revision; its bounded inspection and correction evidence is recorded in [IMPLEMENTATION.md](docs/IMPLEMENTATION.md). No application build was run. No Impeccable workflow preference was stored.
+
+Canonical controls now have explicit native CSS foregrounds, backgrounds, padding and icon gaps, with the anchor reset excluding action controls. Dialog centering uses one native translation, with a viewport-bounded scrolling surface. Compact navigation and profile action rows wrap rather than overflowing. Community XP comes only from recorded learning and approved educational contributions; avatar frames and eligible award flair are cosmetic, and leaderboard participation requires opt-in with visible points.
 
 Future implementation must read Impeccable's craft-floor immediately before UI edits, use shared Shadcn controls, and run authorized automated component/contrast checks. Browser/visual inspection requires the user's explicit request under this repository's verification policy.

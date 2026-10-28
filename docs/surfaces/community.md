@@ -1,6 +1,6 @@
 # Community surface brief
 
-**Mode:** Operate. **Status:** proposed composition inside the user-pinned PixelVault identity.
+**Mode:** Operate. **Status:** implemented test-mode surface inside the user-pinned PixelVault identity; Mapbox token still required.
 
 **Job:** a Philippine member compares understandable lending offers, inspects a limited public profile, and privately applies without broadcasting financial need.
 
@@ -10,8 +10,12 @@
 
 **Routes:** `/explore`, `/offers/:id`, `/offers/new`, `/members/:handle`, `/members/:handle/badges/:awardId`, `/applications/new?offer=:id`. The exact application is private even when the offer is public.
 
-**Layout:** compact desktop filter column plus comparable rows; mobile filter sheet and labeled stacked rows. The map is progressive enhancement, not the only route to the result list. Coarse area centroids and distance bands prevent exact home disclosure.
+**Layout:** desktop opens a full Mapbox workspace beside a scrollable posting sidebar; mobile stacks the map above a collapsible posting panel. City/area search, lender search, shared filters and a list toggle remain accessible above the workspace. Grouped avatar markers use approximate public area centroids without jitter or invented home locations. The list retains complete cost examples and pagination even when filtered loaded pages contain no matches.
 
-**States:** no offers nearby, no matching filters, location denied, map unavailable, offer changed/closed, insufficient available amount, identity review required, applicant restricted, application already submitted, unavailable lender, long display name and stale saved offer. Preserve filters in URLs; precise coordinates never enter shareable URLs or public analytics.
+**States:** no offers nearby, no matching loaded posts with more pages available, missing map configuration, geocoder/offline/WebGL/authorization failure, offer changed/closed, insufficient available amount, identity review required, applicant restricted, application already submitted, unavailable lender, long display name and stale saved offer. Preserve filters in URLs; precise coordinates never enter shareable URLs or public analytics.
 
 **Success:** a member understands the counterparty, full cost and dates before applying. A specific verification check never suggests guaranteed repayment or government endorsement.
+
+**Recent activity:** public posts have real server timestamps. SSE revision events and reconnects offer a staged refresh; they do not fabricate new-post counts or reorder a reader’s current view. An explicit 60-second polling fallback is labeled when streaming cannot recover.
+
+**Community expression:** optional learning/contribution XP, an opt-in leaderboard, avatar frames and eligible badge flair support participation without borrowing incentives. Public financial history and private recovery recognition remain outside the leaderboard.

@@ -24,6 +24,7 @@ import {
   SelectField,
   Status,
   TextField,
+  IllustratedInfoDialog,
 } from "../components";
 import { date, label, text } from "../lib/format";
 export function VerificationPage() {
@@ -42,6 +43,14 @@ export function VerificationPage() {
       <PageHeading
         title="Build a verified foundation."
         description="Identity, income and lender registration are separate checks. Uploading a document is not approval."
+        action={
+          <IllustratedInfoDialog
+            title="Private checks. Clear boundaries."
+            description="Evidence is reviewed only by permitted staff. An uploaded document is not approval, and identity checks do not establish legal lending authority. Test adapters use synthetic evidence only."
+            scene="welcome-community"
+            triggerLabel="How verification works"
+          />
+        }
       />
       <div className="verification-layout">
         <section>

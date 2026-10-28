@@ -1,10 +1,56 @@
 /** Explicit browser contracts. Server financial values use integer centavos. */
 export type Money = number | string;
+export interface CommunityReputation {
+  points: number;
+  level: string;
+  frame: string;
+  flair: Award | null;
+  show_points: boolean;
+}
+export interface ReputationWorkspace {
+  reputation: CommunityReputation;
+  frames: {
+    key: string;
+    name: string;
+    required_points: number;
+    unlocked: boolean;
+  }[];
+  settings: {
+    avatar_frame: string;
+    avatar_flair_id: string | null;
+    show_reputation: boolean;
+    leaderboard_opt_in: boolean;
+  };
+  rules: {
+    literacy_points: number;
+    contribution_points: number;
+    contribution_cap: number;
+  };
+  progress: { next_level: string | null; points_to_next: number };
+  breakdown: {
+    literacy_points: number;
+    contribution_points: number;
+    approved_contributions: number;
+  };
+}
+export interface LeaderboardPage {
+  entries: {
+    rank: number;
+    handle: string;
+    display_name: string;
+    avatar_key?: string;
+    reputation: CommunityReputation;
+  }[];
+  next_cursor: string | null;
+  rules: ReputationWorkspace["rules"];
+  notice: string;
+}
 export interface Member {
   id: string;
   email: string;
   display_name: string;
   avatar_key?: string;
+  community_reputation?: CommunityReputation;
   handle?: string;
   area: string;
   bio: string;
@@ -24,6 +70,7 @@ export interface Person {
   avatar_key?: string;
   handle?: string;
   area?: string;
+  reputation?: CommunityReputation;
 }
 export interface Installment {
   id?: string;
@@ -153,6 +200,7 @@ export interface Profile {
   handle: string;
   display_name: string;
   avatar_key?: string;
+  reputation?: CommunityReputation;
   bio: string;
   area: string;
   community_level: string;
@@ -165,6 +213,7 @@ export interface Thread {
   application_id?: string;
   other_display_name: string;
   other_avatar_key?: string;
+  other_reputation?: CommunityReputation;
   latest_at: string;
 }
 export interface Message {

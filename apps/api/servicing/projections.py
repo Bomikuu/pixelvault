@@ -9,11 +9,14 @@ from .models import Loan
 
 
 def member_summary(member):
+    from community.reputation import reputation_summary
+
     return {
         "id": str(member.id),
         "display_name": member.display_name,
         "area": member.area,
         "avatar_key": member.avatar_key if member.avatar_key in AVATAR_KEYS else "",
+        "reputation": reputation_summary(member),
     }
 
 

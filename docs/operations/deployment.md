@@ -6,4 +6,8 @@ No hosted service, domain, TLS endpoint or production deployment was created. Pr
 
 The existing PixelFlow service and all PixelCore/Medframe/DineEase applications remain unchanged. Configure an explicit test-only routing profile before any PixelFlow sandbox connection; do not reinterpret a platform merchant as a pooled lender account. Payout/disbursement and lender settlement are not implemented by the inspected PixelFlow SDK.
 
+Map discovery uses Mapbox GL JS 3.33.0 and Mapbox Geocoding v6. Configure only a public `VITE_MAPBOX_ACCESS_TOKEN` in the repository-root `.env`, restrict its website origins in the Mapbox account, and restart the web process. Vite rejects non-public tokens before client transformation. No public token is currently configured; actual tiles and search are unavailable until supplied. Public member markers remain approximate city/area centers. Production provider usage/billing, origin restrictions and data-processing settings still need operator review.
+
+Keep the same-origin `/api/v1/community/activity/stream` path available for server-sent events with proxy buffering disabled. The server emits public revisions and bounds connections to approximately 45 seconds; normal expiry reconnects. The client stages changed postings and uses bounded retry plus labeled 60-second polling when streaming is unavailable. No stream carries private messages, applications, documents, borrower activity or exact member locations.
+
 Read [recovery](recovery.md), [privacy](privacy.md), [incident response](incident-response.md) and [launch readiness](launch-readiness.md) before changing the operational boundary. Future image/application builds require the user's explicit authorization under AGENTS.md.

@@ -47,6 +47,7 @@ import type {
   Offer,
   Installment,
   Money,
+  Person,
 } from "@pixelvault/contracts";
 import { apiRequest, items, operationId, post } from "../app/api";
 import { useSession } from "../app/session";
@@ -69,12 +70,15 @@ import {
   VerifiedNote,
 } from "../components";
 import { cents, date, label, money, text } from "../lib/format";
+import { DiscoveryWorkspace } from "./discovery/DiscoveryWorkspace";
+import type { CoarseArea, DiscoveryOffer } from "./discovery/types";
 interface DiscoveryPage {
   offers: {
     id: string;
     title: string;
-    lender: { handle: string; display_name: string; avatar_key?: string };
-    area: { name: string };
+    lender: Person & { handle: string };
+    area: CoarseArea;
+    created_at?: string;
     declared_available_amount: string;
     min_amount: string;
     max_amount: string;
@@ -86,6 +90,7 @@ interface DiscoveryPage {
 export function useOffers() {
   const query = useInfiniteQuery({
     queryKey: ["offers"],
+    refetchOnWindowFocus: false,
     initialPageParam: "",
     queryFn: ({ pageParam }) =>
       apiRequest<DiscoveryPage>(
@@ -106,8 +111,11 @@ export function useOffers() {
               handle: row.lender.handle,
               display_name: row.lender.display_name,
               avatar_key: row.lender.avatar_key,
+              reputation: row.lender.reputation,
             },
             area: row.area.name,
+            coarseArea: row.area,
+            created_at: row.created_at,
             declared_amount: row.declared_available_amount,
             available_amount: row.declared_available_amount,
             annual_rate_bps: row.terms.annual_rate_bps,
@@ -118,7 +126,7 @@ export function useOffers() {
             status: "published",
             terms: row.terms,
             disclosure: row.cost_example,
-          }) satisfies Offer,
+          }) satisfies DiscoveryOffer,
       ),
     ),
   };
@@ -193,285 +201,60 @@ function ArrowUpRightIcon() {
   );
 }
 export function ExplorePage() {
-  const query = useOffers(),
-    [params, setParams] = useSearchParams();
-  const search = params.get("q") || "",
-    area = params.get("area") || "all",
-    view = params.get("view") || "list",
-    sort = params.get("sort") || "recent";
+  const query = useOffers();
+  const [params, setParams] = useSearchParams();
+  const search = params.get("q") || "";
+  const area = params.get("area") || "all";
+  const view = params.get("view") === "list" ? "list" : "map";
+  const sort = params.get("sort") || "recent";
+  const minimum = params.get("amount") || "";
   const areas = [
-    ...new Set((query.data || []).map((o) => o.area).filter(Boolean)),
+    ...new Set((query.data || []).map((offer) => offer.area).filter(Boolean)),
   ];
   const offers = useMemo(() => {
     const result = (query.data || []).filter(
-      (o) =>
-        `${o.title} ${o.lender.display_name}`
+      (offer) =>
+        `${offer.title} ${offer.lender.display_name}`
           .toLowerCase()
           .includes(search.toLowerCase()) &&
-        (area === "all" || o.area === area) &&
-        (!params.get("amount") ||
-          Number(o.available_amount) >= Number(params.get("amount")) * 100),
+        (area === "all" || offer.area === area) &&
+        (!minimum || Number(offer.available_amount) >= Number(minimum) * 100),
     );
     if (sort === "amount")
       result.sort(
-        (a, b) => Number(b.available_amount) - Number(a.available_amount),
+        (left, right) =>
+          Number(right.available_amount) - Number(left.available_amount),
       );
     if (sort === "rate")
-      result.sort((a, b) => a.annual_rate_bps - b.annual_rate_bps);
+      result.sort(
+        (left, right) => left.annual_rate_bps - right.annual_rate_bps,
+      );
     return result;
-  }, [query.data, search, area, sort, params]);
-  function set(key: string, value: string) {
+  }, [query.data, search, area, sort, minimum]);
+  function setFilter(key: string, value: string) {
     const next = new URLSearchParams(params);
     value && value !== "all" ? next.set(key, value) : next.delete(key);
     setParams(next, { replace: true });
   }
   return (
-    <>
-      <PageHeading
-        title="Good things start with community."
-        description="Find individual lenders. Compare clear terms. Take the next step privately."
-        action={
-          <ActionLink to="/offers/new">
-            <Plus size={17} />
-            Post an offer
-          </ActionLink>
-        }
-      />
-      <div className="explore-layout">
-        <div>
-          <div className="explore-toolbar">
-            <div className="search-box">
-              <Search size={18} />
-              <Input
-                aria-label="Search lending offers"
-                value={search}
-                onChange={(e) => set("q", e.target.value)}
-                placeholder="Search lenders or offers"
-              />
-            </div>
-            <div className="view-switch" aria-label="Discovery view">
-              <Button
-                variant={view === "list" ? "secondary" : "ghost"}
-                onClick={() => set("view", "list")}
-                aria-pressed={view === "list"}
-              >
-                <List size={17} />
-                List
-              </Button>
-              <Button
-                variant={view === "map" ? "secondary" : "ghost"}
-                onClick={() => set("view", "map")}
-                aria-pressed={view === "map"}
-              >
-                <Map size={17} />
-                Map
-              </Button>
-            </div>
-          </div>
-          <div className="filter-line">
-            <MapPin size={16} />
-            <Select value={area} onValueChange={(value) => set("area", value)}>
-              <SelectTrigger
-                aria-label="Filter by approximate area"
-                className="area-filter"
-              >
-                <SelectValue placeholder="All areas" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All areas</SelectItem>
-                {areas.map((a) => (
-                  <SelectItem value={a} key={a}>
-                    {a}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="filter-amount">
-              <Label htmlFor="filter-amount">Minimum available ₱</Label>
-              <Input
-                id="filter-amount"
-                type="number"
-                min={0}
-                value={params.get("amount") || ""}
-                onChange={(e) => set("amount", e.target.value)}
-                placeholder="Any"
-              />
-            </div>
-            <Select value={sort} onValueChange={(value) => set("sort", value)}>
-              <SelectTrigger className="sort-filter" aria-label="Sort offers">
-                <ArrowDownWideNarrow size={14} />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="recent">Recently listed</SelectItem>
-                <SelectItem value="amount">Available amount</SelectItem>
-                <SelectItem value="rate">Annual interest</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          {query.isPending ? (
-            <Loading text="Finding community offers…" />
-          ) : query.error ? (
-            <ErrorNotice error={query.error} retry={() => query.refetch()} />
-          ) : (
-            <>
-              <div className="results-label">
-                <strong>
-                  {offers.length} {offers.length === 1 ? "offer" : "offers"} to
-                  explore
-                </strong>
-                <span>Private applications. Individual decisions.</span>
-              </div>
-              {view === "map" && (
-                <div className="map-panel">
-                  <div className="map-graphic" aria-hidden="true">
-                    <svg viewBox="0 0 600 240">
-                      <path d="M0 60H600M0 120H600M0 180H600M100 0V240M200 0V240M300 0V240M400 0V240M500 0V240" />
-                      <path
-                        d="m0 210 150-60 120 15 125-85 206-35"
-                        className="map-waterway"
-                      />
-                      {[...new Set(offers.map((o) => o.area))].map((a, i) => (
-                        <g
-                          key={a}
-                          transform={`translate(${110 + (i % 4) * 125},${65 + Math.floor(i / 4) * 80})`}
-                        >
-                          <circle r="20" />
-                          <text y="5" textAnchor="middle">
-                            {offers.filter((o) => o.area === a).length}
-                          </text>
-                          <text
-                            y="40"
-                            textAnchor="middle"
-                            className="map-label"
-                          >
-                            {a.slice(0, 18)}
-                          </text>
-                        </g>
-                      ))}
-                    </svg>
-                  </div>
-                  <div className="map-caption">
-                    <MapPin size={16} />
-                    <div>
-                      <strong>Area overview</strong>
-                      <p>
-                        Schematic grouping by area, not street locations. A
-                        geographic tile provider has not been configured. The
-                        complete list is below.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-              {!offers.length ? (
-                <Empty
-                  title="A new connection is still ahead."
-                  icon={Users}
-                  action={
-                    <Button variant="outline" onClick={() => setParams({})}>
-                      Clear filters
-                    </Button>
-                  }
-                >
-                  There are no available offers matching these filters. Try
-                  another area or return later.
-                </Empty>
-              ) : (
-                <div className="offer-list">
-                  {offers.map((offer) => (
-                    <OfferRow key={offer.id} offer={offer} />
-                  ))}
-                </div>
-              )}
-              {query.hasNextPage && (
-                <Button
-                  className="load-more"
-                  variant="outline"
-                  onClick={() => query.fetchNextPage()}
-                  disabled={query.isFetchingNextPage}
-                >
-                  {query.isFetchingNextPage
-                    ? "Loading more offers…"
-                    : "Load more offers"}
-                </Button>
-              )}
-              <p className="cost-note">
-                Rates alone do not show total cost. Open an offer to review the
-                principal, interest, fees and exact schedule before applying.
-              </p>
-            </>
-          )}
-        </div>
-        <aside className="community-aside">
-          <div className="community-note">
-            <ContextIllustration
-              scene="community-workshop"
-              className="community-scene"
-              eager
-            />
-            <h2>
-              People first.
-              <br />
-              Clear terms, always.
-            </h2>
-            <p>
-              A lending community built around informed choices and a shared
-              agreement.
-            </p>
-            <div className="community-values">
-              <span>
-                <ShieldCheck size={17} />
-                Specific verification checks
-              </span>
-              <span>
-                <FileIcon />A contract for every loan
-              </span>
-              <span>
-                <Users size={17} />
-                Private applications
-              </span>
-            </div>
-            <Link to="/learn">
-              How lending works <ArrowRight size={15} />
-            </Link>
-          </div>
-          <div className="aside-section">
-            <h3>Your next chapter</h3>
-            <p>
-              Understand repayment schedules and your responsibilities before
-              you commit.
-            </p>
-            <Link to="/learn" className="text-link">
-              <span>Visit the learning room</span>
-              <ChevronRight size={16} />
-            </Link>
-          </div>
-          <div className="privacy-note">
-            <MapPin size={18} />
-            <p>
-              Nearby, with boundaries. Profiles show an approximate area, never
-              a home address.
-            </p>
-          </div>
-        </aside>
-      </div>
-    </>
-  );
-}
-function FileIcon() {
-  return (
-    <svg
-      width="17"
-      height="17"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-    >
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
-      <path d="M14 2v6h6M8 13h8M8 17h6" />
-    </svg>
+    <DiscoveryWorkspace
+      offers={offers}
+      areas={areas}
+      search={search}
+      area={area}
+      sort={sort}
+      minimum={minimum}
+      view={view}
+      setFilter={setFilter}
+      onClear={() => setParams({ view })}
+      renderOffer={(offer) => <OfferRow offer={offer} />}
+      pending={query.isPending}
+      error={query.error}
+      retry={() => void query.refetch()}
+      hasNext={!!query.hasNextPage}
+      fetchingNext={query.isFetchingNextPage}
+      loadNext={() => void query.fetchNextPage()}
+    />
   );
 }
 export function Schedule({ rows }: { rows: Installment[] }) {

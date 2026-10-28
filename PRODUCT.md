@@ -41,7 +41,7 @@ Individual-to-individual lending is mandatory. PixelVault combines nearby offers
 - Lender authorization and the platform's regulatory classification remain unresolved live-launch dependencies. Plans do not establish that future registration permits operating today.
 - PixelFlow collection success does not establish disbursement or settlement to an individual lender. The existing implementation has no payout/disbursement provider contract.
 - Complete test-mode flows can be built while live origination remains disabled. No real identities, documents or funds are needed for fixtures.
-- No provider for real KYC/liveness, SMS, signatures, maps or individual-lender disbursement/settlement has been selected. These are explicit adapters and operational decisions.
+- Mapbox is the implemented map and Philippine city/area-search provider; a public token is still unconfigured. No provider for real KYC/liveness, SMS, signatures or individual-lender disbursement/settlement has been selected. These remain explicit adapters and operational decisions.
 
 ## Brand Commitments
 

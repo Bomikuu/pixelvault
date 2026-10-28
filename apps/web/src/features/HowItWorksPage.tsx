@@ -1,46 +1,80 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, BookOpen, ShieldCheck } from "lucide-react";
-import { ActionLink, ContextIllustration, Notice } from "../components";
+import {
+  ArrowRight,
+  BookOpen,
+  ShieldCheck,
+  Compass,
+  ReceiptText,
+  FileCheck2,
+  Handshake,
+  Landmark,
+  CalendarCheck,
+} from "lucide-react";
+import {
+  ActionLink,
+  ContextIllustration,
+  IllustratedInfoDialog,
+  Notice,
+} from "../components";
 
 const journey = [
   {
     title: "Verify privately.",
+    summary:
+      "Check identity and the evidence your activity requires. Documents stay private.",
+    icon: ShieldCheck,
     description:
       "Submit identity, contact, income and funding-account evidence for the checks your activity requires. Sensitive documents stay private. Identity verification is separate from legal lending authorization.",
     detail: "Private checks, specific permissions",
   },
   {
     title: "Compare individual offers.",
+    summary:
+      "Meet individual lenders. Compare the amount, interest and payment frequency.",
+    icon: Compass,
     description:
       "Explore offers from individual lenders in approximate areas. Compare the amount, interest, payment frequency and example total cost. An offer expresses an intention to lend; funding is not guaranteed.",
     detail: "One individual lender, one borrower",
   },
   {
     title: "Understand the full plan.",
+    summary:
+      "See principal, interest, fees, total repayment and every due date.",
+    icon: ReceiptText,
     description:
       "Review the principal, interest method, fees, total repayment and every due date before applying. Choose a schedule you can realistically manage.",
     detail: "Costs and dates before commitment",
   },
   {
     title: "Apply. The lender chooses.",
+    summary: "Send a private application. The lender decides whom to lend to.",
+    icon: FileCheck2,
     description:
       "Send a private application for an offer. The lender reviews permitted information and selects an applicant. Community achievements describe milestones; they never guarantee repayment or approval.",
     detail: "A private application and a considered choice",
   },
   {
     title: "Accept the same agreement.",
+    summary: "Both people accept the identical version of the disclosed terms.",
+    icon: Handshake,
     description:
       "Both people review and accept the identical version of the disclosed terms. Each keeps access to the agreement and schedule. Changed terms require a new accepted version.",
     detail: "Two acceptances, one shared record",
   },
   {
     title: "Wait for confirmed funding.",
+    summary:
+      "Funding needs its own confirmation. Acceptance alone does not move money.",
+    icon: Landmark,
     description:
       "Acceptance alone does not mean money was sent. Funding needs its own confirmation before the loan becomes active. This test environment uses explicitly simulated funding and moves no real funds.",
     detail: "An agreement is separate from a transfer",
   },
   {
     title: "Repay privately. Keep your record.",
+    summary:
+      "Follow the schedule, track confirmed payments and get private support when you need it.",
+    icon: CalendarCheck,
     description:
       "Follow your schedule, track confirmed payments and retain private documents. If circumstances change, open a private support or hardship case. A revised plan needs mutual acceptance; debt shaming is prohibited.",
     detail: "A clear timeline and a private way forward",
@@ -52,7 +86,7 @@ export function HowItWorksPage() {
     <article className="journey-page">
       <header className="journey-intro">
         <div>
-          <h1>From a first hello to a clear shared plan.</h1>
+          <h1>How PixelVault works.</h1>
           <p>
             Individual lending, one step at a time. Understand who decides, what
             you agree to and which records stay private.
@@ -77,9 +111,21 @@ export function HowItWorksPage() {
                 {index + 1}
               </span>
               <div>
+                <step.icon
+                  className="journey-stage-icon"
+                  size={23}
+                  aria-hidden="true"
+                />
                 <h3>{step.title}</h3>
-                <p>{step.description}</p>
-                <span className="journey-step-detail">{step.detail}</span>
+                <p>{step.summary}</p>
+                <IllustratedInfoDialog
+                  title={step.title}
+                  description={step.description}
+                  scene="lending-journey"
+                  triggerLabel={`About step ${index + 1}`}
+                >
+                  <p>{step.detail}</p>
+                </IllustratedInfoDialog>
               </div>
             </li>
           ))}

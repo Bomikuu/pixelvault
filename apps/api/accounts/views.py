@@ -18,6 +18,8 @@ from .services import register_member, validate_avatar_key
 
 
 def member_data(member):
+    from community.reputation import reputation_summary
+
     return {
         "id": str(member.pk),
         "email": member.email,
@@ -29,6 +31,7 @@ def member_data(member):
         "literacy_completed": member.literacy_completed,
         "staff_role": member.staff_role,
         "is_staff": member.is_staff,
+        "community_reputation": reputation_summary(member, own=True),
     }
 
 

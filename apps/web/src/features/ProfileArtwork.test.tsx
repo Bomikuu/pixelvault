@@ -1,14 +1,61 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, expect, it, vi } from "vitest";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@pixelvault/ui";
-import { EditProfile, AchievementsPage, BadgeDetail } from "./CommunityPages";
+import {
+  EditProfile,
+  AchievementsPage,
+  BadgeDetail,
+  OwnProfile,
+} from "./CommunityPages";
 import { MemberAvatar } from "../components";
 import { SessionProvider } from "../app/session";
 import { renderApp, jsonResponse, session } from "../test/helpers";
 
 afterEach(() => vi.unstubAllGlobals());
+
+it("makes avatar frame and flair settings directly discoverable from the own profile", async () => {
+  vi.stubGlobal(
+    "fetch",
+    vi
+      .fn()
+      .mockImplementation((url: string) =>
+        Promise.resolve(
+          jsonResponse(
+            url.endsWith("/auth/session")
+              ? session
+              : {
+                  id: session.member.id,
+                  handle: "maya",
+                  display_name: session.member.display_name,
+                  avatar_key: "maker",
+                  area: "Quezon City",
+                  bio: "Synthetic profile",
+                  community_level: "Prepared",
+                  badges: [],
+                  reviews: [],
+                },
+          ),
+        ),
+      ),
+  );
+  const { useSession } = await import("../app/session");
+  function Gate() {
+    return useSession().session?.member ? <OwnProfile /> : null;
+  }
+  renderApp(
+    <SessionProvider>
+      <Gate />
+    </SessionProvider>,
+  );
+  const navigation = await screen.findByRole("navigation", {
+    name: "Profile settings",
+  });
+  expect(
+    within(navigation).getByRole("link", { name: "Avatar frames & flair" }),
+  ).toHaveAttribute("href", "/profile/appearance");
+});
 
 it("persists the chosen avatar with profile changes and refreshes the member session", async () => {
   let saved = false;

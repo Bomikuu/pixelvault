@@ -18,6 +18,7 @@ def test_profile_allowlist_excludes_legal_identity_income_and_debt(members):
         "handle",
         "display_name",
         "avatar_key",
+        "reputation",
         "bio",
         "area",
         "community_level",
@@ -57,6 +58,12 @@ def test_uncomparable_cost_is_labeled_not_ranked_as_zero(offer):
 
 
 def test_public_badge_selection_maximum_three(members):
+    from verification.models import VerificationCase
+
+    members[0].literacy_completed = True
+    members[0].save(update_fields=["literacy_completed"])
+    for kind in ("identity", "income", "contact", "funding_account"):
+        VerificationCase.objects.create(member=members[0], kind=kind, status="approved")
     awards = [
         Award.objects.create(member=members[0], key=key, earned_at=timezone.now())
         for key in ("first_chapter", "helping_hand", "clockwork", "full_circle")

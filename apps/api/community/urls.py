@@ -8,6 +8,7 @@ from .views import (
     AwardsView,
     ContributionsView,
     DiscoveryView,
+    LeaderboardView,
     MessagesView,
     ModerationDecisionView,
     ModerationQueueView,
@@ -15,6 +16,7 @@ from .views import (
     PublicProfileView,
     RepaymentSummaryView,
     ReportView,
+    ReputationView,
     ReviewAppealView,
     ReviewResponseView,
     ReviewsView,
@@ -22,6 +24,8 @@ from .views import (
 )
 
 urlpatterns = [
+    path("community/reputation", ReputationView.as_view()),
+    path("community/leaderboard", LeaderboardView.as_view()),
     path("community/achievement-catalog", AchievementCatalogView.as_view()),
     path("community/repayment-summary/<uuid:member_id>", RepaymentSummaryView.as_view()),
     path("admin/achievement-holds", AchievementHoldsView.as_view()),

@@ -41,6 +41,8 @@ class PixelVaultSchema(AutoSchema):
         return {"application/json": {"type": "object", "additionalProperties": True}}
 
     def get_response_serializers(self):
+        if self.view.__class__.__name__ == "ActivityStreamView":
+            return {(200, "text/event-stream"): {"type": "string"}}
         if hasattr(self.view, "serializer_class"):
             return super().get_response_serializers()
         if self.view.__class__.__name__ in {

@@ -88,7 +88,13 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
     ],
-    "DEFAULT_THROTTLE_RATES": {"anon": "120/hour", "user": "6000/hour", "auth": "30/hour"},
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "120/hour",
+        "user": "6000/hour",
+        "auth": "30/hour",
+        "community_activity": "600/hour",
+        "community_stream": "120/hour",
+    },
 }
 SPECTACULAR_SETTINGS = {
     "TITLE": "PixelVault API",

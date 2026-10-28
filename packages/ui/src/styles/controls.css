@@ -1,0 +1,235 @@
+/* Canonical controls also have a native CSS foundation. Application resets are
+   unlayered; these rules keep action links, spacing and focus independent of
+   the utility layer's cascade priority. Data attributes are the public API. */
+:where([data-slot="button"]) {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-decoration: none;
+  white-space: normal;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+[data-slot="button"][data-variant="default"] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+[data-slot="button"][data-variant="default"]:hover {
+  background: #0755d4;
+}
+[data-slot="button"][data-variant="outline"] {
+  background: var(--card);
+  color: var(--foreground);
+  border-color: #a7b7cc;
+}
+[data-slot="button"][data-variant="outline"]:hover {
+  background: var(--accent);
+  color: var(--accent-foreground);
+  border-color: #6d8dc0;
+}
+[data-slot="button"][data-variant="secondary"] {
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+}
+[data-slot="button"][data-variant="secondary"]:hover {
+  background: #dbe8ff;
+}
+[data-slot="button"][data-variant="ghost"] {
+  background: transparent;
+  color: var(--foreground);
+}
+[data-slot="button"][data-variant="ghost"]:hover {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+[data-slot="button"][data-variant="link"] {
+  background: transparent;
+  color: #0755d4;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+[data-slot="button"][data-variant="destructive"] {
+  background: var(--destructive);
+  color: #fff;
+}
+[data-slot="button"][data-variant="destructive"]:hover {
+  background: #921c14;
+}
+[data-slot="button"][data-size="sm"] {
+  padding: 8px 12px;
+}
+[data-slot="button"][data-size="xs"] {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+[data-slot="button"][data-size="lg"] {
+  min-height: 48px;
+  padding: 12px 22px;
+}
+[data-slot="button"][data-size^="icon"] {
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+}
+:where([data-slot="button"]) > svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+:where([data-slot="button"]):focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 3px;
+}
+:where([data-slot="button"]):disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+:where(
+  [data-slot="input"],
+  [data-slot="textarea"],
+  [data-slot="select-trigger"]
+) {
+  border: 1px solid var(--input);
+  padding: 10px 12px;
+  color: var(--foreground);
+  background: var(--card);
+  font: inherit;
+}
+:where([data-slot="input"], [data-slot="textarea"]):focus-visible {
+  outline: 3px solid #cce0ff;
+  border-color: var(--primary);
+  outline-offset: 1px;
+}
+:where([data-slot="dialog-overlay"]) {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: #0b142880;
+}
+:where([data-slot="dialog-content"]) {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 51;
+  translate: -50% -50%;
+  transform: none;
+  display: grid;
+  gap: 16px;
+  width: min(540px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  padding: 28px;
+  background: var(--card);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 24px 80px #0b142833;
+}
+:where([data-slot="dialog-content"]) > [data-slot="dialog-close"] {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  display: grid;
+  place-items: center;
+  min-width: 36px;
+  min-height: 36px;
+  background: var(--card);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+}
+:where([data-slot="dialog-content"]) > [data-slot="dialog-close"] > svg {
+  width: 18px;
+  height: 18px;
+}
+:where([data-slot="dialog-title"]) {
+  font-size: 24px;
+  line-height: 1.3;
+  font-weight: 800;
+}
+:where([data-slot="dialog-description"]) {
+  color: var(--muted-foreground);
+  font-size: 14px;
+  line-height: 1.75;
+}
+:where([data-slot="select-trigger"]) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+}
+:where([data-slot="select-trigger"]) svg {
+  width: 16px;
+  height: 16px;
+}
+:where([data-slot="select-content"]) {
+  z-index: 60;
+  min-width: 180px;
+  padding: 6px;
+  background: var(--card);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 10px 35px #0b142820;
+}
+:where([data-slot="select-item"]) {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 32px 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  outline: none;
+}
+:where([data-slot="select-item"])[data-highlighted] {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+:where([data-slot="checkbox"]) {
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--input);
+  border-radius: 4px;
+  padding: 0;
+  background: var(--card);
+  color: var(--foreground);
+}
+[data-slot="checkbox"][data-state="checked"] {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+:where([data-slot="checkbox"]) svg {
+  width: 14px;
+  height: 14px;
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(
+    [data-slot="button"],
+    [data-slot="dialog-content"],
+    [data-slot="dialog-overlay"]
+  ) {
+    transition: none;
+    animation: none;
+  }
+}

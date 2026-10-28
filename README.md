@@ -14,6 +14,8 @@ python3 scripts/dev.py --seed
 
 Open [PixelVault](http://127.0.0.1:5178). API is at `http://127.0.0.1:8008`; Vite proxies `/api` to it. PostgreSQL/Redis bind only to localhost on 55438/56438. The launcher performs migrations and starts the API, web, Celery worker and scheduler processes without a build. Logs are in `.runtime`; `python3 scripts/dev.py --stop` stops only its recorded processes and preserves database data.
 
+Interactive maps and place search require your own **public Mapbox token** in the repository-root `.env` as `VITE_MAPBOX_ACCESS_TOKEN`. The setting is blank in `.env.example`, and no token is currently configured. Restrict it to the intended website origins and restart the web process after changing it. Vite rejects non-public tokens before serving client code. Without the token, Explore explains that setup is needed; its offer sidebar and list remain usable.
+
 Synthetic demo accounts, password **`PixelVaultDemo!2026`**:
 
 | Account | Purpose |
@@ -32,9 +34,13 @@ The seed command refuses live mode, does not overwrite existing demo users, send
 - Reducing-balance schedules, weekly/twice-monthly/monthly/maturity frequencies, exact dated cost calculation, partial/early collection and compensating reversals.
 - Explicit synthetic disbursement, separate unknown lender settlement, one-time lender-paid fee accrual and separate fee collection records.
 - Actual PixelFlow SDK contract with persist-before-dispatch operations, signed events, replay/semantic deduplication, pending/orphan recovery and refund reservations.
-- Coarse list/map discovery, private inbox, optional original badges, evidence-based award correction, moderated transaction reviews and contribution/literacy progression.
+- Mapbox GL discovery with a full map workspace, posting sidebar and list toggle. Avatar markers group approximate public area centers; city/municipality/neighborhood search uses Mapbox Geocoding v6 restricted to the Philippines.
+- Recent public posts and server-sent revision updates, with bounded reconnection and an explicit once-per-minute REST fallback. A banner lets the reader apply updated postings without interrupting the current view.
+- Private inbox, ten original achievements, evidence-based award correction, moderated transaction reviews and contribution/literacy progression. Optional community XP, an opt-in leaderboard, eight profile characters, unlocked avatar frames and eligible achievement flair.
 - Private complaints/hardship, mutual amendments without capitalizing old interest, policy-limited notices, period analytics and scoped formula-safe exports.
 - Admin verification/registration, cases/moderation, commissions/reconciliation, policies, template status and audit records.
+
+Community XP comes from completed literacy (100 points) and distinct moderator-approved educational contributions (50 each, up to 20 contributions). It does not depend on loan size, borrowing or repayment. Profile settings control public points, leaderboard participation, frames and eligible badge flair; Fresh Start stays private. The [leaderboard](http://127.0.0.1:5178/leaderboard) includes only opted-in members with visible points and shares ranks for equal scores. XP is recognition, not a credit or lending-authority assessment.
 
 ## Automated verification
 
@@ -54,7 +60,7 @@ Tests use PostgreSQL and mocked external providers. Component tests run in jsdom
 
 ## Operational limits
 
-This is a working **test-mode implementation**, not an authorized live lending service. No real KYC/liveness, malware scanner, production MFA, approved legal template/e-signing service, SMS delivery, individual-lender disbursement or lender-settlement provider is configured. The map uses synthetic coarse-area data rather than live tile/geocoder services. Test-only branding/assets have derivative provenance, not designer-source certification.
+This is a working **test-mode implementation**, not an authorized live lending service. No real KYC/liveness, malware scanner, production MFA, approved legal template/e-signing service, SMS delivery, individual-lender disbursement or lender-settlement provider is configured. Mapbox tiles and city search are integrated but remain inactive until a public token is configured. Member markers still use the server’s synthetic coarse-area fixtures, never residential coordinates. Test-only branding/assets have derivative provenance, not designer-source certification.
 
 Real PixelFlow checkout needs a configured approved test routing profile and server credentials. The local seeded experience does not claim that an uploaded screenshot, redirect or sandbox transfer is a gateway payment. Missing live arrangements keep origination disabled server-side. Ordinary collections and unknown settlement are different facts.
 

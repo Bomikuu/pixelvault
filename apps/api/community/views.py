@@ -82,6 +82,27 @@ class AchievementCatalogView(APIView):
         return Response({"catalog": achievement_catalog()})
 
 
+class ReputationView(MemberView):
+    def get(self, request):
+        from .reputation import reputation_details
+
+        return Response(reputation_details(member=request.user))
+
+
+class LeaderboardView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        from .reputation import leaderboard
+
+        return Response(
+            leaderboard(
+                limit=request.query_params.get("limit", 25),
+                cursor=request.query_params.get("cursor"),
+            )
+        )
+
+
 class AwardsView(MemberView):
     def get(self, request):
         settings = getattr(request.user, "community_settings", None)
@@ -128,6 +149,7 @@ class ThreadView(MemberView):
                     "other_display_name": identity.get("display_name", ""),
                     "other_handle": identity.get("handle", ""),
                     "other_avatar_key": other.avatar_key if other else "",
+                    "other_reputation": identity.get("reputation") if other else None,
                     "latest_at": thread.latest_at.isoformat() if thread.latest_at else None,
                 }
             )

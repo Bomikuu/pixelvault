@@ -41,7 +41,9 @@ import {
   PageHeading,
   SelectField,
   TextField,
+  IllustratedInfoDialog,
 } from "../components";
+import { ReputationSettings } from "./ReputationPages";
 import { date, label, text } from "../lib/format";
 export function MemberProfile() {
   const { handle } = useParams();
@@ -74,6 +76,7 @@ function ProfileView({
         <MemberAvatar
           name={profile.display_name}
           avatarKey={profile.avatar_key}
+          reputation={profile.reputation}
           size={80}
         />
         <div>
@@ -82,7 +85,7 @@ function ProfileView({
             <MapPin size={15} />
             {profile.area || "Area private"}
             <span>·</span>
-            {profile.community_level || "Newcomer"}
+            {profile.reputation?.level || profile.community_level || "Newcomer"}
           </p>
         </div>
         {own && (
@@ -93,6 +96,7 @@ function ProfileView({
       </section>
       {own && (
         <nav className="profile-tools" aria-label="Profile settings">
+          <Link to="/profile/appearance">Avatar frames & flair</Link>
           <Link to="/profile/badges">Achievement showcase</Link>
           <Link to="/reviews">My review history</Link>
           <Link to="/settings/notifications">Reminder preferences</Link>
@@ -109,6 +113,12 @@ function ProfileView({
           <section className="surface">
             <div className="section-heading">
               <h2>Achievement showcase</h2>
+              <IllustratedInfoDialog
+                title="Milestones, with meaning."
+                description="Every achievement has a specific earning rule. You choose which eligible awards appear publicly. Achievements never guarantee repayment or legal lending authorization."
+                scene="community-workshop"
+                triggerLabel="About achievements"
+              />
               {own && (
                 <Link to="/profile/badges">
                   Manage showcase
@@ -293,6 +303,7 @@ export function EditProfile() {
               help="Do not share ID numbers, account numbers or private financial details."
             />
           </ApiForm>
+          <ReputationSettings />
         </section>
         <aside className="profile-edit-aside">
           <ContextIllustration scene="community-workshop" eager />
@@ -305,6 +316,7 @@ export function EditProfile() {
             <MemberAvatar
               name={member.display_name}
               avatarKey={selectedAvatar}
+              reputation={member.community_reputation}
               size={64}
             />
             <div>
@@ -405,6 +417,14 @@ export function AchievementsPage() {
       <PageHeading
         title="A story worth building."
         description="Recognition for learning, clear agreements and meaningful contributions."
+        action={
+          <IllustratedInfoDialog
+            title="Choose what you celebrate."
+            description="Earn achievements through recorded learning, approved contributions and specific milestones. You can showcase up to three eligible public awards and wear one as avatar flair. Fresh Start stays private. No award guarantees repayment or lending authorization."
+            scene="community-workshop"
+            triggerLabel="About awards & avatar flair"
+          />
+        }
       />
       <section className="achievement-intro surface">
         <div>
@@ -431,6 +451,9 @@ export function AchievementsPage() {
           </p>
           <Link to="/learn" className="text-link">
             Visit the learning room <ArrowRight size={15} />
+          </Link>
+          <Link to="/profile/edit" className="text-link">
+            Choose your avatar frame & flair <ArrowRight size={15} />
           </Link>
         </div>
         <ContextIllustration scene="community-workshop" eager />
@@ -590,6 +613,7 @@ export function InboxPage() {
                 <MemberAvatar
                   name={t.other_display_name}
                   avatarKey={t.other_avatar_key}
+                  reputation={t.other_reputation}
                 />
                 <span>
                   <strong>{t.other_display_name}</strong>

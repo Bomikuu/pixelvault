@@ -9,34 +9,48 @@ import {
   jsonResponse,
   discoveryEnvelope,
 } from "../test/helpers";
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
+});
+function mockDiscovery(offers: (typeof offer)[]) {
+  vi.stubEnv("VITE_MAPBOX_ACCESS_TOKEN", "");
+  vi.stubGlobal(
+    "fetch",
+    vi
+      .fn()
+      .mockImplementation((url: string) =>
+        Promise.resolve(
+          jsonResponse(
+            url.endsWith("/community/activity")
+              ? { posts: [], revision: "test-revision" }
+              : discoveryEnvelope(offers),
+          ),
+        ),
+      ),
+  );
+}
 function Location() {
   const location = useLocation();
   return <output aria-label="Filter URL">{location.search}</output>;
 }
 it("filters complete comparable rows and preserves shared filters in URL", async () => {
-  vi.stubGlobal(
-    "fetch",
-    vi.fn().mockResolvedValue(
-      jsonResponse(
-        discoveryEnvelope([
-          offer,
-          {
-            ...offer,
-            id: "offer-2",
-            title: "Other offer",
-            lender: { id: "two", display_name: "Lina Test", area: "Pasig" },
-            area: "Pasig",
-          },
-        ]),
-      ),
-    ),
-  );
+  mockDiscovery([
+    offer,
+    {
+      ...offer,
+      id: "offer-2",
+      title: "Other offer",
+      lender: { id: "two", display_name: "Lina Test", area: "Pasig" },
+      area: "Pasig",
+    },
+  ]);
   renderApp(
     <>
       <ExplorePage />
       <Location />
     </>,
+    { route: "/explore?view=list" },
   );
   expect(await screen.findByText("2 offers to explore")).toBeInTheDocument();
   await userEvent.type(
@@ -48,17 +62,16 @@ it("filters complete comparable rows and preserves shared filters in URL", async
   expect(screen.getByText("₱8,000.00")).toBeInTheDocument();
 });
 it("keeps the complete offer list when geographic tiles are unavailable", async () => {
-  vi.stubGlobal(
-    "fetch",
-    vi.fn().mockResolvedValue(jsonResponse(discoveryEnvelope([offer]))),
-  );
+  mockDiscovery([offer]);
   renderApp(<ExplorePage />, { route: "/explore?view=map" });
-  expect(await screen.findByText("Area overview")).toBeInTheDocument();
   expect(
-    screen.getByText(/geographic tile provider has not been configured/),
+    await screen.findByRole("heading", { name: "Map setup is still needed." }),
   ).toBeInTheDocument();
   expect(
-    screen.getByRole("link", { name: /A clear next step/ }),
+    screen.getByText(/Mapbox public token has not been configured/),
+  ).toBeInTheDocument();
+  expect(
+    await screen.findByRole("link", { name: /A clear next step/ }),
   ).toBeInTheDocument();
   expect(
     screen.queryByText(/home address:|exact coordinates/i),
@@ -70,4 +83,44 @@ it("renders schedule columns with semantic shared table controls", () => {
     screen.getByRole("columnheader", { name: "Due date" }),
   ).toBeInTheDocument();
   expect(screen.getByRole("cell", { name: "₱1,030.00" })).toBeInTheDocument();
+});
+
+it("keeps pagination reachable when the currently loaded page has no matching offers", async () => {
+  vi.stubEnv("VITE_MAPBOX_ACCESS_TOKEN", "");
+  const fetch = vi
+    .fn()
+    .mockImplementation((url: string) =>
+      Promise.resolve(
+        jsonResponse(
+          url.endsWith("/community/activity")
+            ? { posts: [], revision: "r1" }
+            : url.includes("cursor=30")
+              ? discoveryEnvelope([
+                  {
+                    ...offer,
+                    id: "later-offer",
+                    title: "A later matching offer",
+                  },
+                ])
+              : { ...discoveryEnvelope([offer]), next_cursor: "30" },
+        ),
+      ),
+    );
+  vi.stubGlobal("fetch", fetch);
+  renderApp(<ExplorePage />, { route: "/explore?view=list&q=later" });
+  expect(
+    await screen.findByRole("heading", { name: "No offers match this view." }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByText(/More posts are available to search/),
+  ).toBeInTheDocument();
+  await userEvent.click(
+    screen.getByRole("button", { name: "Load more offers" }),
+  );
+  expect(
+    await screen.findByRole("link", { name: /A later matching offer/ }),
+  ).toBeInTheDocument();
+  expect(fetch.mock.calls.some(([url]) => url.includes("cursor=30"))).toBe(
+    true,
+  );
 });

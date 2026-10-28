@@ -70,6 +70,7 @@ def search_offers(*, viewer_id=None, filters=None, cursor=None):
                 "comparison": "per_offer_example",
                 "capacity_label": "Declared availability; not funds held by PixelVault",
                 "expires_at": offer.expires_at.isoformat(),
+                "created_at": offer.created_at.isoformat(),
             }
         )
     # Disclosed examples can have different dates, fees and principal. Never rank unlike scenarios as equal-cost quotes.

@@ -54,6 +54,7 @@ import {
 } from "../features/AdditionalPages";
 import { HelpPage } from "../features/HelpPage";
 import { HowItWorksPage } from "../features/HowItWorksPage";
+import { Leaderboard, ReputationPage } from "../features/ReputationPages";
 import { ActionLink } from "../components";
 const member = (element: React.ReactNode) => (
   <RequireMember>{element}</RequireMember>
@@ -127,6 +128,7 @@ export const routes = [
       { path: "members/:handle", element: <MemberProfile /> },
       { path: "profile", element: member(<OwnProfile />) },
       { path: "profile/edit", element: member(<EditProfile />) },
+      { path: "profile/appearance", element: member(<ReputationPage />) },
       { path: "profile/badges", element: member(<AchievementsPage />) },
       { path: "badges/:key", element: <BadgeDetail /> },
       { path: "reviews/new", element: member(<ReviewForm />) },
@@ -159,6 +161,7 @@ export const routes = [
       { path: "learn", element: <LearningPage /> },
       { path: "help", element: <HelpPage /> },
       { path: "how-it-works", element: <HowItWorksPage /> },
+      { path: "leaderboard", element: <Leaderboard /> },
       {
         path: "admin",
         element: (

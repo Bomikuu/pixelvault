@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 
 from .locations import coarse_area
-from .models import Award, Contribution, ProfileSettings, Review
+from .models import Award, ProfileSettings, Review
 from .permissions import member_for
 
 BADGES = {
@@ -45,14 +45,19 @@ def achievement_catalog():
     ]
 
 
-def public_identity(member):
+def public_identity(member, *, include_reputation=True):
     handle = member.username if "@" not in member.username else str(member.id)
     fallback = member.username if "@" not in member.username else f"Member {str(member.id)[:8]}"
-    return {
+    result = {
         "handle": handle,
         "display_name": member.display_name or fallback,
         "avatar_key": member.avatar_key,
     }
+    if include_reputation:
+        from .reputation import reputation_summary
+
+        result["reputation"] = reputation_summary(member)
+    return result
 
 
 def public_area(member):
@@ -63,12 +68,9 @@ def public_area(member):
 
 
 def community_level(member):
-    count = Contribution.objects.filter(member=member, status="approved").count()
-    if member.literacy_completed and count >= 5:
-        return "Guide"
-    if member.literacy_completed and count >= 3:
-        return "Contributor"
-    return "Prepared" if member.literacy_completed else "Newcomer"
+    from .reputation import community_facts
+
+    return community_facts(member)["level"]
 
 
 def award_data(award, public=False):
@@ -126,6 +128,17 @@ def public_profile(*, handle, viewer_id=None):
             for award in awards
             if award.key not in educational or educational_facts.get(award.key)
         ]
+    if any(award.key == "first_chapter" for award in awards):
+        from .reputation import eligible_flair
+
+        # Reuse the current onboarding predicate for the shelf and worn flair.
+        # Public reads hide stale claims without publishing private review facts.
+        awards = [
+            award
+            for award in awards
+            if award.key != "first_chapter"
+            or eligible_flair(member=member, award_id=award.id) is not None
+        ]
     review_rows = (
         Review.objects.filter(subject=member, status="approved", published_at__isnull=False)
         .select_related("author")
@@ -143,7 +156,9 @@ def public_profile(*, handle, viewer_id=None):
         reviews.append(
             {
                 "id": str(review.id),
-                "author_display_name": public_identity(review.author)["display_name"],
+                "author_display_name": public_identity(review.author, include_reputation=False)[
+                    "display_name"
+                ],
                 "ratings": review.ratings,
                 "body": review.body,
                 "published_at": review.published_at.isoformat(),
@@ -163,13 +178,24 @@ def public_profile(*, handle, viewer_id=None):
 
 @transaction.atomic
 def update_profile(*, actor_id, data):
-    allowed = {"display_name", "bio", "area", "public_award_ids", "avatar_key"}
+    allowed = {
+        "display_name",
+        "bio",
+        "area",
+        "public_award_ids",
+        "avatar_key",
+        "avatar_frame",
+        "avatar_flair_id",
+        "show_reputation",
+        "leaderboard_opt_in",
+    }
     if set(data) - allowed:
         raise DomainError(
             "invalid_fields",
-            "Only display name, bio, city, avatar and badge selections may be edited here.",
+            "Only profile details, avatar, badges and community display preferences may be edited here.",
         )
     member = member_for(actor_id)
+    member = type(member).objects.select_for_update().get(pk=member.id)
     if "avatar_key" in data:
         member.avatar_key = validate_avatar_key(data["avatar_key"])
     for field, maximum in (("display_name", 100), ("bio", 400)):
@@ -185,6 +211,9 @@ def update_profile(*, actor_id, data):
     member.save(update_fields=["display_name", "bio", "area", "avatar_key"])
     if "public_award_ids" in data:
         set_public_badges(member_id=actor_id, award_ids=data["public_award_ids"])
+    from .reputation import update_reputation_settings
+
+    update_reputation_settings(member=member, data=data)
     return public_profile(handle=member.username, viewer_id=actor_id)
 
 

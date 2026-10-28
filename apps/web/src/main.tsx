@@ -11,6 +11,7 @@ import "@fontsource/manrope/600.css";
 import "@fontsource/manrope/700.css";
 import "@fontsource/manrope/800.css";
 import "../../../packages/ui/src/styles/tokens.css";
+import "../../../packages/ui/src/styles/controls.css";
 import "./styles.css";
 const queryClient = new QueryClient({
   defaultOptions: {

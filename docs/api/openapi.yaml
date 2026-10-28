@@ -1385,6 +1385,48 @@ paths:
                     type: object
                     additionalProperties: true
           description: ''
+  /api/v1/community/activity:
+    get:
+      operationId: get_api_v1_community_activity
+      tags:
+      - v1
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
+  /api/v1/community/activity/stream:
+    get:
+      operationId: get_api_v1_community_activity_stream
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - event-stream
+          - json
+      tags:
+      - v1
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            text/event-stream:
+              schema:
+                type: string
+          description: ''
   /api/v1/community/areas:
     get:
       operationId: get_api_v1_community_areas
@@ -1517,6 +1559,27 @@ paths:
                     type: object
                     additionalProperties: true
           description: ''
+  /api/v1/community/leaderboard:
+    get:
+      operationId: get_api_v1_community_leaderboard
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
   /api/v1/community/profile:
     get:
       operationId: get_api_v1_community_profile
@@ -1627,6 +1690,26 @@ paths:
             schema:
               type: object
               additionalProperties: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
+  /api/v1/community/reputation:
+    get:
+      operationId: get_api_v1_community_reputation
+      tags:
+      - v1
       security:
       - cookieAuth: []
       responses:

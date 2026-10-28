@@ -8,6 +8,10 @@ class ProfileSettings(Record):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="community_settings"
     )
     public_award_ids = models.JSONField(default=list)
+    avatar_frame = models.CharField(max_length=20, default="plain")
+    avatar_flair_id = models.UUIDField(null=True, blank=True)
+    show_reputation = models.BooleanField(default=True)
+    leaderboard_opt_in = models.BooleanField(default=False)
 
 
 class Contribution(Record):

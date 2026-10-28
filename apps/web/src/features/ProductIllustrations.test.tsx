@@ -112,7 +112,7 @@ it("makes the infographic public and discoverable in community navigation", asyn
   renderRoute("/how-it-works");
   expect(
     await screen.findByRole("heading", {
-      name: "From a first hello to a clear shared plan.",
+      name: "How PixelVault works.",
     }),
   ).toBeInTheDocument();
   expect(screen.getByRole("link", { name: "How it works" })).toHaveAttribute(
@@ -125,7 +125,7 @@ it("uses the illustrated not-found page for an unmatched address without inventi
   const { container } = renderRoute("/a-page-that-does-not-exist");
   expect(
     await screen.findByRole("heading", {
-      name: "This path doesn’t lead to a page.",
+      name: "Page not found.",
     }),
   ).toBeInTheDocument();
   expect(
@@ -152,7 +152,7 @@ it("uses the real error boundary without exposing internal error details or clai
   ]);
   const { container } = render(<RouterProvider router={router} />);
   expect(
-    await screen.findByRole("heading", { name: "A little detour." }),
+    await screen.findByRole("heading", { name: "Something went wrong." }),
   ).toBeInTheDocument();
   expect(screen.getByRole("alert")).toHaveTextContent(
     "We couldn’t display this page.",

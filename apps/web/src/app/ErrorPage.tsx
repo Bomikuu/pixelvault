@@ -1,5 +1,5 @@
 import { isRouteErrorResponse, Link, useRouteError } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Compass, LayoutDashboard } from "lucide-react";
 import { BrandMark } from "@pixelvault/ui";
 import { ActionLink, ContextIllustration } from "../components";
 
@@ -9,11 +9,11 @@ function RecoveryContent({ missing = false }: { missing?: boolean }) {
       <ContextIllustration scene="finding-your-way" eager />
       <div className="recovery-copy">
         <h1 id="recovery-heading">
-          {missing ? "This path doesn’t lead to a page." : "A little detour."}
+          {missing ? "Page not found." : "Something went wrong."}
         </h1>
         <p role={missing ? undefined : "alert"}>
           {missing
-            ? "The link may have changed, or the address may be incomplete. There’s a way back to your community."
+            ? "This address doesn’t match a page. Check the link or head back to the community."
             : "We couldn’t display this page. Try opening it again, or continue from your dashboard."}
         </p>
         {!missing && (
@@ -24,9 +24,11 @@ function RecoveryContent({ missing = false }: { missing?: boolean }) {
         )}
         <div className="recovery-actions">
           <ActionLink to="/explore">
-            Back to the community <ArrowRight size={16} />
+            <Compass size={17} />
+            Back to the community
           </ActionLink>
           <ActionLink to="/dashboard" variant="outline">
+            <LayoutDashboard size={17} />
             Open my dashboard
           </ActionLink>
         </div>

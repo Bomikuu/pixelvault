@@ -30,8 +30,19 @@ import {
   AVATAR_OPTIONS,
   Badge,
   Checkbox,
+  BadgeArt,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
 } from "@pixelvault/ui";
-import type { DataRecord, Person } from "@pixelvault/contracts";
+import type {
+  CommunityReputation,
+  DataRecord,
+  Person,
+} from "@pixelvault/contracts";
 import { operationId, ApiError } from "./app/api";
 import { date, initials, label, money } from "./lib/format";
 export function ActionLink({
@@ -183,28 +194,91 @@ export function MemberAvatar({
   avatarKey,
   className = "",
   size = 40,
+  reputation,
 }: {
   name: string;
   avatarKey?: string;
   className?: string;
   size?: number;
+  reputation?: CommunityReputation;
 }) {
   const hasPortrait = AVATAR_OPTIONS.some((option) => option.key === avatarKey);
+  const frame = ["plain", "blue", "leaf", "gold", "orbit"].includes(
+    reputation?.frame || "",
+  )
+    ? reputation!.frame
+    : "plain";
   return (
-    <Avatar
-      className={`member-avatar ${className}`}
+    <span
+      className={`member-avatar-shell frame-${frame} ${className}`}
       style={{ width: size, height: size }}
     >
-      {hasPortrait ? (
-        <AvatarArt
-          avatarKey={avatarKey!}
-          size={size}
-          label={`${name}’s chosen avatar`}
-        />
-      ) : (
-        <AvatarFallback>{initials(name)}</AvatarFallback>
+      <Avatar className="member-avatar" style={{ width: size, height: size }}>
+        {hasPortrait ? (
+          <AvatarArt
+            avatarKey={avatarKey!}
+            size={size}
+            label={`${name}’s chosen avatar`}
+          />
+        ) : (
+          <AvatarFallback>{initials(name)}</AvatarFallback>
+        )}
+      </Avatar>
+      {reputation?.show_points && (
+        <span
+          className="avatar-xp"
+          aria-label={`${reputation.points} community experience points`}
+        >
+          {reputation.points.toLocaleString("en-PH")}
+          <span> XP</span>
+        </span>
       )}
-    </Avatar>
+      {reputation?.flair && (
+        <span className="avatar-flair" title={reputation.flair.name}>
+          <BadgeArt
+            name={reputation.flair.name}
+            badgeKey={reputation.flair.key}
+            size={size >= 64 ? 28 : 20}
+          />
+        </span>
+      )}
+    </span>
+  );
+}
+export function IllustratedInfoDialog({
+  title,
+  description,
+  scene,
+  triggerLabel,
+  children,
+}: {
+  title: string;
+  description: string;
+  scene: Parameters<typeof ContextIllustration>[0]["scene"];
+  triggerLabel: string;
+  children?: ReactNode;
+}) {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button type="button" variant="outline">
+          <Info size={17} />
+          {triggerLabel}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="illustrated-dialog">
+        <ContextIllustration scene={scene} />
+        <DialogTitle>{title}</DialogTitle>
+        <DialogDescription>{description}</DialogDescription>
+        {children && <div className="illustrated-dialog-copy">{children}</div>}
+        <DialogClose asChild>
+          <Button type="button">
+            <CheckCircle2 size={17} />
+            Got it
+          </Button>
+        </DialogClose>
+      </DialogContent>
+    </Dialog>
   );
 }
 export function ContextIllustration({
@@ -242,7 +316,11 @@ export function PersonName({
 }) {
   return (
     <div className="person">
-      <MemberAvatar name={person.display_name} avatarKey={person.avatar_key} />
+      <MemberAvatar
+        name={person.display_name}
+        avatarKey={person.avatar_key}
+        reputation={person.reputation}
+      />
       <div>
         <Link
           className="person-name"

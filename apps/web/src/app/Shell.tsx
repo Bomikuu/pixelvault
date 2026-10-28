@@ -29,6 +29,7 @@ import {
   ShieldCheck,
   Sparkles,
   Users,
+  Trophy,
   Wallet,
   X,
 } from "lucide-react";
@@ -45,6 +46,7 @@ import { ActionLink, ErrorNotice, Loading, MemberAvatar } from "../components";
 const community = [
   ["/explore", "Explore offers", Compass],
   ["/how-it-works", "How it works", BookOpen],
+  ["/leaderboard", "Leaderboard", Trophy],
   ["/offers/new", "Post an offer", Plus],
   ["/inbox", "Messages", MessageSquare],
 ] as const;
@@ -80,7 +82,8 @@ export function Shell() {
     location.pathname.startsWith("/explore") ||
     location.pathname.startsWith("/offers") ||
     location.pathname.startsWith("/members") ||
-    location.pathname.startsWith("/how-it-works")
+    location.pathname.startsWith("/how-it-works") ||
+    location.pathname.startsWith("/leaderboard")
       ? "community"
       : "workspace";
   const navigation = (
@@ -178,6 +181,7 @@ export function Shell() {
           <MemberAvatar
             name={member?.display_name || "Guest"}
             avatarKey={member?.avatar_key}
+            reputation={member?.community_reputation}
           />
           <div>
             <strong>{member?.display_name || "Welcome to PixelVault"}</strong>
@@ -191,7 +195,9 @@ export function Shell() {
     </>
   );
   return (
-    <div className="app-shell">
+    <div
+      className={`app-shell ${location.pathname === "/explore" && new URLSearchParams(location.search).get("view") !== "list" ? "is-map-workspace" : ""}`}
+    >
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
@@ -243,6 +249,7 @@ export function Shell() {
                 <MemberAvatar
                   name={member.display_name}
                   avatarKey={member.avatar_key}
+                  reputation={member.community_reputation}
                   className="topbar-avatar"
                   size={34}
                 />

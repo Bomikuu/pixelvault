@@ -8,6 +8,7 @@ from accounts.views import (
     SignOutView,
     StepUpView,
 )
+from community.activity import ActivityStreamView, ActivityView
 from django.http import JsonResponse
 from django.urls import include, path
 from documents.views import ContentView, DocumentsView, DownloadView, ScanView, UploadView
@@ -28,6 +29,8 @@ urlpatterns = [
         ),
     ),
     path("api/schema", SpectacularAPIView.as_view()),
+    path("api/v1/community/activity", ActivityView.as_view()),
+    path("api/v1/community/activity/stream", ActivityStreamView.as_view()),
     path("api/v1/auth/session", SessionView.as_view()),
     path("api/v1/auth/register", RegisterView.as_view()),
     path("api/v1/auth/sign-in", SignInView.as_view()),

@@ -8,6 +8,6 @@ The implemented product is test-only. The following remain unresolved and cannot
 - Real identity/liveness/income review, private production storage/scanning, staff MFA, lawyer-reviewed template and appropriate signing evidence.
 - Approved individual-lender funding, disbursement, repayment settlement and platform service-fee routing. A PixelFlow payment success still does not establish lender settlement.
 - Actual provider sandbox/live acceptance under the approved arrangement, secrets/key rotation and operational reconciliation ownership.
-- Production hosting/TLS/origin settings, licensed map/geocoder service and approved final asset exports.
+- Production hosting/TLS/origin settings, Mapbox public-token/account/origin/usage configuration and provider acceptance, and approved final asset exports. Mapbox SDK/geocoder integration is implemented; no public token is currently configured.
 
 No item above is marked complete by this implementation. `config.live_policy.assert_live_origination_allowed` fails closed, and lending eligibility independently rejects live originations. This does not change the required P2P model or suggest that registering later permits operating now.
