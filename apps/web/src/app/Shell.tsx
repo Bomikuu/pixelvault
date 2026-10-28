@@ -10,6 +10,7 @@ import {
   ArrowUpRight,
   Bell,
   BookOpen,
+  CalendarClock,
   ChartNoAxesCombined,
   CircleHelp,
   Compass,
@@ -48,6 +49,7 @@ const community = [
   ["/how-it-works", "How it works", BookOpen],
   ["/leaderboard", "Leaderboard", Trophy],
   ["/offers/new", "Post an offer", Plus],
+  ["/meetings", "Meeting rooms", CalendarClock],
   ["/inbox", "Messages", MessageSquare],
 ] as const;
 const workspace = [
@@ -57,6 +59,7 @@ const workspace = [
   ["/payments", "Payments", Wallet],
   ["/people", "My connections", Users],
   ["/documents", "Documents", FileText],
+  ["/investments", "Investments", HandCoins],
   ["/analytics", "Analytics", ChartNoAxesCombined],
 ] as const;
 const admin = [
@@ -93,6 +96,7 @@ export function Shell() {
     "/how-it-works",
     "/leaderboard",
     "/learn",
+    "/meetings",
   ].some((path) => location.pathname.startsWith(path))
     ? "community"
     : "workspace";

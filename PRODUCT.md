@@ -38,7 +38,7 @@ Individual-to-individual lending is mandatory. PixelVault combines nearby offers
 - Strict identity, contact, income/affordability and funding-account review, including freelancer evidence. Fake demo verification must remain visibly synthetic.
 - Future individual-lender registration has its own evidence, authority, validity and review history. Identity checks do not confer legal lending authority.
 - Lists and approximate maps, offer applications, agreements, payments, private documents, messaging, reviews, achievements, complaints and analytics are required.
-- Public debt shaming, contact harvesting, automatic government referrals, threats of arrest, pooled investments and fractional loan trading are excluded.
+- Public debt shaming, contact harvesting, automatic government referrals, threats of arrest and fractional loan trading are excluded. The user-approved investor extension currently permits private test-mode pitches and negotiations about contributing to a specific individual lender's offer. Investment contracts, capital credits, earnings payouts and public confirmed-investor circles are not implemented; live investment origination remains disabled.
 - Lender authorization and the platform's regulatory classification remain unresolved live-launch dependencies. Plans do not establish that future registration permits operating today.
 - PixelFlow collection success does not establish disbursement or settlement to an individual lender. The existing implementation has no payout/disbursement provider contract.
 - Complete test-mode flows can be built while live origination remains disabled. No real identities, documents or funds are needed for fixtures.

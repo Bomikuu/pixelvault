@@ -38,6 +38,7 @@ def upload_document(*, owner, uploaded, purpose):
         "address",
         "funding_account",
         "registration",
+        "room_evidence",
     }:
         raise DomainError("INVALID_PURPOSE", "Choose a permitted evidence category.")
     if uploaded.size > 10 * 1024 * 1024 or uploaded.size == 0:

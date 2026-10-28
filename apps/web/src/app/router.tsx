@@ -1,3 +1,5 @@
+import { AgreementRoom } from "../features/negotiations/AgreementRoom";
+import { MeetingList } from "../features/negotiations/MeetingList";
 import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 import { ErrorPage, NotFoundPage } from "./ErrorPage";
 import { Shell } from "./Shell";
@@ -82,6 +84,9 @@ export const routes = [
       { path: "applications", element: member(<ApplicationsPage />) },
       { path: "applications/:id", element: member(<ApplicationDetail />) },
       { path: "agreements/:id", element: member(<AgreementPage />) },
+      { path: "meetings", element: member(<MeetingList />) },
+      { path: "meetings/:id", element: member(<AgreementRoom />) },
+      { path: "investments", element: member(<MeetingList investments />) },
       { path: "dashboard", element: member(<Dashboard />) },
       { path: "loans", element: member(<LoansPage />) },
       { path: "loans/:id", element: member(<LoanDetail />) },

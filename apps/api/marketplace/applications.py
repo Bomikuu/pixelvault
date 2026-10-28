@@ -90,4 +90,16 @@ def apply_to_offer(
             from connections.services import attach_to_application
 
             attach_to_application(application=application, invitation_id=co_borrower_invitation_id)
+        from negotiations.services import create_room
+        from uuid import uuid4
+
+        create_room(
+            actor_id=borrower_id,
+            data={
+                "kind": "borrowing",
+                "offer_id": str(offer.id),
+                "application_id": str(application.id),
+                "operation_id": str(uuid4()),
+            },
+        )
         return application

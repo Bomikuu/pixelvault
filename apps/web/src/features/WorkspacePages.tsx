@@ -1,3 +1,4 @@
+import { MeetingEntry } from "./negotiations/MeetingEntry";
 import { useState } from "react";
 import {
   Link,
@@ -513,12 +514,26 @@ export function ApplicationDetail() {
         </section>
         <aside className="surface">
           <h2>What happens next</h2>
+          {a.meeting_id ? (
+            <MeetingEntry
+              offerId={a.offer_id || offer?.id || ""}
+              applicationId={a.id}
+              meetingId={a.meeting_id}
+            />
+          ) : (
+            ["submitted", "reviewing", "selected"].includes(a.status) && (
+              <MeetingEntry
+                offerId={a.offer_id || offer?.id || ""}
+                applicationId={a.id}
+              />
+            )
+          )}
           {a.agreement_id ? (
             <ActionLink to={`/agreements/${a.agreement_id}`}>
               Review agreement
               <ArrowRight size={16} />
             </ActionLink>
-          ) : canSelect && a.status === "submitted" ? (
+          ) : canSelect && a.status === "submitted" && !a.meeting_id ? (
             <ApiForm
               onSubmit={async (data) => {
                 const result = await post<{ agreement_id: string }>(

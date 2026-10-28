@@ -164,6 +164,7 @@ export interface Offer {
   test_mode?: boolean;
 }
 export interface Application {
+  meeting_id?: string | null;
   id: string;
   offer_id?: string;
   offer?: Offer | string;
@@ -265,6 +266,7 @@ export interface Profile {
   reviews: Review[];
 }
 export interface Thread {
+  meeting_id?: string | null;
   id: string;
   loan_id?: string;
   application_id?: string;

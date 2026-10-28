@@ -66,7 +66,30 @@ def accept_agreement(*, member_id, agreement_id, expected_hash, operation_id, at
 
     at = at or timezone.now()
     preliminary = AgreementVersion.objects.select_related("reservation").get(pk=agreement_id)
+    if member_id not in {preliminary.lender_id, preliminary.borrower_id}:
+        raise DomainError("not_found", "Agreement not found.", 404)
     with transaction.atomic():
+        from negotiations.models import Room
+        from negotiations.services import both_approved, evidence_reviewed, require_both
+
+        meeting = (
+            Room.objects.select_for_update()
+            .filter(application_id=preliminary.reservation.application_id)
+            .first()
+        )
+        if meeting and preliminary.state != "accepted":
+            if (
+                meeting.agreement_id != preliminary.id
+                or meeting.state != "negotiating"
+                or not both_approved(meeting)
+                or not evidence_reviewed(meeting)
+            ):
+                raise DomainError(
+                    "meeting_required",
+                    "Review and accept the exact current agreement in your meeting room.",
+                    409,
+                )
+            require_both(meeting)
         offer = LendingOffer.objects.select_for_update().get(pk=preliminary.reservation.offer_id)
         reservation = OfferReservation.objects.select_for_update().get(
             pk=preliminary.reservation_id

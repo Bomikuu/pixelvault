@@ -57,6 +57,10 @@ def thread_for(*, actor_id, thread_id):
 def send_message(*, actor_id, thread_id, body, operation_id):
     member = member_for(actor_id)
     thread = thread_for(actor_id=actor_id, thread_id=thread_id)
+    if hasattr(thread, "room") and thread.room.state == "closed":
+        raise DomainError(
+            "room_closed", "This meeting is closed. Its records remain available.", 409
+        )
     body = clean_text(body)
     type(member).objects.select_for_update().get(pk=actor_id)
     previous = Message.objects.filter(sender_id=actor_id, operation_id=operation_id).first()

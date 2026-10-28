@@ -1,6 +1,6 @@
 # Investor contributions and live mutual-agreement rooms
 
-Status: review draft, 2026-10-28. This document is a proposed extension, not implemented behavior or an approved live financial product. It is ready for the user's design review; financial decisions explicitly marked pending must be resolved before their implementation. No application source, runtime policy, acceptance, funds or personal documents were changed for this design.
+Status: design approved by the user's “proceed”, 2026-10-28; room/pitch phase implemented in the test application. This document describes the full intended extension, not a claim that every phase is implemented or approved for live use. See [the surface and behavior contract](../surfaces/agreement-rooms.md) and [implementation status](../IMPLEMENTATION.md) for the delivered boundary. Investment financial activation and audio/video integration remain unimplemented.
 
 ## 1. Intent and confirmed scope
 
@@ -10,7 +10,7 @@ The user confirmed that investor earnings come from **interest actually collecte
 
 The user also requires lender-selected agendas, an interactive benefit calculation, microphone/camera options, public investor circles with an anonymous option, and a one-time platform commission on the investment transaction. Public pot availability increases only after confirmed funding, never after a pitch, meeting, signature or receipt upload.
 
-The current request proposes extending the earlier PRODUCT.md exclusion of pooled investments. That earlier exclusion remains the shipped/live boundary until this design is approved and implemented; it must not silently block planning the requested test-mode extension. Individual lenders remain counterparties. Nothing here claims that individuals, PixelVault or a provider have authorization to offer this investment model live.
+The approved request extends PRODUCT.md with private test-mode investor pitches and negotiation rooms. Financial activation remains outside the delivered phase. Individual lenders remain counterparties. Nothing here claims that individuals, PixelVault or a provider have authorization to offer this investment model live.
 
 ## 2. Architecture options and recommendation
 
@@ -92,15 +92,15 @@ No share applies to principal, unpaid future interest, late fees, platform fees,
 
 The initial proposal is non-revolving: recovered capital does not automatically fund another loan. Any reinvestment requires another mutually accepted allocation policy/agreement. Capital-return deadlines, exit rights and default losses are mandatory terms, not implied by a profit percentage.
 
-### Capital and default decision awaiting the user
+### Confirmed capital/default direction; remaining terms
 
-The pending question offers two materially different models: (a) the investor bears allocated borrower losses with no capital guarantee, or (b) the lender owes return of capital despite borrower losses. Do not implement either as an inferred default. The selected model, exit mechanics and capital-return dates must appear in the agreement and calculation. Any guarantee wording needs its own reviewed template and eligibility; the label “investment” cannot settle the legal relationship.
+The user answered “go with your suggestion” to the proposed terms. The accepted direction is allocated investor loss with no capital guarantee; the lender does not guarantee capital repayment following borrower default. Exit mechanics, capital-return dates and a reviewed investment agreement remain unresolved. They must appear in the eventual contract before investment finalization; an interest-share percentage does not settle them.
 
 ### Platform commission decision for review
 
-A one-time investment-transaction platform fee is requested, but its rate, payer, tax treatment and whether it is additional or deducted have not been approved. Keep a separate versioned `ContributionFeePolicy` with exact payer, basis, rate, cap, tax treatment, refund/reversal rule and evidence. “Not configured” blocks finalization; do not show an invented 0% or silently copy the loan-origination fee policy.
+A one-time investment-transaction platform fee is requested. The user accepted a lender-paid fee charged separately so the full investor contribution enters the pot. No numeric rate was proposed or selected. The rate, tax treatment and refund/reversal rule remain unresolved. The future financial phase needs a separate versioned `ContributionFeePolicy` with exact payer, basis, rate, cap, tax treatment, refund/reversal rule and evidence. “Not configured” blocks finalization; do not show an invented 0% or silently copy the loan-origination fee policy.
 
-The proposed pricing presentation is a separately disclosed, lender-paid fee in addition to the investor's contribution, preserving full contributed capital. This remains a recommendation for approval, not a business decision. Disclose whether the existing funded-loan origination commission also applies later; do not hide two fees on different events. Investor earnings share and platform commission have different labels, ledgers and recipients. No recurring platform repayment commission is introduced.
+The confirmed pricing presentation is a separately disclosed, lender-paid fee in addition to the investor's contribution, preserving full contributed capital. Disclose whether the existing funded-loan origination commission also applies later; do not hide two fees on different events. Investor earnings share and platform commission have different labels, ledgers and recipients. No recurring platform repayment commission is introduced.
 
 ## 7. Verified funding and the public pot
 
@@ -202,4 +202,4 @@ Legal inference for review: a contribution made for a share of a lender's earnin
 
 Jitsi source and current SDK/authentication documentation were read for the technical recommendation. No service was installed, deployed or configured, no camera/microphone was opened, no public meeting was created and no data was transmitted to a meeting provider. A chosen host, privacy/retention agreement, credentials, verified room-join controls and a service-capacity plan are needed before calls can be enabled.
 
-This is a concrete review draft under the brainstorming architectural gate. The user has not yet reviewed this written spec or an implementation plan. PRODUCT.md, DESIGN.md, runtime policy and live flags remain unchanged until the approved implementation applies the agreed extension.
+The user approved this written design with “proceed”. The first implementation slice is recorded in the surface and implementation documents. Later financial/call slices and the acceptance criteria above remain outstanding; the room UI and source do not establish a launch-ready investment product. Live flags remain disabled.

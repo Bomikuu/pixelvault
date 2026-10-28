@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "reporting",
     "engagement",
     "connections",
+    "negotiations",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

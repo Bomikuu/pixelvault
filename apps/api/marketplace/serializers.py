@@ -39,7 +39,11 @@ def application_data(application):
         if hasattr(application, "reservation")
         else None
     )
+    from negotiations.models import Room
+
+    meeting_id = Room.objects.filter(application=application).values_list("id", flat=True).first()
     return {
+        "meeting_id": str(meeting_id) if meeting_id else None,
         "id": str(application.id),
         "offer_id": str(application.offer_id),
         "principal": application.terms["principal"],

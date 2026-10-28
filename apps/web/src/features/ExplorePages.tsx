@@ -1,3 +1,4 @@
+import { InvestmentPitch } from "./negotiations/MeetingEntry";
 import { useMemo, useState } from "react";
 import {
   Link,
@@ -394,6 +395,7 @@ export function OfferDetail() {
         </div>
       </section>
       <OfferCalculator offer={offer} canApply={!owned} />
+      <InvestmentPitch offer={offer} />
       <div className="detail-layout">
         <section className="surface">
           <h2>The lender’s original offer</h2>

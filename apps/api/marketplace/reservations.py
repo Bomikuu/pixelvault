@@ -38,6 +38,23 @@ def select_application(*, lender_id, application_id, expected_offer_version, ope
         }
     )
     with transaction.atomic():
+        from negotiations.models import Room
+        from negotiations.services import both_approved, evidence_reviewed, require_both
+
+        meeting = Room.objects.select_for_update().filter(application=application).first()
+        if meeting:
+            if (
+                meeting.state != "negotiating"
+                or not both_approved(meeting)
+                or not evidence_reviewed(meeting)
+                or meeting.proposal.get("terms") != application.terms
+            ):
+                raise DomainError(
+                    "meeting_required",
+                    "Both parties must agree to the current application in their meeting room.",
+                    409,
+                )
+            require_both(meeting)
         offer = LendingOffer.objects.select_for_update().get(pk=application.offer_id)
         existing = OfferReservation.objects.filter(operation_id=operation_id).first()
         if existing:

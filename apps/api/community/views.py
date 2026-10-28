@@ -163,6 +163,7 @@ class ThreadView(MemberView):
             rows.append(
                 {
                     "id": str(thread.id),
+                    "meeting_id": str(thread.room.id) if hasattr(thread, "room") else None,
                     "loan_id": str(thread.loan_id) if thread.loan_id else None,
                     "application_id": str(thread.application_id) if thread.application_id else None,
                     "other_display_name": identity.get("display_name", ""),

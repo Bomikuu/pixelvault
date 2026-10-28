@@ -63,6 +63,7 @@ class AchievementHold(Record):
 
 
 class Thread(Record):
+    investment_context = models.UUIDField(null=True, blank=True, unique=True)
     loan_id = models.UUIDField(null=True, blank=True, unique=True)
     application_id = models.UUIDField(null=True, blank=True, unique=True)
     participants = models.ManyToManyField(
@@ -73,8 +74,21 @@ class Thread(Record):
         constraints = [  # noqa: RUF012 -- Django model metadata
             models.CheckConstraint(
                 condition=(
-                    models.Q(loan_id__isnull=False, application_id__isnull=True)
-                    | models.Q(loan_id__isnull=True, application_id__isnull=False)
+                    models.Q(
+                        loan_id__isnull=False,
+                        application_id__isnull=True,
+                        investment_context__isnull=True,
+                    )
+                    | models.Q(
+                        loan_id__isnull=True,
+                        application_id__isnull=False,
+                        investment_context__isnull=True,
+                    )
+                    | models.Q(
+                        loan_id__isnull=True,
+                        application_id__isnull=True,
+                        investment_context__isnull=False,
+                    )
                 ),
                 name="thread_single_context",
             )

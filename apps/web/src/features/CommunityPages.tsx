@@ -637,6 +637,7 @@ export function AchievementsPage() {
 export function InboxPage() {
   const [params, setParams] = useSearchParams();
   const selected = params.get("thread");
+  const roomNavigate = useNavigate();
   const threads = useQuery({
     queryKey: ["threads"],
     queryFn: () => apiRequest<{ threads: Thread[] }>("/community/threads"),
@@ -673,7 +674,11 @@ export function InboxPage() {
                 key={t.id}
                 variant="ghost"
                 className={`thread-row ${t.id === selected ? "selected" : ""}`}
-                onClick={() => setParams({ thread: t.id })}
+                onClick={() =>
+                  t.meeting_id
+                    ? roomNavigate(`/meetings/${t.meeting_id}`)
+                    : setParams({ thread: t.id })
+                }
               >
                 <MemberAvatar
                   name={t.other_display_name}
@@ -684,9 +689,11 @@ export function InboxPage() {
                 <span>
                   <strong>{t.other_display_name}</strong>
                   <small>
-                    {t.loan_id
-                      ? "Loan conversation"
-                      : "Application conversation"}{" "}
+                    {t.meeting_id
+                      ? "Agreement room"
+                      : t.loan_id
+                        ? "Loan conversation"
+                        : "Application conversation"}{" "}
                     · {date(t.latest_at)}
                   </small>
                 </span>
