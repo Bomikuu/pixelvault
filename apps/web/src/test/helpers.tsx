@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render } from "@testing-library/react";
+import { TooltipProvider } from "@pixelvault/ui";
 export const member = {
   id: "member-1",
   email: "maya@pixelvault.test",
@@ -59,7 +60,9 @@ export function renderApp(children: ReactNode, { route = "/" } = {}) {
   });
   return render(
     <QueryClientProvider client={client}>
-      <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
+      <TooltipProvider>
+        <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
+      </TooltipProvider>
     </QueryClientProvider>,
   );
 }

@@ -90,19 +90,9 @@ def award_data(award, public=False):
     return result
 
 
-def public_profile(*, handle, viewer_id=None):
-    try:
-        try:
-            member_id = uuid.UUID(str(handle))
-        except (ValueError, TypeError):
-            member_id = None
-        member = get_user_model().objects.get(
-            **({"pk": member_id} if member_id else {"username": handle}), is_active=True
-        )
-    except get_user_model().DoesNotExist:
-        raise DomainError("not_found", "Profile not found.", 404)
-    settings = ProfileSettings.objects.filter(member=member).first()
-    selected = settings.public_award_ids if settings else []
+def public_badge_awards(member, *, preferences=None):
+    preferences = preferences or ProfileSettings.objects.filter(member=member).first()
+    selected = preferences.public_award_ids if preferences else []
     awards = list(
         Award.objects.filter(member=member, id__in=selected, eligible=True, private=False)
     )
@@ -141,6 +131,23 @@ def public_profile(*, handle, viewer_id=None):
             if award.key != "first_chapter"
             or eligible_flair(member=member, award_id=award.id) is not None
         ]
+    by_id = {str(award.id): award for award in awards}
+    return [by_id[str(identifier)] for identifier in selected if str(identifier) in by_id]
+
+
+def public_profile(*, handle, viewer_id=None):
+    try:
+        try:
+            member_id = uuid.UUID(str(handle))
+        except (ValueError, TypeError):
+            member_id = None
+        member = get_user_model().objects.get(
+            **({"pk": member_id} if member_id else {"username": handle}), is_active=True
+        )
+    except get_user_model().DoesNotExist:
+        raise DomainError("not_found", "Profile not found.", 404)
+    settings = ProfileSettings.objects.filter(member=member).first()
+    awards = public_badge_awards(member, preferences=settings)
     review_rows = (
         Review.objects.filter(subject=member, status="approved", published_at__isnull=False)
         .select_related("author")
@@ -212,6 +219,7 @@ def update_profile(*, actor_id, data):
         "avatar_flair_id",
         "show_reputation",
         "leaderboard_opt_in",
+        "show_lending_totals",
     }
     if set(data) - allowed:
         raise DomainError(

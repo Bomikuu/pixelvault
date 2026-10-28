@@ -1,56 +1,61 @@
 # Community leaderboard
 
-Mode: Operate. Extend the existing opt-in XP board using the user's supplied podium reference; preserve the surrounding PixelVault shell and the privacy/earning rules.
+Mode: Operate. User-directed lending-statistics and theme revision inside the existing PixelVault brand. The user's latest request supersedes the earlier educational comparison columns and rank-colored cards.
 
 ## Direction contract
 
-**THESIS:** Celebrate useful community participation with a real illustrated podium, then make the actual rankings easy to compare. The reference supplies composition, never fictional names or metrics.
+**THESIS:** Make the people and lending facts comparable: lifetime lent, loans funded, distinct people helped, reputation and showcased achievements. Keep financial aggregates separate from community XP ranking.
 
-**OWN-WORLD:** Inherit Manrope, cobalt/navy/white, canonical controls and thin-ink isometric art with teal, coral and mustard. Silver/blue, gold and bronze distinguish podium places while text states every rank.
+**OWN-WORLD:** Inherit Manrope, the blue P/keyhole and the original thin-ink/isometric podium illustration. All three podium cards use the same neutral surface and blue interactions. Light uses cool white surfaces; dark uses navy canvas, elevated blue-navy surfaces and readable pale-blue actions.
 
-**STORY:** Understand what earns XP, see the top contributors and their factual learning/contribution breakdown, visit a profile or manage participation. Borrowing/lending volumes stay private; the user's reputation option uses existing community XP.
+**STORY:** See current member-chosen badges and consented lending aggregates, open the badge overflow collection, visit a profile or manage participation. Exact peso totals remain static. Separate consent defaults off for lending totals; XP participation alone never publishes them.
 
-**FIRST VIEWPORT:** A two-column pale-blue hero, large left-aligned title/actions and original award scene on the right. A four-part factual summary strip leads into a 2–1–3 podium at desktop; a member table follows. Mobile puts the first contributor first and stacks the podium without horizontal page overflow.
+**FIRST VIEWPORT:** Preserve the illustrated split hero and summary strip. The top-three cards lead with lifetime lent and funded-loan/people counts, then circular overlapping badges and animated reputation. The table uses lending columns and member pictures. At narrow widths, cards stack and the named keyboard-scroll region keeps all columns available.
 
-**FORM:** User-pinned reference, code-led extension; no concept seed or alternative identity. Use server ranks, including ties, and an honest all-time scope. Missing positions remain absent.
+**FORM:** User-pinned, code-led extension. Tailwind classes replace the leaderboard's feature CSS. Shared semantic token/control foundations remain in their existing system stylesheets. Visible hover/focus states apply to cards, rows, profiles and badges. The header theme toggle persists the choice and respects system preference initially.
 
 **FINISH:** unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
-## Motion and quality bar
+## Required interactions and truth
 
-The single focal moment is the top-three XP count-up: at most 600ms, once per mounted member, no currency counters, no loops. Final values are always available to assistive technology. Reduced motion displays final numbers immediately. Refreshes and pagination do not restart existing counters.
+- Two circular showcased badges are visible; the dynamic +N control opens the complete selected public collection. Existing three-badge showcase limits and current eligibility still apply; +3 is never fabricated when only one badge is hidden. Tooltip/focus labels, real achievement links, Escape dismissal and focus return are retained.
+- Lending totals use confirmed loan and disbursement records, including completed loans; amounts are integer centavos serialized as decimal strings. Borrower identities, borrowing totals and individual debt records remain private. The total strip includes only members who explicitly share aggregates. Sharing/amount changes invalidate the pagination snapshot.
+- Reputation ordering and dense ties remain unchanged. The 560ms count-up applies only to XP, once per mounted member, with immediate reduced-motion values.
+- New accounts default to private lending totals. Only six existing known synthetic @pixelvault.test fixtures were given demo sharing visibility. Current awards were evaluated against existing learning/funding evidence and up to three selected for those fictional showcases; no loan or contribution facts were fabricated.
 
-Pass when the illustration uses the actual brand vocabulary, the reference's hierarchy is recognizable, every displayed count comes from opted-in current evidence, ranks/ties remain authoritative, profile links and privacy actions work, and 320px layouts retain names and metrics. Preserve loading/error/empty/pagination states and existing shared UI boundaries.
+## Verification boundary
 
-## Advisory evidence
+The user explicitly requested **visual-only testing**, with no builds or automated tests/check scripts. The visual pass covers light/dark desktop, tablet, mobile and 320px, badge overflow and hover states, theme persistence and the sharing control. Static detector, UI-boundary check, typecheck, application tests and production builds are intentionally not run in this revision. Previous passing automated results belong to the preceding implementation, not this change.
 
-Graphify traced incumbent community/profile relationships; its existing graph is scoped/stale, so current source and tests govern new relationships. Jev 0.7.0 selected `community_xp` over unconsented financial-volume ranking at confidence 1.0 using only sanitized product rules. This is advisory, not a privacy or creditworthiness certification. Impeccable context loading was already unavailable in this session; PRODUCT.md, DESIGN.md and applicable references were read directly.
+Graphify's existing scoped/stale graph was advisory; current source governs new relationships. A sanitized Jev judgment favored a separate aggregate-sharing choice over reinterpreting past XP consent. No secrets or personal records were submitted.
 
-## Shipped comparison and system fit
+## Finished implementation
 
-Recorded 2026-10-28 from the finished [leaderboard component](../../apps/web/src/features/leaderboard/Leaderboard.tsx), [surface stylesheet](../../apps/web/src/features/leaderboard/leaderboard.css), [XP counter](../../apps/web/src/features/leaderboard/XpCount.tsx), [shared explanation](../../apps/web/src/features/leaderboard/CommunityXpInfo.tsx) and [appearance settings](../../apps/web/src/features/ReputationPages.tsx). [PRODUCT.md](../../PRODUCT.md) and [DESIGN.md](../../DESIGN.md) remain the incumbent authority; this is an ordinary surface extension, not a new visual world or approved system change.
+The shared semantic theme is implemented in `packages/ui/src/styles/tokens.css` and the existing canonical control foundation. `ThemeToggle.tsx` initializes the document theme before React mounts, follows system preference until an explicit choice and persists that choice. The shell exposes the toggle in both desktop and compact headers. The leaderboard's feature stylesheet was removed; layout, type, responsive behavior and states now live in Tailwind utilities in its TSX components.
 
-The user-pinned composition (`/tmp/codex-clipboard-d08df3aa-9755-4ff4-b78f-4b2d3e37d889.png`) is recognizable in the split pale-blue hero, prominent two-line heading, award scene, four-part summary, desktop 2–1–3 placement and comparison table. The shipped work inherits PixelVault's existing navigation, Manrope, blue/navy identity, white surfaces and thin-ink isometric illustration vocabulary. The original [podium raster](../../apps/web/public/illustrations/community-podium.png) supplies the scene; its [exact prompt and provenance](../brand/leaderboard-podium-prompt.txt) are recorded and provenance is embedded in the PNG. The pixel SHA was verified unchanged after metadata embedding. The scene contains no embedded interface copy or money imagery.
+All three podium cards use the same neutral surface. Each shows the member's picture, static lifetime lent amount, funded-loan count, distinct people helped, selected circular badges and separate community reputation. Private aggregates read “Not shared.” The remaining members use the same lending fields in the comparison table. Cards gain a blue border and restrained shadow on hover; rows gain an accent tint; profile links and badges retain their own hover/focus feedback.
 
-The implementation deliberately reports current opted-in community XP, completed learning checks and distinct approved educational contributions. It uses the user's reputation alternative; private lending/borrowing totals are excluded. Summary totals describe the current participating set. The only period is the supported “All time” scope. Server dense ranks and ties remain authoritative: tied first-place members retain first-place color/crowns even when placed in different podium positions. The reference's sample counts, invented activity categories and unsupported period controls are not presented as live capabilities.
+Two selected public badges are visible before the actual hidden count. The existing public showcase cap remains three, so a three-badge selection shows **+1**. The collection popover lists those selected, currently eligible awards and links to their details. Empty showcases have a textual state. No new badge capacity or fabricated **+3** count was introduced.
 
-Surface-specific type uses a bold hero heading (2.5rem, narrowing to 2.125rem and 1.875rem), section heading (1.25rem), XP figures (1.5rem), supporting copy (0.875rem) and compact labels (0.6875–0.8125rem). These describe this surface, not a replacement global type scale. Rounded panels (14px), light borders, flat tonal grouping and canonical outline actions continue the incumbent material language. Shared controls preserve their visible focus and primary touch target (44px).
+The demo still represents six known fictional participants. Existing evidence supports Elias Cruz's **₱10,000.00**, **two funded loans** and **one distinct person helped**; no new loan activity was invented for the presentation. Canonical award evaluation materializes existing facts, and the synthetic showcase selections demonstrate two circles plus one true overflow item. Community XP sorting and dense ties remain unchanged; shared lending amounts do not set ranks. The original podium raster and its existing provenance remain unchanged.
 
-At 800px and below, hero content and podium entries stack, server entry order puts the first contributor first, and the summary becomes two columns. Comparison columns remain in the canonical table. Its named, keyboard-focusable horizontal region has a visible blue focus outline and a narrow-screen scroll cue. Loading, error/retry, empty and load-more states remain explicit. The 560ms XP count-up runs once per mounted member; exact final values are exposed to assistive technology throughout. Reduced motion, hidden documents and changed preferences resolve to final values. Financial totals never use this counter.
+The aggregate-sharing checkbox is separate from XP visibility and board participation. `show_lending_totals` defaults to false for new accounts. The six existing synthetic fixtures explicitly share for the demonstration. The visible sharing label names lifetime lent amount, funded-loan count and people helped; it does not authorize borrower identities or individual debt disclosure.
 
-## Completion evidence and limits
+## Current visual evidence and finish verdict
 
-- Finished captures: [desktop](../../.runtime/qa/leaderboard-v2/desktop.png), [mobile](../../.runtime/qa/leaderboard-v2/mobile.png), [narrow](../../.runtime/qa/leaderboard-v2/narrow.png), [tablet](../../.runtime/qa/leaderboard-v2/tablet.png) and [focused mobile table](../../.runtime/qa/leaderboard-v2/mobile-table-focus.png). The implementation pass reported viewport checks at 1440×1000, 390×844, 320×740 and 1024×900: no document overflow or console warnings/errors, with temporary overrides reset. Full-page raster widths are respectively 1425, 375, 305 and 1009px because captures omit the classic 15px scrollbar; these widths are distinct from the configured viewport widths.
-- Final scoped verification reported 52 PostgreSQL tests and 10 frontend tests across three files passing, plus TypeScript and the 77-module UI boundary check. Semantic contrast checks passed (10 pairs); 12 additional leaderboard body-text pairs were at least 5.50:1 and the large blue heading was 4.46:1 against its 3:1 requirement. OpenAPI validation, Django checks, Ruff and migration-drift checks also passed.
-- The detector ran once on changed UI and returned `[]` with exit 0. The finish reviewer initially requested only scroll accessibility. After that single fix batch, the same reviewer's verdict-only confirmation resolved the finding and returned **ship** within that one-fix scope, with no regression observed. This is bounded review evidence, not whole-product acceptance.
-- The documenter checked the current source and supplied captures, without running a browser, application build or additional application tests. No external action, deployment or production acceptance is claimed. The captures show the explicitly labeled synthetic test environment; displayed fixture values are not production metrics.
+The current capture set covers requested viewports of **1440 × 1000**, **1024 × 900**, **390 × 844** and **320 × 740** in both themes. Full-page capture heights vary with content. Raster widths are 15px narrower where the browser reserves a classic vertical scrollbar; the 320px viewport has a 305px content client width.
 
-Pre-existing drift remains uncanonized: root DESIGN.md uses its incumbent prose format rather than the current canonical token/section format, its proposed scale and some proposed colors differ from current source, and `.impeccable/design.json` is absent. This extension does not repair that root documentation drift or promote its page-specific hero, podium colors or compact labels into global rules. A sanitized Jev boundary judgment also selected surface-only documentation (confidence 1.0); direct scope and source checks govern the decision.
+| State | Light evidence | Dark evidence |
+| --- | --- | --- |
+| Desktop | [Capture](../../.runtime/qa/leaderboard-lending/light-desktop.png) | [Capture](../../.runtime/qa/leaderboard-lending/dark-desktop.png) |
+| Tablet | [Capture](../../.runtime/qa/leaderboard-lending/light-tablet.png) | [Capture](../../.runtime/qa/leaderboard-lending/dark-tablet.png) |
+| Mobile | [Capture](../../.runtime/qa/leaderboard-lending/light-mobile.png) | [Capture](../../.runtime/qa/leaderboard-lending/dark-mobile.png) |
+| Narrow | [Capture](../../.runtime/qa/leaderboard-lending/light-narrow.png) | [Capture](../../.runtime/qa/leaderboard-lending/dark-narrow.png) |
 
-## Five-line design-system summary
+Additional current captures show [dark badge overflow](../../.runtime/qa/leaderboard-lending/badges-dark.png), [narrow badge overflow](../../.runtime/qa/leaderboard-lending/badges-narrow.png), [dark hover feedback](../../.runtime/qa/leaderboard-lending/hover-dark.png) and [the separate sharing choice](../../.runtime/qa/leaderboard-lending/sharing-dark.png).
 
-1. **Palette:** inherited cobalt/navy/white; pale ice-blue hero with rank-aware gold, blue and bronze podium fills.
-2. **Type:** inherited Manrope; bold 2.5→2.125→1.875rem hero, 1.5rem XP, 1.25rem sections and compact supporting labels.
-3. **Form:** flat tonal grouping, 14px panels, light separators and canonical controls with visible focus.
-4. **Truth rule:** opt-in current XP evidence, authoritative dense ties and private financial activity excluded.
-5. **Access rule:** first-entry-first mobile stacking, named keyboard-scrollable comparison and immediate reduced-motion totals.
+The implementation browser pass reported no page overflow and an empty console; the wide comparison dataset remains available inside its named horizontal-scroll region. It observed card border/shadow and row tint, Escape dismissal with focus returning to the overflow trigger, and dark choice persistence after reload. The narrow collection measured 281px wide, from x=12 to x=293 inside the 305px client width. The initial light preference and viewport were restored after inspection.
+
+**Finish verdict: ship within this visual extension's scope.** A fresh reviewer opened all twelve current captures and found no material visual fixes. Documentation was grounded in the current token/control, theme, shell, leaderboard and sharing source, with a direct read of the supplied desktop, narrow collection and sharing captures. This evidence does not independently certify financial aggregation, persistence or keyboard behavior beyond the supplied source and implementation browser observations. Application tests, UI checks, typecheck, contrast scripts, detectors and builds were not run for this revision; updated fixture expectations and harness remain unrun. Prior passing counts are not current validation.
+
+The approved global semantic roles and Tailwind-first rule are recorded in root `DESIGN.md`; `.impeccable/design.json` carries source-derived control previews, state timing, hover/overlay shadows and breakpoint metadata. Unrelated legacy design prose and styling drift were preserved rather than expanded into new rules.

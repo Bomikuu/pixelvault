@@ -197,7 +197,7 @@ class Command(BaseCommand):
             )
         from community.awards import evaluate_awards
         from community.messaging import ensure_thread, send_message
-        from community.models import Award, Contribution
+        from community.models import Award, Contribution, ProfileSettings
         from community.profiles import set_public_badges
 
         for handle in ["elias", "lina", "nico"]:
@@ -211,6 +211,10 @@ class Command(BaseCommand):
                     moderation_reason="Fictional seed content",
                 )
         for member in members.values():
+            # Explicit synthetic demo visibility, never a consent migration for real members.
+            ProfileSettings.objects.update_or_create(
+                member=member, defaults={"show_lending_totals": True}
+            )
             evaluate_awards(member_id=member.pk, rule_version="v1")
             set_public_badges(
                 member_id=member.pk,

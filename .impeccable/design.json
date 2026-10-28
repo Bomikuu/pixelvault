@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-28T09:25:21.844313+00:00",
+  "title": "Design System: PixelVault",
+  "extensions": {
+    "colorMeta": {
+      "primary-light": {
+        "role": "primary",
+        "displayName": "Light action blue"
+      },
+      "primary-dark": {
+        "role": "primary",
+        "displayName": "Dark action blue"
+      },
+      "background-light": {
+        "role": "neutral",
+        "displayName": "Cool light canvas"
+      },
+      "background-dark": {
+        "role": "neutral",
+        "displayName": "Navy canvas"
+      },
+      "surface-light": {
+        "role": "neutral",
+        "displayName": "White working surface"
+      },
+      "surface-dark": {
+        "role": "neutral",
+        "displayName": "Navy working surface"
+      },
+      "popover-dark": {
+        "role": "neutral",
+        "displayName": "Raised navy popover"
+      }
+    },
+    "shadows": [
+      {
+        "name": "podium-hover",
+        "value": "0 12px 28px -16px rgba(8,102,255,0.38)",
+        "purpose": "Blue hover elevation shared by all podium cards."
+      },
+      {
+        "name": "popover",
+        "value": "0 12px 36px #0b142829",
+        "purpose": "Canonical collection overlay."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-state",
+        "value": "160ms ease",
+        "purpose": "Canonical button state changes; transitions disabled under reduced motion."
+      },
+      {
+        "name": "podium-state",
+        "value": "200ms",
+        "purpose": "Card transform, border and shadow; reduced motion suppresses movement."
+      },
+      {
+        "name": "community-xp",
+        "value": "560ms; 1 - (1 - progress)^3",
+        "purpose": "One count-up per mounted podium member, community XP only; reduced motion and hidden documents resolve immediately. Financial amounts remain static."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "description": "Existing canonical default variant from controls.css; CSS variables inherit the active theme.",
+      "html": "<button class=\"ds-button ds-default\">View details</button>",
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;border:1px solid transparent;border-radius:var(--radius,.625rem);font:700 14px/1.4 Manrope,sans-serif;text-decoration:none;text-align:center;cursor:pointer;transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease,box-shadow 160ms ease}.ds-button:focus-visible{outline:3px solid var(--ring,#0866ff);outline-offset:3px}.ds-button:disabled{opacity:.55;cursor:not-allowed;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-default{background:var(--primary,#0866ff);color:var(--primary-foreground,#fff)}.ds-default:hover{background:var(--primary-hover,#0755d4)}"
+    },
+    {
+      "name": "Outline button",
+      "kind": "button",
+      "description": "Existing canonical outline variant from controls.css; CSS variables inherit the active theme.",
+      "html": "<button class=\"ds-button ds-outline\">View details</button>",
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;border:1px solid transparent;border-radius:var(--radius,.625rem);font:700 14px/1.4 Manrope,sans-serif;text-decoration:none;text-align:center;cursor:pointer;transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease,box-shadow 160ms ease}.ds-button:focus-visible{outline:3px solid var(--ring,#0866ff);outline-offset:3px}.ds-button:disabled{opacity:.55;cursor:not-allowed;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-outline{background:var(--card,#fff);color:var(--foreground,#0f172a);border-color:#a7b7cc}.ds-outline:hover{background:var(--accent,#edf3ff);color:var(--accent-foreground,#1648a7);border-color:#6d8dc0}"
+    },
+    {
+      "name": "Secondary button",
+      "kind": "button",
+      "description": "Existing canonical secondary variant from controls.css; CSS variables inherit the active theme.",
+      "html": "<button class=\"ds-button ds-secondary\">View details</button>",
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;border:1px solid transparent;border-radius:var(--radius,.625rem);font:700 14px/1.4 Manrope,sans-serif;text-decoration:none;text-align:center;cursor:pointer;transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease,box-shadow 160ms ease}.ds-button:focus-visible{outline:3px solid var(--ring,#0866ff);outline-offset:3px}.ds-button:disabled{opacity:.55;cursor:not-allowed;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-secondary{background:var(--secondary,#edf3ff);color:var(--secondary-foreground,#1648a7)}.ds-secondary:hover{background:var(--accent,#edf3ff)}"
+    },
+    {
+      "name": "Ghost button",
+      "kind": "button",
+      "description": "Existing canonical ghost variant from controls.css; CSS variables inherit the active theme.",
+      "html": "<button class=\"ds-button ds-ghost\">View details</button>",
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;border:1px solid transparent;border-radius:var(--radius,.625rem);font:700 14px/1.4 Manrope,sans-serif;text-decoration:none;text-align:center;cursor:pointer;transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease,box-shadow 160ms ease}.ds-button:focus-visible{outline:3px solid var(--ring,#0866ff);outline-offset:3px}.ds-button:disabled{opacity:.55;cursor:not-allowed;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-ghost{background:transparent;color:var(--foreground,#0f172a)}.ds-ghost:hover{background:var(--accent,#edf3ff);color:var(--accent-foreground,#1648a7)}"
+    },
+    {
+      "name": "Link button",
+      "kind": "button",
+      "description": "Existing canonical link variant from controls.css; CSS variables inherit the active theme.",
+      "html": "<button class=\"ds-button ds-link\">View details</button>",
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;border:1px solid transparent;border-radius:var(--radius,.625rem);font:700 14px/1.4 Manrope,sans-serif;text-decoration:none;text-align:center;cursor:pointer;transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease,box-shadow 160ms ease}.ds-button:focus-visible{outline:3px solid var(--ring,#0866ff);outline-offset:3px}.ds-button:disabled{opacity:.55;cursor:not-allowed;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-link{background:transparent;color:#0755d4;text-decoration:underline;text-underline-offset:4px}.ds-link:hover{text-decoration:underline}"
+    },
+    {
+      "name": "Destructive button",
+      "kind": "button",
+      "description": "Existing canonical destructive variant from controls.css; CSS variables inherit the active theme.",
+      "html": "<button class=\"ds-button ds-destructive\">View details</button>",
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;border:1px solid transparent;border-radius:var(--radius,.625rem);font:700 14px/1.4 Manrope,sans-serif;text-decoration:none;text-align:center;cursor:pointer;transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease,box-shadow 160ms ease}.ds-button:focus-visible{outline:3px solid var(--ring,#0866ff);outline-offset:3px}.ds-button:disabled{opacity:.55;cursor:not-allowed;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-destructive{background:var(--destructive,#b42318);color:#fff}.ds-destructive:hover{background:#921c14}"
+    },
+    {
+      "name": "Text field",
+      "kind": "input",
+      "description": "Canonical input surface, boundary and focus foundation.",
+      "html": "<label class=\"ds-field-label\">Display name<input class=\"ds-field\" value=\"Sample member\" /></label>",
+      "css": ".ds-field-label{display:grid;gap:8px;font:14px Manrope,sans-serif;color:var(--foreground,#0f172a)}.ds-field{border:1px solid var(--input,#8b9aaf);padding:10px 12px;border-radius:var(--radius,.625rem);color:var(--foreground,#0f172a);background:var(--card,#fff);font:inherit}.ds-field:focus-visible{outline:3px solid #cce0ff;border-color:var(--primary,#0866ff);outline-offset:1px}"
+    },
+    {
+      "name": "Neutral podium card",
+      "kind": "card",
+      "description": "All podium positions share the same neutral card and blue hover treatment; this preview shows a private total.",
+      "html": "<article class=\"ds-podium\"><a class=\"ds-profile\" href=\"#member\">Sample member</a><span class=\"ds-caption\">Lifetime lent</span><strong class=\"ds-private\">Not shared</strong></article>",
+      "css": ".ds-podium{min-width:0;border-radius:14px;border:1px solid var(--border,#dbe3ee);background:var(--card,#fff);color:var(--foreground,#0f172a);padding:20px;font-family:Manrope,sans-serif;transition:transform 200ms,border-color 200ms,box-shadow 200ms}.ds-podium:hover{transform:translateY(-4px);border-color:var(--primary,#0866ff);box-shadow:0 12px 28px -16px rgba(8,102,255,.38)}.ds-podium:focus-within{border-color:var(--primary,#0866ff)}.ds-profile{display:block;color:var(--foreground,#0f172a);font-size:14px;font-weight:800;text-decoration:none}.ds-profile:hover,.ds-profile:focus-visible{color:var(--primary,#0866ff);text-decoration:underline}.ds-profile:focus-visible{outline:3px solid var(--ring,#0866ff);outline-offset:4px}.ds-caption{display:block;margin-top:20px;font-size:12px;color:var(--muted-foreground,#52637b)}.ds-private{display:block;margin-top:4px;font-size:12px;font-weight:500;color:var(--muted-foreground,#52637b)}@media(prefers-reduced-motion:reduce){.ds-podium:hover{transform:none}}"
+    },
+    {
+      "name": "Badge collection surface",
+      "kind": "custom",
+      "description": "Shared popover foundation with leaderboard dimensions. Actual Radix UI provides collision handling, Escape dismissal and focus return; this snippet represents its surface.",
+      "html": "<section class=\"ds-popover\" aria-label=\"Showcased badges\"><h3 class=\"ds-popover-title\">Showcased badges</h3><p class=\"ds-popover-copy\">Selected by the member. Current eligibility applies.</p></section>",
+      "css": ".ds-popover{width:min(320px,calc(100vw - 24px));max-height:420px;overflow-y:auto;padding:16px;background:var(--popover,#fff);color:var(--popover-foreground,#0f172a);border:1px solid var(--border,#dbe3ee);border-radius:14px;box-shadow:0 12px 36px #0b142829;font-family:Manrope,sans-serif}.ds-popover-title{margin:0;font-size:14px;font-weight:700}.ds-popover-copy{margin:4px 0 0;font-size:12px;color:var(--muted-foreground,#52637b)}"
+    }
+  ],
+  "narrative": {
+    "rules": [
+      {
+        "name": "The Semantic Theme Rule",
+        "body": "Use shared semantic roles for new UI so foregrounds, surfaces and interaction states change together across light and dark modes.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tailwind First Rule",
+        "body": "Express new feature layout, typography, responsive behavior, hover, focus and motion directly with Tailwind utilities in TSX. Keep semantic tokens and canonical control foundations in their existing shared stylesheets; do not add feature stylesheets when utilities express the design.",
+        "section": "components"
+      }
+    ]
+  }
+}

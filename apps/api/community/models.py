@@ -12,6 +12,7 @@ class ProfileSettings(Record):
     avatar_flair_id = models.UUIDField(null=True, blank=True)
     show_reputation = models.BooleanField(default=True)
     leaderboard_opt_in = models.BooleanField(default=False)
+    show_lending_totals = models.BooleanField(default=False)
 
 
 class Contribution(Record):

@@ -115,6 +115,7 @@ def test_authenticated_details_explain_progress_frames_and_default_privacy(membe
         "avatar_flair_id": None,
         "show_reputation": True,
         "leaderboard_opt_in": False,
+        "show_lending_totals": False,
     }
     assert [frame["key"] for frame in data["frames"] if frame["unlocked"]] == ["plain", "blue"]
     assert APIClient().get("/api/v1/community/reputation").status_code == 403
@@ -324,6 +325,8 @@ def test_leaderboard_is_explicit_opt_in_excludes_inactive_and_suspended_and_expo
         "photo_url",
         "reputation",
         "activity",
+        "badges",
+        "lending",
     }
     assert data["rules"] == REPUTATION_RULES
     assert "Dense ranks" in data["notice"]
@@ -335,6 +338,9 @@ def test_leaderboard_is_explicit_opt_in_excludes_inactive_and_suspended_and_expo
         "learning_completed": 0,
         "approved_contributions": 1,
         "total_xp": 50,
+        "lending_sharing_members": 0,
+        "total_lent": "0",
+        "loans_funded": 0,
     }
     assert data["entries"][0]["activity"] == {
         "learning_completed": False,
@@ -400,6 +406,9 @@ def test_leaderboard_summary_uses_all_visible_participants_and_capped_distinct_x
             "learning_completed": 1,
             "approved_contributions": 20,
             "total_xp": 1100,
+            "lending_sharing_members": 0,
+            "total_lent": "0",
+            "loans_funded": 0,
         }
     )
     assert first["entries"][0]["activity"] == {

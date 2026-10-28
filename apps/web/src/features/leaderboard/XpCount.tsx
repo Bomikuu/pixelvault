@@ -50,11 +50,14 @@ export function XpCount({ value }: { value: number }) {
   }, [value]);
   return (
     <span
-      className="podium-xp"
+      className="inline-flex items-baseline gap-1 text-2xl font-extrabold whitespace-nowrap text-primary tabular-nums"
       aria-label={`${value.toLocaleString("en-PH")} community XP`}
     >
       <span aria-hidden="true">{display.toLocaleString("en-PH")}</span>
-      <span aria-hidden="true"> XP</span>
+      <span className="text-[11px]" aria-hidden="true">
+        {" "}
+        XP
+      </span>
     </span>
   );
 }

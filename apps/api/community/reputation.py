@@ -156,6 +156,7 @@ def reputation_details(*, member):
             else None,
             "show_reputation": preferences.show_reputation if preferences else True,
             "leaderboard_opt_in": preferences.leaderboard_opt_in if preferences else False,
+            "show_lending_totals": preferences.show_lending_totals if preferences else False,
         },
         "rules": REPUTATION_RULES,
         "progress": {
@@ -203,12 +204,18 @@ def xp_progress(member, *, own=False):
 def update_reputation_settings(*, member, data):
     selected = {
         key: data[key]
-        for key in ("avatar_frame", "avatar_flair_id", "show_reputation", "leaderboard_opt_in")
+        for key in (
+            "avatar_frame",
+            "avatar_flair_id",
+            "show_reputation",
+            "leaderboard_opt_in",
+            "show_lending_totals",
+        )
         if key in data
     }
     if not selected:
         return
-    for key in ("show_reputation", "leaderboard_opt_in"):
+    for key in ("show_reputation", "leaderboard_opt_in", "show_lending_totals"):
         if key in selected and not isinstance(selected[key], bool):
             raise DomainError(
                 "invalid_preferences", "Community display preferences must be true or false."
@@ -235,7 +242,9 @@ def update_reputation_settings(*, member, data):
 
 
 def leaderboard(*, limit=25, cursor=None):
-    from .profiles import public_identity
+    from .profiles import award_data, public_badge_awards, public_identity
+    from django.db.models import Count, Sum
+    from servicing.models import Loan
 
     if isinstance(limit, bool):
         raise DomainError("invalid_limit", "Choose a leaderboard limit from 1 to 50.")
@@ -267,8 +276,8 @@ def leaderboard(*, limit=25, cursor=None):
         )
         .select_related("community_settings")
     )
-    # Bulk reading is bounded by explicit participant opt-in. Canonicalization
-    # matches award evaluation; no loan, document or verification row is read.
+    # XP scoring uses learning/contribution evidence only. Lending aggregates
+    # below have a separate explicit sharing preference and never affect rank.
     bodies = {member.id: set() for member in members}
     for member_id, body in (
         Contribution.objects.filter(member_id__in=bodies, status="approved")
@@ -282,6 +291,26 @@ def leaderboard(*, limit=25, cursor=None):
         for member in members
     ]
     scored.sort(key=lambda item: (-item[1]["points"], str(item[0].id)))
+    sharing = [member.id for member in members if member.community_settings.show_lending_totals]
+    lending = {
+        str(row["lender_id"]): {
+            "total_lent": str(row["total_lent"] or 0),
+            "loans_funded": row["loans_funded"],
+            "people_helped": row["people_helped"],
+        }
+        for row in Loan.objects.filter(
+            lender_id__in=sharing,
+            disbursement_status="confirmed",
+            disbursement__status="confirmed",
+        )
+        .values("lender_id")
+        .annotate(
+            total_lent=Sum("disbursement__amount"),
+            loans_funded=Count("id"),
+            people_helped=Count("borrower_id", distinct=True),
+        )
+    }
+    empty_lending = {"total_lent": "0", "loans_funded": 0, "people_helped": 0}
     fingerprint = hashlib.sha256(
         json.dumps(
             [
@@ -290,6 +319,9 @@ def leaderboard(*, limit=25, cursor=None):
                     facts["points"],
                     facts["literacy_points"],
                     facts["approved_contributions"],
+                    lending.get(str(member.id), empty_lending)
+                    if member.community_settings.show_lending_totals
+                    else None,
                 )
                 for member, facts in scored
             ]
@@ -325,6 +357,13 @@ def leaderboard(*, limit=25, cursor=None):
                     "learning_completed": bool(facts["literacy_points"]),
                     "approved_contributions": facts["approved_contributions"],
                 },
+                "badges": [
+                    award_data(award, public=True)
+                    for award in public_badge_awards(member, preferences=member.community_settings)
+                ],
+                "lending": lending.get(str(member.id), empty_lending)
+                if member.community_settings.show_lending_totals
+                else None,
             }
             for member, facts in page
         ],
@@ -334,6 +373,9 @@ def leaderboard(*, limit=25, cursor=None):
             "learning_completed": sum(bool(facts["literacy_points"]) for _, facts in scored),
             "approved_contributions": sum(facts["approved_contributions"] for _, facts in scored),
             "total_xp": sum(facts["points"] for _, facts in scored),
+            "lending_sharing_members": len(sharing),
+            "total_lent": str(sum(int(row["total_lent"]) for row in lending.values())),
+            "loans_funded": sum(row["loans_funded"] for row in lending.values()),
         },
         "rules": REPUTATION_RULES,
         "notice": LEADERBOARD_NOTICE,

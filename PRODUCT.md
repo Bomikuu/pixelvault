@@ -64,7 +64,7 @@ Individual-to-individual lending is mandatory. PixelVault combines nearby offers
 
 1. Individuals remain the contractual counterparties; eligibility is explicit.
 2. Exact costs and obligations precede acceptance; confirmed events drive balances.
-3. Social recognition is optional; sensitive financial history stays private.
+3. Social recognition is optional. A separate member choice may publish aggregate confirmed lifetime lending, funded-loan count and distinct people helped on the leaderboard; it defaults off. Borrower identities, borrowing totals, individual debt records and repayment hardship stay private.
 4. Verification, disputes and recovery are accountable human workflows.
 5. Simulation, collection, disbursement and settlement are distinct facts.
 

@@ -1,3 +1,34 @@
+---
+name: PixelVault
+description: Blue identity with explicit light and dark semantic surfaces.
+colors:
+  primary-light: "#0866ff"
+  primary-hover-light: "#0755d4"
+  primary-dark: "#76b0ff"
+  primary-hover-dark: "#9bc6ff"
+  background-light: "#f8fafc"
+  foreground-light: "#0f172a"
+  surface-light: "#ffffff"
+  muted-light: "#f1f5f9"
+  muted-foreground-light: "#52637b"
+  accent-light: "#edf3ff"
+  accent-foreground-light: "#1648a7"
+  border-light: "#dbe3ee"
+  input-light: "#8b9aaf"
+  background-dark: "#0b1428"
+  foreground-dark: "#f8fafc"
+  surface-dark: "#111e35"
+  popover-dark: "#16263f"
+  muted-dark: "#182a45"
+  muted-foreground-dark: "#b3c0d5"
+  secondary-dark: "#1b3354"
+  secondary-foreground-dark: "#d4e5ff"
+  accent-dark: "#203c61"
+  accent-foreground-dark: "#e3efff"
+  border-dark: "#334965"
+  input-dark: "#69809f"
+---
+
 # PixelVault design
 
 Date: 2026-10-28. User-pinned branding guides the implemented semantic tokens and original derivative assets. These are not sampled official brand standards or designer-source exports.
@@ -60,3 +91,27 @@ Surface-specific priorities live in [surfaces/community.md](docs/surfaces/commun
 Canonical controls now have explicit native CSS foregrounds, backgrounds, padding and icon gaps, with the anchor reset excluding action controls. Dialog centering uses one native translation, with a viewport-bounded scrolling surface. Compact navigation and profile action rows wrap rather than overflowing. Community XP comes only from recorded learning and approved educational contributions; avatar frames and eligible award flair are cosmetic, and leaderboard participation requires opt-in with visible points.
 
 Future implementation must read Impeccable's craft-floor immediately before UI edits, use shared Shadcn controls, and run authorized automated component/contrast checks. Browser/visual inspection requires the user's explicit request under this repository's verification policy.
+
+## Colors
+
+Implemented theme update, 2026-10-28: the frontmatter records the actual shared theme values from `packages/ui/src/styles/tokens.css`. This approved light/dark update supersedes the earlier proposed color values for these roles; unrelated planning prose above remains preserved.
+
+### Primary
+
+The blue identity remains permanent. Light mode uses the saturated primary for actions; dark mode uses the pale-blue primary with the dark canvas foreground for filled actions. Hover has its own primary value in each theme. The theme changes semantic UI roles, not the supplied brand or illustration assets.
+
+### Neutral
+
+Light mode pairs a cool page ground with white cards and popovers. Dark mode pairs navy ground with lighter navy cards, a distinct popover surface and pale text. Muted text, borders, input boundaries, secondary surfaces and accent states resolve independently in each mode. Ring color follows the active primary. The frontmatter's light accent values also serve the light secondary roles; light primary foreground is the white surface value, dark primary foreground is the dark background value.
+
+**The Semantic Theme Rule.** Use shared semantic roles for new UI so foregrounds, surfaces and interaction states change together across light and dark modes.
+
+## Components
+
+**The Tailwind First Rule.** Express new feature layout, typography, responsive behavior, hover, focus and motion directly with Tailwind utilities in TSX. Keep semantic tokens and canonical control foundations in their existing shared stylesheets; do not add feature stylesheets when utilities express the design.
+
+Canonical Shadcn controls retain the existing native CSS foundation. Filled buttons use primary/primary-foreground; ghost buttons use transparent rest and accent hover; fields use card/foreground with input borders. The shared theme is initialized before React renders, follows system preference until a choice is stored, and exposes an accessible light/dark toggle in the header. An explicit choice persists under `pixelvault-theme`; blocked storage leaves the session choice usable.
+
+The leaderboard applies the same neutral card surface to all three podium positions. Blue hover borders and a restrained shadow, row accent tint, profile-link emphasis and circular badge lift communicate interaction. Selected badge artwork keeps its white circular backing in both modes. Two visible badges precede a count derived from the remaining selected public badges; the overflow popover uses the semantic popover surface and viewport collision limits. Details and surface-specific evidence live in [the leaderboard contract](docs/surfaces/leaderboard.md).
+
+Theme documentation was extracted from source and the supplied current visual captures. The current task explicitly permits visual-only testing: no automated tests, UI check, typecheck, contrast script, detector or build was run for this revision. Earlier automated results are historical. Remaining legacy hard-coded styles outside this approved theme/leaderboard change are not canonized or repaired by this addendum.

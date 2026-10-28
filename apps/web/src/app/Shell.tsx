@@ -43,6 +43,7 @@ import {
 } from "@pixelvault/ui";
 import { useSession } from "./session";
 import { ActionLink, ErrorNotice, Loading, MemberAvatar } from "../components";
+import { legacyThemeClasses, ThemeToggle } from "./ThemeToggle";
 const community = [
   ["/explore", "Explore offers", Compass],
   ["/how-it-works", "How it works", BookOpen],
@@ -90,7 +91,7 @@ export function Shell() {
     <>
       <div className="sidebar-top">
         <Link to="/explore" aria-label="PixelVault home">
-          <BrandMark />
+          <BrandMark className="dark:[&_.brand-word]:text-foreground!" />
         </Link>
         <Button
           variant="ghost"
@@ -102,7 +103,7 @@ export function Shell() {
           <X />
         </Button>
       </div>
-      <div className="area-switch">
+      <div className="area-switch dark:bg-muted! dark:border-border! dark:[&_a]:text-muted-foreground! dark:[&_.selected]:bg-accent! dark:[&_.selected]:text-foreground!">
         <NavLink
           to="/explore"
           className={active === "community" && !isAdmin ? "selected" : ""}
@@ -125,7 +126,7 @@ export function Shell() {
             ]
         ).map(([heading, items]) => (
           <div className="nav-group" key={String(heading)}>
-            <p>{String(heading)}</p>
+            <p className="dark:text-muted-foreground!">{String(heading)}</p>
             {(items as typeof community | typeof workspace | typeof admin).map(
               ([path, name, Icon]) => (
                 <NavLink
@@ -134,7 +135,7 @@ export function Shell() {
                   end={path === "/dashboard"}
                   onClick={() => setMenu(false)}
                   className={({ isActive }) =>
-                    `nav-item ${isActive ? "active" : ""}`
+                    `nav-item dark:text-muted-foreground! dark:hover:bg-accent! dark:hover:text-foreground! ${isActive ? "active dark:bg-accent! dark:text-primary!" : ""}`
                   }
                 >
                   <Icon size={18} />
@@ -149,7 +150,7 @@ export function Shell() {
         ))}
       </nav>
       <div className="sidebar-bottom">
-        <div className="learning-teaser">
+        <div className="learning-teaser dark:bg-muted! dark:border-border! dark:[&_p]:text-muted-foreground! dark:[&_a]:text-primary!">
           <span className="learning-icon">
             <BookOpen size={19} />
           </span>
@@ -169,12 +170,15 @@ export function Shell() {
             <ArrowUpRight size={14} />
           </NavLink>
         )}
-        <Link className="nav-item help-link" to="/help">
+        <Link
+          className="nav-item help-link dark:text-muted-foreground! dark:hover:bg-accent!"
+          to="/help"
+        >
           <CircleHelp size={18} />
           Help & private support
         </Link>
         <Link
-          className="sidebar-profile"
+          className="sidebar-profile dark:border-border! dark:[&_small]:text-muted-foreground!"
           to={member ? "/profile" : "/sign-in"}
           onClick={() => setMenu(false)}
         >
@@ -197,12 +201,14 @@ export function Shell() {
   );
   return (
     <div
-      className={`app-shell ${location.pathname === "/explore" && new URLSearchParams(location.search).get("view") !== "list" ? "is-map-workspace" : ""}`}
+      className={`app-shell bg-background text-foreground ${legacyThemeClasses} ${location.pathname === "/explore" && new URLSearchParams(location.search).get("view") !== "list" ? "is-map-workspace" : ""}`}
     >
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
-      <aside className="sidebar">{navigation}</aside>
+      <aside className="sidebar dark:bg-card! dark:border-border!">
+        {navigation}
+      </aside>
       <Dialog open={menu} onOpenChange={setMenu}>
         <DialogContent className="mobile-drawer" aria-describedby={undefined}>
           <DialogTitle className="sr-only">Navigation</DialogTitle>
@@ -210,7 +216,7 @@ export function Shell() {
         </DialogContent>
       </Dialog>
       <div className="app-body">
-        <div className="environment-strip">
+        <div className="environment-strip dark:bg-muted! dark:text-muted-foreground! dark:border-border!">
           <span className="environment-dot" />
           <strong>Test environment</strong>
           <span>Synthetic community. No real funds move.</span>
@@ -218,7 +224,7 @@ export function Shell() {
             About test mode <ArrowUpRight size={12} />
           </Link>
         </div>
-        <header className="topbar">
+        <header className="topbar dark:bg-card! dark:border-border! dark:text-foreground!">
           <div className="topbar-title">
             <Button
               size="icon"
@@ -229,7 +235,7 @@ export function Shell() {
             >
               <Menu />
             </Button>
-            <span>
+            <span className="max-[380px]:hidden dark:text-muted-foreground!">
               {isAdmin
                 ? "Operations"
                 : active === "community"
@@ -238,6 +244,7 @@ export function Shell() {
             </span>
           </div>
           <div className="topbar-actions">
+            <ThemeToggle />
             <Link to="/verification" className="verification-link">
               <ShieldCheck size={16} />
               Verification center
@@ -291,7 +298,7 @@ export function Shell() {
             </>
           )}
         </main>
-        <footer className="app-footer">
+        <footer className="app-footer dark:text-muted-foreground! dark:border-border!">
           <span>
             PixelVault <span aria-hidden="true">·</span> Borrow today. Build
             tomorrow.
@@ -299,7 +306,10 @@ export function Shell() {
           <Link to="/help#privacy">Privacy & community guidelines</Link>
         </footer>
       </div>
-      <nav className="mobile-bottom" aria-label="Mobile navigation">
+      <nav
+        className="mobile-bottom dark:bg-card! dark:border-border! dark:text-muted-foreground! dark:[&_a]:text-muted-foreground! dark:[&_.active]:text-primary!"
+        aria-label="Mobile navigation"
+      >
         <NavLink to="/explore">
           <Compass size={20} />
           <span>Explore</span>

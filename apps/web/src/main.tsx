@@ -13,6 +13,8 @@ import "@fontsource/manrope/800.css";
 import "../../../packages/ui/src/styles/tokens.css";
 import "../../../packages/ui/src/styles/controls.css";
 import "./styles.css";
+import { initializeTheme } from "./app/ThemeToggle";
+initializeTheme();
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: { staleTime: 15_000, retry: 1, refetchOnWindowFocus: false },

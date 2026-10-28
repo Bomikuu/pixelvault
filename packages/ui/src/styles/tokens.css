@@ -12,6 +12,7 @@
   --popover-foreground: #0f172a;
   --primary: #0866ff;
   --primary-foreground: #ffffff;
+  --primary-hover: #0755d4;
   --secondary: #edf3ff;
   --secondary-foreground: #1648a7;
   --muted: #f1f5f9;
@@ -38,6 +39,31 @@
   --chart-3: #7c3aed;
   --chart-4: #92400e;
   --chart-5: #52637b;
+}
+.dark {
+  --background: #0b1428;
+  --foreground: #f8fafc;
+  --card: #111e35;
+  --card-foreground: #f8fafc;
+  --popover: #16263f;
+  --popover-foreground: #f8fafc;
+  --primary: #76b0ff;
+  --primary-foreground: #0b1428;
+  --primary-hover: #9bc6ff;
+  --secondary: #1b3354;
+  --secondary-foreground: #d4e5ff;
+  --muted: #182a45;
+  --muted-foreground: #b3c0d5;
+  --accent: #203c61;
+  --accent-foreground: #e3efff;
+  --border: #334965;
+  --input: #69809f;
+  --ring: #76b0ff;
+  --success: #6ee7b7;
+  --success-background: #123d35;
+  --warning: #fcd38d;
+  --warning-background: #49351c;
+  --danger-background: #4b2530;
 }
 @theme inline {
   --font-sans: "Manrope", sans-serif;

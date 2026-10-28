@@ -30,7 +30,7 @@
   color: var(--primary-foreground);
 }
 [data-slot="button"][data-variant="default"]:hover {
-  background: #0755d4;
+  background: var(--primary-hover);
 }
 [data-slot="button"][data-variant="outline"] {
   background: var(--card);
@@ -47,7 +47,7 @@
   color: var(--secondary-foreground);
 }
 [data-slot="button"][data-variant="secondary"]:hover {
-  background: #dbe8ff;
+  background: var(--accent);
 }
 [data-slot="button"][data-variant="ghost"] {
   background: transparent;

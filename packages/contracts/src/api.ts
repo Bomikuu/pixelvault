@@ -35,6 +35,7 @@ export interface ReputationWorkspace {
     avatar_flair_id: string | null;
     show_reputation: boolean;
     leaderboard_opt_in: boolean;
+    show_lending_totals?: boolean;
   };
   rules: {
     literacy_points: number;
@@ -56,6 +57,12 @@ export interface LeaderboardPage {
     avatar_key?: string;
     photo_url?: string | null;
     reputation: CommunityReputation;
+    badges?: Award[];
+    lending?: {
+      total_lent: string;
+      loans_funded: number;
+      people_helped: number;
+    } | null;
     activity?: {
       learning_completed: boolean;
       approved_contributions: number;
@@ -67,6 +74,9 @@ export interface LeaderboardPage {
     learning_completed: number;
     approved_contributions: number;
     total_xp: number;
+    lending_sharing_members?: number;
+    total_lent?: string;
+    loans_funded?: number;
   };
   rules: ReputationWorkspace["rules"];
   notice: string;

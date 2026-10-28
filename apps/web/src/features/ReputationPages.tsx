@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, LockKeyhole, Sparkles } from "lucide-react";
 import { Button, Checkbox, Label } from "@pixelvault/ui";
 import type {
@@ -36,6 +36,7 @@ export function ReputationPage() {
 }
 
 export function ReputationSettings() {
+  const client = useQueryClient();
   const { session, refresh } = useSession();
   const query = useQuery({
     queryKey: ["community-reputation"],
@@ -49,6 +50,7 @@ export function ReputationSettings() {
   const [flairChoice, setFlairChoice] = useState<string>();
   const [showChoice, setShowChoice] = useState<boolean>();
   const [boardChoice, setBoardChoice] = useState<boolean>();
+  const [lendingChoice, setLendingChoice] = useState<boolean>();
   if (query.isPending)
     return <Loading text="Loading your community experience…" />;
   if (query.error) return <ErrorNotice error={query.error} />;
@@ -64,6 +66,7 @@ export function ReputationSettings() {
   const flair = flairChoice ?? data.settings.avatar_flair_id ?? "none";
   const show = showChoice ?? data.settings.show_reputation;
   const board = boardChoice ?? data.settings.leaderboard_opt_in;
+  const lending = lendingChoice ?? data.settings.show_lending_totals ?? false;
   const eligible = (awards.data?.awards || []).filter(
     (award) => award.eligible && !award.private,
   );
@@ -118,9 +121,16 @@ export function ReputationSettings() {
               avatar_flair_id: flair === "none" ? null : flair,
               show_reputation: show,
               leaderboard_opt_in: board,
+              show_lending_totals: lending,
             }),
           });
           await refresh();
+          await client.invalidateQueries({
+            queryKey: ["community-leaderboard"],
+          });
+          await client.invalidateQueries({
+            queryKey: ["community-reputation"],
+          });
         }}
       >
         <fieldset className="frame-picker">
@@ -211,6 +221,18 @@ export function ReputationSettings() {
             />
             <Label htmlFor="join-community-board">
               Include me in the optional community board
+            </Label>
+          </div>
+          <div className="check-field">
+            <Checkbox
+              id="share-lending-totals"
+              checked={lending}
+              onCheckedChange={(checked) => setLendingChoice(checked === true)}
+            />
+            <Label htmlFor="share-lending-totals">
+              {" "}
+              Share my lifetime lent amount, funded loan count and people helped
+              on the leaderboard
             </Label>
           </div>
           <p className="small-text">
