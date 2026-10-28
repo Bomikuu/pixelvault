@@ -76,9 +76,9 @@ components:
   page-desktop:
     padding: "24px"
   podium-badge:
-    size: "64px"
+    size: "44px"
   table-badge:
-    size: "48px"
+    size: "44px"
   podium-first-light:
     backgroundColor: "{colors.podium-gold-surface-light}"
     rounded: "{rounded.panel}"
@@ -119,7 +119,7 @@ Original derivative standalone logo/glyph and achievement vectors are in package
 
 The signature interaction is **offer → full schedule → private application → lender selection → mutual acceptance → confirmed funding → shared loan timeline**. The timeline is the factual thread joining payments, documents and private cases. It is not an honor/shame meter.
 
-Desktop uses one navigation hierarchy within each area, a clear Community/My dashboard switch, and Messages. Mobile primary navigation: Explore, Dashboard, Inbox, Profile. Borrowing/Lending changes dashboard context without changing account identity. Financial review, signatures and multi-section cases use full routes; dialogs serve short confirmations.
+Signed-in members use one navigation hierarchy within each area, a clear Community/My dashboard switch, and Messages. Their mobile primary navigation is Explore, Dashboard, Inbox, Profile. Guests use public community destinations, with Explore, Leaderboard, Learn and Sign in in the mobile navigation; workspace and private actions appear only after a session member is available. Borrowing/Lending changes dashboard context without changing account identity. Financial review, signatures and multi-section cases use full routes; dialogs serve short confirmations.
 
 Use information-rich rows for comparing offers and managing loans. A listing shows one named lender, offered amount, total-cost example, frequency, approximate area and precise verification attributes. A dashboard leads with the next action, not a promotional hero. Loan detail leads with status and next obligation, then timeline and schedule, with documents/cases in adjacent navigation.
 
@@ -190,11 +190,11 @@ Proposed UI type: self-hosted Manrope, with system sans fallback; the board does
 
 The desktop navigation rail begins at 1024px. Expanded and collapsed widths, and page padding, are recorded in frontmatter. Main content no longer has a narrow maximum-width cap. Rail width and the corresponding content margin move together over 300ms ease-out; reduced motion removes those transitions. The collapsed preference persists under `pixelvault-sidebar-collapsed`, with session-only behavior if storage is blocked. Icon-only destinations retain accessible labels and tooltips.
 
-The header owns the Community/My dashboard segmented switch: a bordered muted rounded container, primary selected segment, and compact icons with text. Below 640px it occupies its own full-width header row; larger screens keep it beside the navigation toggle. Mobile retains the drawer and four-destination bottom navigation.
+For signed-in members, the header owns the Community/My dashboard segmented switch: a bordered muted rounded container, primary selected segment, and compact icons with text. Below 640px it occupies its own full-width header row; larger screens keep it beside the navigation toggle. Guests and unresolved sessions do not render either area-switch variant, workspace destinations or private member actions. Mobile retains the drawer and four-destination bottom navigation appropriate to the session. Route protection remains independent of navigation visibility.
 
 Agreement-room detail is the dedicated protected-layout exception: it owns the dynamic viewport height without the platform rail, header, footer or mobile navigation. Room-local return, theme and confirmed sign-out controls retain access to shared navigation and session actions. Desktop columns scroll independently; narrow layouts reflow into one scrolling viewport. This layout retains the incumbent semantic theme and canonical controls; its column dimensions and conversation arrangement belong to [the agreement-room contract](docs/surfaces/agreement-rooms.md).
 
-At desktop widths the podium uses three columns, with the first displayed position in the center; narrow screens stack in server order. The comparison table remains in its named horizontal-scroll region. These surface-specific relationships are detailed in [the leaderboard contract](docs/surfaces/leaderboard.md).
+At desktop widths the podium uses three columns, with the first displayed position in the center; narrow screens stack in server order. The comparison table remains in its named horizontal-scroll region. The focused preview, separate public directory, search and showcased-badge filtering follow the current section of [the leaderboard contract](docs/surfaces/leaderboard.md); its older compositions and pagination rules are historical. Preview limits, directory page sizes and hero composition remain surface-specific requirements.
 
 ### Incumbent spacing and responsive contract
 
@@ -224,7 +224,7 @@ The theme control starts one circular reveal of the new root snapshot from the c
 
 ### Podium and achievement details
 
-The latest approved distinct-position treatment supersedes the earlier neutral-podium guidance. Card hover borders remain blue with restrained elevation; table rows use the semantic accent tint, and profile links retain emphasis. Selected badge artwork keeps a white circular backing in both modes. Podium triggers are 64px with 54px art; table triggers are 48px with 40px art. Individual details use 80px circles with 68px art, criteria and earned date. Badge and collection popovers open in place, with no badge redirect, viewport collision limits, Escape dismissal and focus return through the canonical popover behavior.
+The latest approved distinct-position treatment supersedes the earlier neutral-podium guidance. Card hover borders remain blue with restrained elevation; table rows use the semantic accent tint, and profile links retain emphasis. Selected badge artwork keeps a white circular backing in both modes. Podium and table triggers both retain 44px touch controls; podium art is 34px and table art is 28px. Individual details use 80px circles with 68px art, criteria and earned date. Badge and collection popovers open in place, with no badge redirect, viewport collision limits, Escape dismissal and focus return through the canonical popover behavior.
 
 Two visible badges precede a count derived from the remaining selected public badges. The public showcase cap remains three, so three selected badges produce +1. Never fabricate +3 or enlarge the showcase capacity for presentation.
 
@@ -237,7 +237,7 @@ List offers and the map sidebar expose the same pill-shaped canonical Like contr
 ### Do:
 
 - **Do** preserve the blue PixelVault identity and use shared semantic light/dark roles.
-- **Do** use the recorded shell dimensions, main padding and header area switch for ordinary connected surfaces; agreement-room detail uses the dedicated viewport layout described above.
+- **Do** use the recorded shell dimensions and main padding, exposing the header area switch and private destinations only for signed-in members; agreement-room detail uses the dedicated viewport layout described above.
 - **Do** keep lending aggregates consent-controlled, exact amounts static, XP ties visible and badge overflow factual.
 - **Do** offer badge criteria and earned dates in place through canonical controls.
 

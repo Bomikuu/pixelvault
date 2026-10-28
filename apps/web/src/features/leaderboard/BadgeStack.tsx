@@ -43,7 +43,7 @@ export function BadgeStack({
     return (
       <span className="text-xs text-muted-foreground">No showcased badges</span>
     );
-  const circle = compact ? "size-12!" : "size-16!";
+  const circle = "size-11!";
   return (
     <div
       className="flex items-center -space-x-2"
@@ -61,8 +61,8 @@ export function BadgeStack({
               <BadgeArt
                 name={badge.name}
                 badgeKey={badge.key}
-                size={compact ? 40 : 54}
-                className={compact ? "size-10!" : "size-[54px]!"}
+                size={compact ? 28 : 34}
+                className={compact ? "size-7!" : "size-[34px]!"}
               />
             </Button>
           </PopoverTrigger>

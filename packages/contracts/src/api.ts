@@ -52,6 +52,7 @@ export interface ReputationWorkspace {
 export interface LeaderboardPage {
   entries: {
     rank: number;
+    position?: number;
     handle: string;
     display_name: string;
     avatar_key?: string;

@@ -2,6 +2,18 @@
 
 Implemented on 2026-10-28 in the standalone repository `/home/micxsz/projects/pixelvault`, branch `codex/implementation`, after the user instructed implementation. The original planning package remains in PixelCore commit `32a20f7`. Existing PixelCore, PixelFlow, Medframe and DineEase source was preserved.
 
+## Guest navigation and focused leaderboard directory
+
+Guests and unresolved sessions no longer render Your workspace, private community/header actions or either Community/My dashboard switch. Guest mobile navigation is Explore, Leaderboard, Learn and Sign in. Existing member route guards remain independent of link visibility; signed-in navigation is preserved.
+
+The leaderboard removes the aggregate strip, Community leaders copy, All time pill and ranking explanation. See full list replaces Manage my participation and opens the public `/leaderboard/members` route. The preview requests and clamps ten participants total, including the top three, with no landing pagination. Existing six synthetic participants remain six. Shared member rows retain lending disclosures, avatars and badge details; badge artwork shrinks to 34px on podiums and 28px in tables inside 44px touch controls. Existing podium colors, illustration and XP motion remain.
+
+The directory provides name/public-handle search and independent showcased-achievement badge toggles, persisted in URL parameters. Selected badges use any-match semantics combined with the name query. Filtering uses current eligible public showcase awards before 25-member pagination; unknown/private badge keys are rejected. Filtered rows retain global displayed positions, and signed cursors bind filter scope and the disclosed snapshot. No schema changes or new artwork were required.
+
+**Verification was visual only, as requested.** Sources were formatted and local API/web processes restarted; no builds, automated tests, typecheck, UI-boundary/contrast checks or detector ran. Browser inspection covered desktop/mobile, both themes, guest drawer/navigation, signed-in navigation, directory routing, three Good Neighbor matches, one combined Nico match and an empty badge result. Ten/25-entry boundaries, pagination beyond the six fixtures, cursor tampering and private-award exclusion remain source-only and untested. Captures are under ignored `.runtime/qa/leaderboard-directory/`; the synthetic borrower session was restored.
+
+Fresh Impeccable review examined seven captures, sampled frontend source and updated design records, returning **ship** with no material visual repair. It did not independently verify backend privacy, animation or pagination boundaries. DESIGN.md and its sidecar now record member-only navigation and smaller badge artwork; the current leaderboard surface contract owns preview/directory composition. Scoped Graphify relationships and sanitized Jev guidance supported the split without submitting secrets.
+
 ## Full-viewport meeting rooms and confirmed sign-out
 
 The user's next revision gives `/meetings/:id` a dedicated protected `h-dvh` layout outside the platform Shell. Sidebar, platform header, footer and mobile bottom navigation do not render there. The room retains a return link, theme and session controls, a compact test-mode label, participant status and suspended-account access notice. Desktop columns scroll independently and the conversation composer sits below the tab region; proposal controls move into the room's left column. Mobile uses a single scrolling room inside the viewport. This is an application layout, without a browser Fullscreen API permission request.

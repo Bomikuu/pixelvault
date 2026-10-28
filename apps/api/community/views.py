@@ -118,6 +118,8 @@ class LeaderboardView(APIView):
             leaderboard(
                 limit=request.query_params.get("limit", 25),
                 cursor=request.query_params.get("cursor"),
+                q=request.query_params.get("q", ""),
+                badge_keys=request.query_params.getlist("badge"),
             )
         )
 

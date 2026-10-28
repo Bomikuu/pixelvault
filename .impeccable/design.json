@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-28T11:55:50+00:00",
+  "generatedAt": "2026-10-28T12:31:23Z",
   "title": "Design System: PixelVault",
   "extensions": {
     "colorMeta": {
@@ -414,14 +414,14 @@
     {
       "name": "Badge collection surface",
       "kind": "custom",
-      "description": "Shared in-place popover foundation; collection width 384px is capped by Radix available space, while single details use 352px. Actual Radix behavior supplies collision handling, Escape dismissal and focus return. Triggers use 64px/54px artwork on podiums and 48px/40px in the table; details use 80px/68px. This snippet represents the collection surface.",
+      "description": "Shared in-place popover foundation; collection width 384px is capped by Radix available space, while single details use 352px. Actual Radix behavior supplies collision handling, Escape dismissal and focus return. Triggers retain 44px touch controls with 34px artwork on podiums and 28px in the table; details use 80px/68px. This snippet represents the collection surface.",
       "html": "<section class=\"ds-popover\" aria-label=\"Showcased badges\"><h3 class=\"ds-popover-title\">Showcased badges</h3><p class=\"ds-popover-copy\">Selected by the member. Current eligibility applies.</p></section>",
       "css": ".ds-popover{width:384px;max-width:var(--radix-popover-content-available-width,calc(100vw - 24px));overflow-y:auto;padding:16px;background:var(--popover,#fff);color:var(--popover-foreground,#0f172a);border:1px solid var(--border,#dbe3ee);border-radius:14px;box-shadow:0 12px 36px #0b142829;font-family:Manrope,sans-serif}.ds-popover-title{margin:0;font-size:14px;font-weight:700}.ds-popover-copy{margin:4px 0 0;font-size:12px;color:var(--muted-foreground,#52637b)}"
     },
     {
       "name": "Header area switch",
       "kind": "nav",
-      "description": "The Community/My dashboard switch lives in the header, with a full-width row below 640px. Selected segment shown; actual application links use route-aware aria-current.",
+      "description": "The signed-in Community/My dashboard switch lives in the header, with a full-width row below 640px. Guests and unresolved sessions do not render the switch or private workspace actions. Guest mobile navigation is Explore, Leaderboard, Learn and Sign in; member navigation is Explore, Dashboard, Inbox and Profile. Selected segment shown; actual application links use route-aware aria-current.",
       "html": "<nav class=\"ds-area\" aria-label=\"Platform area\"><a class=\"ds-area-link ds-selected\" href=\"#community\" aria-current=\"true\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M22 21v-2a4 4 0 0 0-3-3.87\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"/></svg>Community</a><a class=\"ds-area-link\" href=\"#dashboard\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"9\" rx=\"1\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"5\" rx=\"1\"/><rect x=\"14\" y=\"12\" width=\"7\" height=\"9\" rx=\"1\"/><rect x=\"3\" y=\"16\" width=\"7\" height=\"5\" rx=\"1\"/></svg>My dashboard</a></nav>",
       "css": ".ds-area{display:flex;gap:4px;padding:4px;border:1px solid var(--border,#dbe3ee);border-radius:16px;background:var(--muted,#f1f5f9);font-family:Manrope,sans-serif}.ds-area-link{display:flex;min-height:40px;align-items:center;justify-content:center;gap:8px;border-radius:12px;padding:0 16px;font-size:12px;font-weight:800;color:var(--muted-foreground,#52637b);text-decoration:none;transition:background-color 150ms,color 150ms,box-shadow 150ms}.ds-area-link:hover{background:var(--card,#fff);color:var(--foreground,#0f172a)}.ds-area-link:focus-visible{outline:3px solid var(--ring,#0866ff);outline-offset:3px}.ds-selected,.ds-selected:hover{background:var(--primary,#0866ff);color:var(--primary-foreground,#fff);box-shadow:0 1px 3px 0 rgb(0 0 0 / .1),0 1px 2px -1px rgb(0 0 0 / .1)}@media(max-width:639px){.ds-area{width:100%}.ds-area-link{flex:1;padding:0 8px}}"
     }
@@ -447,7 +447,7 @@
     ],
     "dos": [
       "**Do** preserve the blue PixelVault identity and use shared semantic light/dark roles.",
-      "**Do** use the recorded shell dimensions, main padding and header area switch for ordinary connected surfaces; agreement-room detail uses the dedicated viewport layout described above.",
+      "**Do** use the recorded shell dimensions and main padding, exposing the header area switch and private destinations only for signed-in members; agreement-room detail uses the dedicated viewport layout described above.",
       "**Do** keep lending aggregates consent-controlled, exact amounts static, XP ties visible and badge overflow factual.",
       "**Do** offer badge criteria and earned dates in place through canonical controls."
     ],

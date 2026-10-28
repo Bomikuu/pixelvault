@@ -12,6 +12,7 @@ import {
   FileText,
   HandCoins,
   LayoutDashboard,
+  LogIn,
   Menu,
   MessageSquare,
   PanelLeftClose,
@@ -81,7 +82,12 @@ export function Shell() {
     }
   });
   const member = session?.member;
-  const isAdmin = location.pathname.startsWith("/admin");
+  const isAdmin = location.pathname.startsWith("/admin") && !!member?.is_staff;
+  const visibleCommunity = member
+    ? community
+    : community.filter(
+        ([path]) => !["/offers/new", "/meetings", "/inbox"].includes(path),
+      );
   const active = [
     "/explore",
     "/offers",
@@ -137,8 +143,8 @@ export function Shell() {
         {(isAdmin
           ? [["Administration", admin]]
           : [
-              ["Discover", community],
-              ["Your workspace", workspace],
+              ["Discover", visibleCommunity],
+              ...(member ? [["Your workspace", workspace]] : []),
             ]
         ).map(([heading, items]) => (
           <div className="mt-5 first:mt-2" key={String(heading)}>
@@ -311,9 +317,76 @@ export function Shell() {
             >
               <Menu />
             </Button>
+            {member && (
+              <nav
+                aria-label="Platform area"
+                className="hidden items-center gap-1 rounded-2xl border border-border bg-muted p-1 sm:flex"
+              >
+                {[
+                  {
+                    to: "/explore",
+                    label: "Community",
+                    Icon: Users,
+                    selected: active === "community" && !isAdmin,
+                  },
+                  {
+                    to: "/dashboard",
+                    label: "My dashboard",
+                    Icon: LayoutDashboard,
+                    selected: active === "workspace" && !isAdmin,
+                  },
+                ].map(({ to, label, Icon, selected }) => (
+                  <Link
+                    key={to}
+                    to={to}
+                    aria-current={selected ? "true" : undefined}
+                    className={`flex min-h-10 items-center gap-2 rounded-xl px-4 text-xs font-extrabold transition-[background-color,color,box-shadow] ${selected ? "bg-primary text-primary-foreground! shadow-sm" : "text-muted-foreground! hover:bg-card hover:text-foreground!"}`}
+                  >
+                    <Icon size={16} aria-hidden="true" />
+                    {label}
+                  </Link>
+                ))}
+              </nav>
+            )}
+          </div>
+          <div className="flex items-center gap-1 sm:gap-2">
+            <ThemeToggle />
+            {member ? (
+              <>
+                <Link
+                  to="/verification"
+                  className="hidden min-h-10 items-center gap-2 rounded-xl px-3 text-xs font-bold text-foreground! hover:bg-accent xl:flex"
+                >
+                  <ShieldCheck size={16} />
+                  Verification center
+                </Link>
+                <Button asChild variant="ghost" size="icon">
+                  <Link to="/inbox" aria-label="Open messages">
+                    <Bell size={19} />
+                  </Link>
+                </Button>
+
+                <Link to="/profile" aria-label="My profile">
+                  <MemberAvatar
+                    name={member.display_name}
+                    avatarKey={member.avatar_key}
+                    reputation={member.community_reputation}
+                    photoUrl={member.photo_url}
+                    size={34}
+                  />
+                </Link>
+                <SignOutButton />
+              </>
+            ) : (
+              <ActionLink to="/sign-in" variant="outline">
+                Sign in
+              </ActionLink>
+            )}
+          </div>
+          {member && (
             <nav
               aria-label="Platform area"
-              className="hidden items-center gap-1 rounded-2xl border border-border bg-muted p-1 sm:flex"
+              className="flex w-full items-center gap-1 rounded-2xl border border-border bg-muted p-1 sm:hidden"
             >
               {[
                 {
@@ -333,76 +406,14 @@ export function Shell() {
                   key={to}
                   to={to}
                   aria-current={selected ? "true" : undefined}
-                  className={`flex min-h-10 items-center gap-2 rounded-xl px-4 text-xs font-extrabold transition-[background-color,color,box-shadow] ${selected ? "bg-primary text-primary-foreground! shadow-sm" : "text-muted-foreground! hover:bg-card hover:text-foreground!"}`}
+                  className={`flex min-h-10 flex-1 items-center justify-center gap-2 rounded-xl px-2 text-xs font-extrabold transition-colors ${selected ? "bg-primary text-primary-foreground! shadow-sm" : "text-muted-foreground! hover:bg-card"}`}
                 >
                   <Icon size={16} aria-hidden="true" />
                   {label}
                 </Link>
               ))}
             </nav>
-          </div>
-          <div className="flex items-center gap-1 sm:gap-2">
-            <ThemeToggle />
-            <Link
-              to="/verification"
-              className="hidden min-h-10 items-center gap-2 rounded-xl px-3 text-xs font-bold text-foreground! hover:bg-accent xl:flex"
-            >
-              <ShieldCheck size={16} />
-              Verification center
-            </Link>
-            <Button asChild variant="ghost" size="icon">
-              <Link to="/inbox" aria-label="Open messages">
-                <Bell size={19} />
-              </Link>
-            </Button>
-            {member ? (
-              <>
-                <Link to="/profile" aria-label="My profile">
-                  <MemberAvatar
-                    name={member.display_name}
-                    avatarKey={member.avatar_key}
-                    reputation={member.community_reputation}
-                    photoUrl={member.photo_url}
-                    size={34}
-                  />
-                </Link>
-                <SignOutButton />
-              </>
-            ) : (
-              <ActionLink to="/sign-in" variant="outline">
-                Sign in
-              </ActionLink>
-            )}
-          </div>
-          <nav
-            aria-label="Platform area"
-            className="flex w-full items-center gap-1 rounded-2xl border border-border bg-muted p-1 sm:hidden"
-          >
-            {[
-              {
-                to: "/explore",
-                label: "Community",
-                Icon: Users,
-                selected: active === "community" && !isAdmin,
-              },
-              {
-                to: "/dashboard",
-                label: "My dashboard",
-                Icon: LayoutDashboard,
-                selected: active === "workspace" && !isAdmin,
-              },
-            ].map(({ to, label, Icon, selected }) => (
-              <Link
-                key={to}
-                to={to}
-                aria-current={selected ? "true" : undefined}
-                className={`flex min-h-10 flex-1 items-center justify-center gap-2 rounded-xl px-2 text-xs font-extrabold transition-colors ${selected ? "bg-primary text-primary-foreground! shadow-sm" : "text-muted-foreground! hover:bg-card"}`}
-              >
-                <Icon size={16} aria-hidden="true" />
-                {label}
-              </Link>
-            ))}
-          </nav>
+          )}
         </header>
         <main
           id="main-content"
@@ -433,13 +444,19 @@ export function Shell() {
         className="fixed inset-x-0 bottom-0 z-30 grid h-16 grid-cols-4 border-t border-border bg-card lg:hidden"
         aria-label="Mobile navigation"
       >
-        {(
-          [
-            ["/explore", "Explore", Compass],
-            ["/dashboard", "Dashboard", LayoutDashboard],
-            ["/inbox", "Inbox", MessageSquare],
-            ["/profile", "Profile", Users],
-          ] as const
+        {(member
+          ? ([
+              ["/explore", "Explore", Compass],
+              ["/dashboard", "Dashboard", LayoutDashboard],
+              ["/inbox", "Inbox", MessageSquare],
+              ["/profile", "Profile", Users],
+            ] as const)
+          : ([
+              ["/explore", "Explore", Compass],
+              ["/leaderboard", "Leaderboard", Trophy],
+              ["/learn", "Learn", BookOpen],
+              ["/sign-in", "Sign in", LogIn],
+            ] as const)
         ).map(([to, label, Icon]) => (
           <NavLink
             key={String(to)}

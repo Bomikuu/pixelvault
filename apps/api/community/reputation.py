@@ -241,8 +241,8 @@ def update_reputation_settings(*, member, data):
     preferences.save(update_fields=[*selected, "updated_at"])
 
 
-def leaderboard(*, limit=25, cursor=None):
-    from .profiles import award_data, public_badge_awards, public_identity
+def leaderboard(*, limit=25, cursor=None, q="", badge_keys=None):
+    from .profiles import BADGES, award_data, public_badge_awards, public_identity
     from django.db.models import Count, Sum
     from servicing.models import Loan
 
@@ -254,6 +254,20 @@ def leaderboard(*, limit=25, cursor=None):
         raise DomainError("invalid_limit", "Choose a leaderboard limit from 1 to 50.")
     if not 1 <= limit <= 50:
         raise DomainError("invalid_limit", "Choose a leaderboard limit from 1 to 50.")
+    if not isinstance(q, str) or len(q) > 80:
+        raise DomainError("invalid_search", "Search with up to 80 characters.")
+    search = q.strip().casefold()
+    badge_keys = [] if badge_keys is None else badge_keys
+    if (
+        not isinstance(badge_keys, (list, tuple))
+        or len(badge_keys) > len(BADGES)
+        or any(
+            not isinstance(key, str) or key not in BADGES or key == "fresh_start"
+            for key in badge_keys
+        )
+    ):
+        raise DomainError("invalid_badge", "Choose public achievement filters.")
+    badge_keys = sorted(set(badge_keys))
     offset = 0
     position = None
     if cursor:
@@ -291,6 +305,33 @@ def leaderboard(*, limit=25, cursor=None):
         for member in members
     ]
     scored.sort(key=lambda item: (-item[1]["points"], str(item[0].id)))
+    ranks = {}
+    positions = {}
+    for index, (member, facts) in enumerate(scored):
+        positions[member.id] = index + 1
+        if facts["points"] not in ranks:
+            ranks[facts["points"]] = len(ranks) + 1
+    # Match only the currently eligible badges a member chose to publish.
+    # Private, unselected and revoked achievements never influence filtering.
+    public_badges = {
+        member.id: [
+            award_data(award, public=True)
+            for award in public_badge_awards(member, preferences=member.community_settings)
+        ]
+        for member, _facts in scored
+    }
+    scored = [
+        (member, facts)
+        for member, facts in scored
+        if (
+            not search
+            or search in member.display_name.casefold()
+            or search in member.username.casefold()
+        )
+        and (
+            not badge_keys or any(badge["key"] in badge_keys for badge in public_badges[member.id])
+        )
+    ]
     sharing = [member.id for member in members if member.community_settings.show_lending_totals]
     lending = {
         str(row["lender_id"]): {
@@ -313,28 +354,32 @@ def leaderboard(*, limit=25, cursor=None):
     empty_lending = {"total_lent": "0", "loans_funded": 0, "people_helped": 0}
     fingerprint = hashlib.sha256(
         json.dumps(
-            [
-                (
-                    str(member.id),
-                    facts["points"],
-                    facts["literacy_points"],
-                    facts["approved_contributions"],
-                    lending.get(str(member.id), empty_lending)
-                    if member.community_settings.show_lending_totals
-                    else None,
-                )
-                for member, facts in scored
-            ]
+            {
+                "search": search,
+                "badges": badge_keys,
+                "members": [
+                    (
+                        str(member.id),
+                        member.display_name,
+                        member.username,
+                        positions[member.id],
+                        facts["points"],
+                        facts["literacy_points"],
+                        facts["approved_contributions"],
+                        lending.get(str(member.id), empty_lending)
+                        if member.community_settings.show_lending_totals
+                        else None,
+                        public_badges[member.id],
+                    )
+                    for member, facts in scored
+                ],
+            }
         ).encode()
     ).hexdigest()
     if position and position.get("fingerprint") != fingerprint:
         raise DomainError(
             "leaderboard_changed", "The leaderboard changed. Start from the first page.", 409
         )
-    ranks = {}
-    for _member, facts in scored:
-        if facts["points"] not in ranks:
-            ranks[facts["points"]] = len(ranks) + 1
     page = scored[offset : offset + limit]
     next_cursor = (
         signing.dumps(
@@ -349,6 +394,7 @@ def leaderboard(*, limit=25, cursor=None):
         "entries": [
             {
                 "rank": ranks[facts["points"]],
+                "position": positions[member.id],
                 **public_identity(member, include_reputation=False),
                 "reputation": reputation_summary(
                     member, preferences=member.community_settings, facts=facts
@@ -357,10 +403,7 @@ def leaderboard(*, limit=25, cursor=None):
                     "learning_completed": bool(facts["literacy_points"]),
                     "approved_contributions": facts["approved_contributions"],
                 },
-                "badges": [
-                    award_data(award, public=True)
-                    for award in public_badge_awards(member, preferences=member.community_settings)
-                ],
+                "badges": public_badges[member.id],
                 "lending": lending.get(str(member.id), empty_lending)
                 if member.community_settings.show_lending_totals
                 else None,
@@ -373,9 +416,17 @@ def leaderboard(*, limit=25, cursor=None):
             "learning_completed": sum(bool(facts["literacy_points"]) for _, facts in scored),
             "approved_contributions": sum(facts["approved_contributions"] for _, facts in scored),
             "total_xp": sum(facts["points"] for _, facts in scored),
-            "lending_sharing_members": len(sharing),
-            "total_lent": str(sum(int(row["total_lent"]) for row in lending.values())),
-            "loans_funded": sum(row["loans_funded"] for row in lending.values()),
+            "lending_sharing_members": sum(member.id in sharing for member, _facts in scored),
+            "total_lent": str(
+                sum(
+                    int(lending.get(str(member.id), empty_lending)["total_lent"])
+                    for member, _facts in scored
+                )
+            ),
+            "loans_funded": sum(
+                lending.get(str(member.id), empty_lending)["loans_funded"]
+                for member, _facts in scored
+            ),
         },
         "rules": REPUTATION_RULES,
         "notice": LEADERBOARD_NOTICE,

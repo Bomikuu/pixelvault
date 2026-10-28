@@ -1,5 +1,6 @@
 import { MeetingLayout } from "../features/negotiations/MeetingLayout";
 import { MeetingList } from "../features/negotiations/MeetingList";
+import { LeaderboardDirectory } from "../features/leaderboard/LeaderboardDirectory";
 import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 import { ErrorPage, NotFoundPage } from "./ErrorPage";
 import { Shell } from "./Shell";
@@ -180,6 +181,7 @@ export const routes = [
       { path: "help", element: <HelpPage /> },
       { path: "how-it-works", element: <HowItWorksPage /> },
       { path: "leaderboard", element: <Leaderboard /> },
+      { path: "leaderboard/members", element: <LeaderboardDirectory /> },
       {
         path: "admin",
         element: (

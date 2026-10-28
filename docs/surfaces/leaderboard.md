@@ -1,8 +1,38 @@
 # Community leaderboard
 
-Mode: Operate. The current connected-shell and distinct-position revision supersedes the preceding neutral-podium request. The latest source and evidence below govern; the preceding finish record is retained as history at the end.
+Mode: Operate. The guest-aware ten-person preview and public member directory below supersede the preceding connected-shell revision. Older sections are retained as historical evidence, not current UI requirements.
 
-## Current direction: distinct podium and connected shell
+## Current direction: focused preview and full member list
+
+**THESIS:** A concise leaderboard shows at most ten people, including the podium, while a separate public directory makes the full community searchable without exposing private workspace navigation to guests.
+
+**OWN-WORLD:** Preserve Manrope, PixelVault blue, the supplied P/keyhole and existing thin-ink podium artwork. Gold, silver-blue and bronze continue to distinguish displayed positions. Light/dark semantics, XP motion, static financial amounts and in-place badge details remain.
+
+**STORY:** Guests browse public offers, learning and the board; signing in reveals workspace destinations and the Community/My dashboard switch. On the board, compare the top three and up to seven more, then use See full list to search the public directory or toggle showcased badge filters. A filter never reveals private or unselected awards.
+
+**FIRST VIEWPORT:** The existing illustrated leaderboard hero and See full list action lead directly into podium members. No aggregate metrics strip, Community leaders subheading/description, All time pill or ranking explanation block is rendered. The directory starts with a back link, Community members heading, name/handle search and wrapping badge-style toggles before its comparison table.
+
+**FORM:** Ordinary code-led extension; no new comp, seed or visual world. `/leaderboard` requests ten and also clamps the returned preview to ten, splitting three podium entries from the remaining seven maximum. It has no pagination action. `/leaderboard/members` uses the same people/financial/badge table with 25-member pages. Badge circles remain 44px touch controls, with 34px podium art and 28px table art; detail artwork is unchanged. Tailwind utilities express feature layout and states.
+
+**FINISH:** Fresh Impeccable review returned **ship** after inspecting all seven desktop/mobile, light/dark and guest-drawer captures plus sampled frontend source. It identified no material visual fixes. DESIGN.md and its sidecar record guest-aware navigation and compact badge artwork. No new raster assets were introduced.
+
+### Behavior and privacy
+
+- Shell renders Your workspace, private community actions, member header actions and both responsive area switches only with a session member. Guest mobile navigation uses Explore, Leaderboard, Learn and Sign in. Existing RequireMember route protection remains; hiding links is presentation, not the access-control mechanism. Loading session state does not show member navigation.
+- Preview contains up to ten actual participants in total, including the top three. Existing six synthetic participants remain six; no extra people, reputation or loans were created to fill the limit.
+- See full list replaces participation management for everyone. Preferences remain available through the signed-in profile/appearance route.
+- Directory uses URL `q` and repeated `badge` parameters. Badge toggles are independent; matching is any selected badge, intersected with case-insensitive name/public-handle search. All members clears only badge choices; Clear filters clears both. Inputs are bounded and unknown/private badge keys are rejected by the server.
+- Filtering runs before pagination using currently eligible, member-selected public showcase awards. Private, unselected, revoked or stale awards do not match. Global displayed positions and dense XP ranks remain separate; filter results retain global positions.
+- Signed cursors bind the filter scope, stable order, public identity, showcase eligibility and disclosed lending projection. Changed snapshots return a refresh-required error. Load more appears only on the directory; stale/error/empty states retain the filter controls and clear/retry actions.
+- Names, portraits, disclosed lifetime lent/funded count/people helped, XP and badge popovers are shared between pages. Lending visibility remains a separate member opt-in. In-place criteria/earned-date details and truthful +N overflow stay; no badge navigation is introduced.
+
+### Verification boundary
+
+The user's visual-only verification preference continues: no application tests, build, typecheck, UI-boundary/contrast check or detector. The local API/web processes were restarted without a build. Browser review exercised signed-in and guest navigation, public See full list, badge search (Good Neighbor: three matching synthetic members), combined name search (Nico: one) and an empty badge match. Pagination beyond the six existing synthetic entries, ten/25-entry boundaries, cursor tampering and private-award exclusion remain source-only, untested. Captures are under ignored `.runtime/qa/leaderboard-directory/`.
+
+The independent finish reviewer checked visual fidelity and design persistence; backend privacy enforcement, animation behavior and pagination boundaries were outside that review. The existing synthetic borrower session and desktop viewport were restored after inspection.
+
+## Historical: distinct podium and connected shell
 
 **THESIS:** Wider usable lending community workspace, persistent factual offer likes, and distinguishable displayed podium positions without fabricated reputation.
 
