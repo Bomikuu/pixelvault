@@ -2,6 +2,10 @@
 
 Philippines-first individual-to-individual lending, with a community marketplace and a private, auditable loan workspace. Built with Django/DRF, PostgreSQL and React/TypeScript using the supplied PixelVault identity.
 
+![PixelVault community members planning together around an open book and calendar, framed by blue arches and plants.](apps/web/public/illustrations/profile-community-cover.png)
+
+**Borrow today. Build tomorrow.** Original PixelVault community illustration · [artwork provenance](docs/brand/profile-cover-prompt.txt).
+
 ## Run locally
 
 Requirements: Docker with Compose, uv, and Node >=22.12.0.
