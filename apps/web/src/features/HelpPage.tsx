@@ -92,6 +92,10 @@ export function HelpPage() {
             Visit the learning room
             <ArrowRight size={15} />
           </Link>
+          <Link className="text-link" to="/how-it-works">
+            See the seven-step lending guide
+            <ArrowRight size={15} />
+          </Link>
         </aside>
       </div>
     </>

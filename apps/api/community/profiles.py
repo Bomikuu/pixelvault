@@ -10,6 +10,7 @@ from .models import Award, Contribution, ProfileSettings, Review
 from .permissions import member_for
 
 BADGES = {
+    "bright_start": ("Bright Start", "Complete the financial-literacy module."),
     "first_chapter": ("First Chapter", "Approved onboarding and a completed literacy module."),
     "clockwork": (
         "Clockwork",
@@ -21,6 +22,15 @@ BADGES = {
         "Three completed agreements with complete disclosures and no upheld disclosure finding.",
     ),
     "helping_hand": ("Helping Hand", "Five distinct moderator-approved educational contributions."),
+    "good_neighbor": ("Good Neighbor", "One distinct moderator-approved educational contribution."),
+    "shared_wisdom": (
+        "Shared Wisdom",
+        "Three distinct moderator-approved educational contributions.",
+    ),
+    "community_guide": (
+        "Community Guide",
+        "Ten distinct moderator-approved educational contributions.",
+    ),
     "fresh_start": (
         "Fresh Start",
         "Private recognition after completing a mutually agreed recovery arrangement.",
@@ -92,9 +102,14 @@ def public_profile(*, handle, viewer_id=None):
     awards = list(
         Award.objects.filter(member=member, id__in=selected, eligible=True, private=False)
     )
-    # Public financial claims are checked now. Durable evaluation still owns the
-    # member's private award history and correction records.
-    from .awards import current_financial_evidence, public_financial_award_eligible
+    # Public claims use current facts. Durable evaluation still owns the member's
+    # private award history and correction records.
+    from .awards import (
+        EDUCATIONAL_CONTRIBUTION_THRESHOLDS,
+        current_educational_evidence,
+        current_financial_evidence,
+        public_financial_award_eligible,
+    )
 
     financial = {"clockwork", "full_circle", "open_book", "fresh_start"}
     facts = (
@@ -103,6 +118,14 @@ def public_profile(*, handle, viewer_id=None):
         else {}
     )
     awards = [award for award in awards if public_financial_award_eligible(award, evidence=facts)]
+    educational = {"bright_start", *EDUCATIONAL_CONTRIBUTION_THRESHOLDS}
+    if any(award.key in educational for award in awards):
+        educational_facts = current_educational_evidence(member=member)
+        awards = [
+            award
+            for award in awards
+            if award.key not in educational or educational_facts.get(award.key)
+        ]
     review_rows = (
         Review.objects.filter(subject=member, status="approved", published_at__isnull=False)
         .select_related("author")

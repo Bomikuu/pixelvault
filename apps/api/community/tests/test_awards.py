@@ -19,16 +19,20 @@ def test_first_chapter_requires_no_loan_and_is_idempotent(members):
     approve_onboarding(members[1])
     first = evaluate_awards(member_id=members[1].id)
     second = evaluate_awards(member_id=members[1].id)
-    assert len(first["changed_award_ids"]) == 1
+    assert len(first["changed_award_ids"]) == 2
     assert second["changed_award_ids"] == []
-    assert Award.objects.get(member=members[1]).key == "first_chapter"
+    assert set(Award.objects.filter(member=members[1]).values_list("key", flat=True)) == {
+        "first_chapter",
+        "bright_start",
+    }
 
 
 def test_latest_rejection_overrides_older_approval(members):
     approve_onboarding(members[1])
     VerificationCase.objects.create(member=members[1], kind="identity", status="rejected")
     evaluate_awards(member_id=members[1].id)
-    assert not Award.objects.filter(member=members[1]).exists()
+    assert not Award.objects.filter(member=members[1], key="first_chapter").exists()
+    assert Award.objects.filter(member=members[1], key="bright_start", eligible=True).exists()
 
 
 def test_helping_hand_requires_five_approved_distinct_contributions(members):
@@ -52,8 +56,8 @@ def test_reversal_hides_award_without_public_reason(members):
     members[1].literacy_completed = False
     members[1].save()
     evaluate_awards(member_id=members[1].id)
-    assert Award.objects.get(member=members[1]).eligible is False
-    assert AwardCorrection.objects.count() == 1
+    assert not Award.objects.filter(member=members[1], eligible=True).exists()
+    assert AwardCorrection.objects.count() == 2
 
 
 def test_loan_amount_and_repeat_originations_give_no_xp(loan, members):

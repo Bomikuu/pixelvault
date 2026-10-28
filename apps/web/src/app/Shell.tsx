@@ -44,6 +44,7 @@ import { useSession } from "./session";
 import { ActionLink, ErrorNotice, Loading, MemberAvatar } from "../components";
 const community = [
   ["/explore", "Explore offers", Compass],
+  ["/how-it-works", "How it works", BookOpen],
   ["/offers/new", "Post an offer", Plus],
   ["/inbox", "Messages", MessageSquare],
 ] as const;
@@ -78,7 +79,8 @@ export function Shell() {
   const active =
     location.pathname.startsWith("/explore") ||
     location.pathname.startsWith("/offers") ||
-    location.pathname.startsWith("/members")
+    location.pathname.startsWith("/members") ||
+    location.pathname.startsWith("/how-it-works")
       ? "community"
       : "workspace";
   const navigation = (

@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
-import { ErrorPage } from "./ErrorPage";
+import { ErrorPage, NotFoundPage } from "./ErrorPage";
 import { Shell } from "./Shell";
 import { RequireMember } from "./RequireMember";
 import {
@@ -53,13 +53,18 @@ import {
   NotificationPreferences,
 } from "../features/AdditionalPages";
 import { HelpPage } from "../features/HelpPage";
-import { Empty, ActionLink } from "../components";
+import { HowItWorksPage } from "../features/HowItWorksPage";
+import { ActionLink } from "../components";
 const member = (element: React.ReactNode) => (
   <RequireMember>{element}</RequireMember>
 );
 export const routes = [
-  { path: "/sign-in", element: <AuthPage /> },
-  { path: "/register", element: <AuthPage register /> },
+  { path: "/sign-in", element: <AuthPage />, errorElement: <ErrorPage /> },
+  {
+    path: "/register",
+    element: <AuthPage register />,
+    errorElement: <ErrorPage />,
+  },
   {
     path: "/",
     element: <Shell />,
@@ -153,6 +158,7 @@ export const routes = [
       },
       { path: "learn", element: <LearningPage /> },
       { path: "help", element: <HelpPage /> },
+      { path: "how-it-works", element: <HowItWorksPage /> },
       {
         path: "admin",
         element: (
@@ -232,16 +238,7 @@ export const routes = [
       },
       {
         path: "*",
-        element: (
-          <Empty
-            title="This page isn’t here."
-            action={
-              <ActionLink to="/explore">Return to the community</ActionLink>
-            }
-          >
-            The record may have moved or you may need a different link.
-          </Empty>
-        ),
+        element: <NotFoundPage />,
       },
     ],
   },

@@ -2,7 +2,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 import { BrandMark, Button } from "@pixelvault/ui";
-import { ApiForm, CheckField, Field, Notice } from "../components";
+import {
+  ApiForm,
+  CheckField,
+  ContextIllustration,
+  Field,
+  Notice,
+} from "../components";
 import { post } from "../app/api";
 import { useSession } from "../app/session";
 import { text } from "../lib/format";
@@ -14,9 +20,9 @@ export function AuthPage({ register = false }: { register?: boolean }) {
     <div className="auth-page">
       <div className="auth-story">
         <Link to="/explore">
-          <BrandMark inverse />
+          <BrandMark />
         </Link>
-        <div>
+        <div className="auth-story-copy">
           <h1>
             A community.
             <br />A clear agreement.
@@ -28,6 +34,7 @@ export function AuthPage({ register = false }: { register?: boolean }) {
             conversations and a shared record.
           </p>
         </div>
+        <ContextIllustration scene="welcome-community" eager />
         <span>
           <ShieldCheck size={18} />
           Your information belongs in your hands.
@@ -141,6 +148,9 @@ export function AuthPage({ register = false }: { register?: boolean }) {
               {register ? "Sign in" : "Create an account"}
             </Link>
           </p>
+          <Link className="auth-guide-link" to="/how-it-works">
+            See how individual lending works
+          </Link>
         </div>
       </div>
     </div>

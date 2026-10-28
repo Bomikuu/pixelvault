@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { AVATAR_OPTIONS, AvatarArt } from "./AvatarArt";
-import { BADGE_ART_KEYS, BadgeArt } from "./BadgeArt";
+import { BADGE_ART_DEFINITIONS, BADGE_ART_KEYS, BadgeArt } from "./BadgeArt";
 
 describe("illustrated achievement and avatar accessibility", () => {
   it("keeps multiple illustrations' texture and portrait clipping references isolated", () => {
@@ -55,6 +55,31 @@ describe("illustrated achievement and avatar accessibility", () => {
     }
   });
 
+  it("exposes all ten named achievements as distinct accessible illustrations", () => {
+    render(
+      <>
+        {BADGE_ART_DEFINITIONS.map(({ key, name }) => (
+          <BadgeArt key={key} badgeKey={key} name={name} />
+        ))}
+      </>,
+    );
+    expect(BADGE_ART_DEFINITIONS).toHaveLength(10);
+    expect(BADGE_ART_DEFINITIONS.map(({ key }) => key)).toEqual(BADGE_ART_KEYS);
+    for (const definition of BADGE_ART_DEFINITIONS) {
+      expect(
+        screen.getByRole("img", { name: definition.name }),
+      ).toHaveAttribute("data-badge-key", definition.key);
+    }
+    const scenes = screen
+      .getAllByRole("img")
+      .map((art) =>
+        [...art.querySelectorAll("path")]
+          .map((path) => path.getAttribute("d"))
+          .join(" "),
+      );
+    expect(new Set(scenes).size).toBe(10);
+  });
+
   it("provides safe art for obsolete or untrusted preference values", () => {
     render(
       <>
@@ -68,6 +93,6 @@ describe("illustrated achievement and avatar accessibility", () => {
     );
     expect(
       screen.getByRole("img", { name: "Existing milestone" }),
-    ).toHaveAttribute("data-badge-key", BADGE_ART_KEYS[5]);
+    ).toHaveAttribute("data-badge-key", BADGE_ART_KEYS.at(-1));
   });
 });

@@ -160,6 +160,30 @@ const catalog = [
       "Private recognition after completing a mutually agreed recovery arrangement.",
     private: true,
   },
+  {
+    key: "bright_start",
+    name: "Bright Start",
+    criteria: "Complete the financial learning check.",
+    private: false,
+  },
+  {
+    key: "good_neighbor",
+    name: "Good Neighbor",
+    criteria: "One approved educational contribution.",
+    private: false,
+  },
+  {
+    key: "shared_wisdom",
+    name: "Shared Wisdom",
+    criteria: "Three approved educational contributions.",
+    private: false,
+  },
+  {
+    key: "community_guide",
+    name: "Community Guide",
+    criteria: "Ten approved educational contributions.",
+    private: false,
+  },
 ];
 
 it("shows every server-defined achievement, preserves private milestones and limits the public showcase", async () => {
@@ -182,11 +206,11 @@ it("shows every server-defined achievement, preserves private milestones and lim
   expect(
     await screen.findByRole("heading", { name: "First Chapter" }),
   ).toBeInTheDocument();
-  expect(screen.getByText("6 of 6")).toBeInTheDocument();
+  expect(screen.getByText("10 of 10")).toBeInTheDocument();
   for (const item of catalog)
     expect(screen.getByText(item.criteria)).toBeInTheDocument();
   const choices = screen.getAllByRole("checkbox");
-  expect(choices).toHaveLength(5);
+  expect(choices).toHaveLength(9);
   expect(
     choices.filter((choice) => choice.getAttribute("data-state") === "checked"),
   ).toHaveLength(3);
@@ -268,7 +292,7 @@ it("removes newly ineligible or private selections after a refetch so the showca
     screen.getByRole("button", { name: "Refresh eligibility" }),
   );
   expect(await screen.findByText("1 / 3 selected")).toBeInTheDocument();
-  expect(screen.getAllByRole("checkbox")).toHaveLength(3);
+  expect(screen.getAllByRole("checkbox")).toHaveLength(7);
   await userEvent.click(
     screen.getByRole("button", { name: /Save public showcase/ }),
   );

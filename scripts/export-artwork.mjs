@@ -1,4 +1,4 @@
-/** Export the original React vector artwork as portable SVG assets, without an app build. */
+/** Export original React vectors and a count-aware contact sheet without an app build. */
 import fs from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
@@ -24,32 +24,30 @@ function loadArtwork(name) {
   new Function("require", "exports", outputText)(require, exports);
   return exports;
 }
-const { BadgeArt, BADGE_ART_KEYS } = loadArtwork("BadgeArt.tsx");
+const { BadgeArt, BADGE_ART_DEFINITIONS } = loadArtwork("BadgeArt.tsx");
 const { AvatarArt, AVATAR_OPTIONS } = loadArtwork("AvatarArt.tsx");
-const badgeNames = [
-  "First Chapter",
-  "Clockwork",
-  "Full Circle",
-  "Open Book",
-  "Helping Hand",
-  "Fresh Start",
-];
 const collections = [
-  [
-    "badges",
-    BADGE_ART_KEYS.map((key, index) => ({
+  {
+    kind: "badges",
+    heading: "Achievements, one meaningful step at a time.",
+    size: 160,
+    stride: 216,
+    artworks: BADGE_ART_DEFINITIONS.map(({ key, name }) => ({
       key,
-      name: badgeNames[index],
+      name,
       element: React.createElement(BadgeArt, {
         badgeKey: key,
-        name: badgeNames[index],
+        name,
         size: 160,
       }),
     })),
-  ],
-  [
-    "avatars",
-    AVATAR_OPTIONS.map(({ key, name }) => ({
+  },
+  {
+    kind: "avatars",
+    heading: "Choose a character. Make it yours.",
+    size: 128,
+    stride: 184,
+    artworks: AVATAR_OPTIONS.map(({ key, name }) => ({
       key,
       name,
       element: React.createElement(AvatarArt, {
@@ -58,33 +56,45 @@ const collections = [
         size: 128,
       }),
     })),
-  ],
+  },
 ];
+const width = 1000,
+  padding = 48,
+  columns = 4;
+const columnWidth = (width - padding * 2) / columns;
 const gallery = [];
-for (const [kind, artworks] of collections) {
+let sectionY = 110;
+for (const { kind, heading, size, stride, artworks } of collections) {
   const destination = path.join(root, "packages/ui/src/assets", kind);
   fs.mkdirSync(destination, { recursive: true });
+  gallery.push(
+    `<text x="${padding}" y="${sectionY}" font-size="22" font-weight="700">${heading}</text>`,
+  );
+  const artworkY = sectionY + 28;
   artworks.forEach(({ key, name, element }, index) => {
     const markup = renderToStaticMarkup(element, {
       identifierPrefix: `${kind}-${key}-`,
     });
     fs.writeFileSync(path.join(destination, `${key}.svg`), markup + "\n");
-    const column = index % (kind === "badges" ? 3 : 4);
-    const row = Math.floor(index / (kind === "badges" ? 3 : 4));
-    const x = kind === "badges" ? 72 + column * 300 : 48 + column * 235;
-    const y = (kind === "badges" ? 78 : 530) + row * 192;
+    const x =
+      padding + (index % columns) * columnWidth + (columnWidth - size) / 2;
+    const y = artworkY + Math.floor(index / columns) * stride;
     gallery.push(
-      `<g transform="translate(${x} ${y})">${markup}<text x="${kind === "badges" ? 80 : 64}" y="${kind === "badges" ? 178 : 148}" text-anchor="middle">${name}</text></g>`,
+      `<g data-artwork-kind="${kind}" data-artwork-key="${key}" transform="translate(${x} ${y})">${markup}<text x="${size / 2}" y="${size + 24}" text-anchor="middle">${name}</text></g>`,
     );
   });
+  sectionY = artworkY + Math.ceil(artworks.length / columns) * stride + 30;
 }
-const catalog = `<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="940" viewBox="0 0 1000 940" role="img" aria-labelledby="title"><title id="title">PixelVault: six achievements and eight profile avatars</title><rect width="1000" height="940" fill="#fff"/><g font-family="Manrope, sans-serif" fill="#0b1428" font-size="15"><text x="48" y="42" font-size="25" font-weight="700">Your next chapter, illustrated.</text><text x="48" y="498" font-size="23" font-weight="700">Choose a character. Make it yours.</text>${gallery.join("")}</g></svg>\n`;
+const height = sectionY + padding;
+const title = `PixelVault: ${BADGE_ART_DEFINITIONS.length} achievements and ${AVATAR_OPTIONS.length} profile avatars`;
+const catalog = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" style="max-width:100%;height:auto" role="img" aria-labelledby="title"><title id="title">${title}</title><rect width="${width}" height="${height}" fill="#fff"/><g font-family="Manrope, sans-serif" fill="#0b1428" font-size="15"><text x="${padding}" y="48" font-size="25" font-weight="700">Your next chapter, illustrated.</text><text x="${padding}" y="76" fill="#52637b">${BADGE_ART_DEFINITIONS.length} original achievements · ${AVATAR_OPTIONS.length} optional profile characters</text>${gallery.join("")}</g></svg>\n`;
 for (const destination of [
   "docs/brand/artwork-catalog.svg",
   "apps/web/public/illustrations/artwork-catalog.svg",
 ]) {
+  fs.mkdirSync(path.dirname(path.join(root, destination)), { recursive: true });
   fs.writeFileSync(path.join(root, destination), catalog);
 }
 console.log(
-  "Exported six badge SVGs, eight avatar SVGs and docs/brand/artwork-catalog.svg.",
+  `Exported ${BADGE_ART_DEFINITIONS.length} badge SVGs, ${AVATAR_OPTIONS.length} avatar SVGs and a ${width} × ${height} responsive artwork catalog.`,
 );

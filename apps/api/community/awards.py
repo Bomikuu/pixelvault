@@ -9,6 +9,38 @@ from django.utils import timezone
 from .models import AchievementHold, Award, AwardCorrection, Contribution
 from .permissions import member_for
 
+EDUCATIONAL_CONTRIBUTION_THRESHOLDS = {
+    "good_neighbor": 1,
+    "shared_wisdom": 3,
+    "helping_hand": 5,
+    "community_guide": 10,
+}
+
+
+def approved_contribution_ids(*, member_id):
+    """Count educational work once, even across case/whitespace variants."""
+    approved = []
+    contribution_bodies = set()
+    for contribution in Contribution.objects.filter(
+        member_id=member_id, status="approved"
+    ).order_by("created_at", "id"):
+        canonical = " ".join(contribution.body.lower().split())
+        if canonical not in contribution_bodies:
+            contribution_bodies.add(canonical)
+            approved.append(str(contribution.id))
+    return approved
+
+
+def current_educational_evidence(*, member):
+    approved = approved_contribution_ids(member_id=member.id)
+    return {
+        "bright_start": [str(member.id)] if member.literacy_completed else [],
+        **{
+            key: approved if len(approved) >= threshold else []
+            for key, threshold in EDUCATIONAL_CONTRIBUTION_THRESHOLDS.items()
+        },
+    }
+
 
 def _has_transaction_cycle(member_id):
     from servicing.models import Loan
@@ -53,18 +85,9 @@ def evaluate_awards(*, member_id, rule_version="v1"):
             and check.status == "approved"
             and (check.expires_at is None or check.expires_at > timezone.now())
         )
-    approved = []
-    contribution_bodies = set()
-    for contribution in Contribution.objects.filter(
-        member_id=member_id, status="approved"
-    ).order_by("created_at"):
-        canonical = " ".join(contribution.body.lower().split())
-        if canonical not in contribution_bodies:
-            contribution_bodies.add(canonical)
-            approved.append(contribution.id)
     evidence = {
         "first_chapter": [str(member_id)] if onboarding and member.literacy_completed else [],
-        "helping_hand": list(map(str, approved)) if len(approved) >= 5 else [],
+        **current_educational_evidence(member=member),
         "clockwork": [],
         "full_circle": [],
         "open_book": [],

@@ -212,7 +212,12 @@ export function ContextIllustration({
   className = "",
   eager = false,
 }: {
-  scene: "community-workshop" | "shared-plan";
+  scene:
+    | "community-workshop"
+    | "shared-plan"
+    | "welcome-community"
+    | "lending-journey"
+    | "finding-your-way";
   className?: string;
   eager?: boolean;
 }) {

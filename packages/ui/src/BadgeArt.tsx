@@ -7,8 +7,24 @@ export const BADGE_ART_KEYS = [
   "open_book",
   "helping_hand",
   "fresh_start",
+  "bright_start",
+  "good_neighbor",
+  "shared_wisdom",
+  "community_guide",
 ] as const;
 export type BadgeArtKey = (typeof BADGE_ART_KEYS)[number];
+export const BADGE_ART_DEFINITIONS = [
+  { key: "first_chapter", name: "First Chapter" },
+  { key: "clockwork", name: "Clockwork" },
+  { key: "full_circle", name: "Full Circle" },
+  { key: "open_book", name: "Open Book" },
+  { key: "helping_hand", name: "Helping Hand" },
+  { key: "fresh_start", name: "Fresh Start" },
+  { key: "bright_start", name: "Bright Start" },
+  { key: "good_neighbor", name: "Good Neighbor" },
+  { key: "shared_wisdom", name: "Shared Wisdom" },
+  { key: "community_guide", name: "Community Guide" },
+] as const satisfies readonly { key: BadgeArtKey; name: string }[];
 
 /** Original illustrated objects, rather than rank or creditworthiness insignia. */
 export function BadgeArt({
@@ -29,7 +45,10 @@ export function BadgeArt({
   const id = useId().replace(/:/g, "");
   const selected = BADGE_ART_KEYS.includes(badgeKey as BadgeArtKey)
     ? (badgeKey as BadgeArtKey)
-    : BADGE_ART_KEYS[((index % 6) + 6) % 6];
+    : BADGE_ART_KEYS[
+        ((index % BADGE_ART_KEYS.length) + BADGE_ART_KEYS.length) %
+          BADGE_ART_KEYS.length
+      ];
   const p = locked
     ? {
         ink: "#5A687A",
@@ -332,6 +351,178 @@ export function BadgeArt({
             fill={p.teal}
           />
           <path d="m106 26 7-4m-4-1 2 7" />
+        </>
+      )}
+      {selected === "bright_start" && (
+        <>
+          <ellipse
+            cx="80"
+            cy="141"
+            rx="62"
+            ry="8"
+            fill={p.ink}
+            stroke="none"
+            opacity=".1"
+          />
+          <path d="m22 116 56-21 59 25-56 23Z" fill={p.paper} />
+          <path d="m22 116 59 27v9l-59-27Z" fill={p.blue} />
+          <path d="m81 143 56-23v9l-56 23Z" fill={p.pink} />
+          <path d="M46 73a34 34 0 0 1 68 0Z" fill={p.yellow} />
+          <path d="M52 73a28 28 0 0 1 56 0" stroke={p.coral} />
+          <path
+            d="M80 27V15m-23 19-7-10m-9 30-12-5m74-15 7-10m9 30 12-5"
+            strokeWidth="2"
+          />
+          <path d="m70 59 4 1m13 0 4-1m-16 9q5 5 10 0" />
+          <path d="m38 100 42-14 45 18-43 17Z" fill={p.coral} />
+          <path d="m38 100 44 21v10l-44-21Z" fill={p.yellow} />
+          <path d="m82 121 43-17v10l-43 17Z" fill={p.blue} />
+          <path
+            d="M81 116V83c-13-13-28-16-44-16v33c17-1 32 5 44 16Z"
+            fill={p.paper}
+          />
+          <path
+            d="M81 116V83c12-14 26-18 44-18v34c-18 1-32 6-44 17Z"
+            fill={p.teal}
+          />
+          <path
+            d="m46 80 24 10m-24-1 24 10m24-9 20-8m-20 17 20-8"
+            strokeWidth="1.1"
+          />
+          <path d="m105 74 8-3v20l-4-2-4 5Z" fill={p.yellow} />
+          <path d="m28 112 9-3m89-37 10-4m-5-3 1 10" />
+          <path
+            d="m88 136 39-16v5l-39 16Z"
+            fill={`url(#${id}-stipple)`}
+            stroke="none"
+          />
+        </>
+      )}
+      {selected === "good_neighbor" && (
+        <>
+          <ellipse
+            cx="80"
+            cy="141"
+            rx="64"
+            ry="8"
+            fill={p.ink}
+            stroke="none"
+            opacity=".1"
+          />
+          <path d="m22 117 56-21 59 25-56 23Z" fill={p.teal} />
+          <path d="m22 117 59 27v8l-59-27Z" fill={p.blue} />
+          <path d="m81 144 56-23v8l-56 23Z" fill={p.dark} />
+          <path
+            d="M20 60c0-9 6-15 15-15h32c10 0 16 6 16 15v20c0 8-6 14-15 14H45L31 106l2-13c-8-1-13-7-13-14Z"
+            fill={p.paper}
+          />
+          <path
+            d="M76 37c0-9 7-15 17-15h28c9 0 15 6 15 15v20c0 9-6 15-15 15h-14L93 84l1-12h-2c-10 0-16-6-16-15Z"
+            fill={p.pink}
+          />
+          <path d="m39 61 11-4 13 5v18l-13-5-11 4Z" fill={p.blue} />
+          <path d="M50 57v18" stroke={p.paper} />
+          <path
+            d="M105 57V42m0 8c-9 0-14-5-14-13 9 0 14 5 14 13Zm0-4c0-10 6-16 14-17 1 10-5 17-14 17Z"
+            fill={p.teal}
+          />
+          <path d="m41 109 12-5 12 6v19l-12 5-12-6Z" fill={p.yellow} />
+          <path d="m53 114 12-4m-12 4v20m-10-23 10 3" />
+          <path d="m89 108 22-8 17 8-22 9Z" fill={p.paper} />
+          <path d="m89 108 17 9v14l-17-9Z" fill={p.coral} />
+          <path d="m106 117 22-9v14l-22 9Z" fill={p.yellow} />
+          <path
+            d="m94 119 7 3v4l-7-3Z"
+            fill={`url(#${id}-stipple)`}
+            stroke="none"
+          />
+          <path d="m67 118 11-4m-5-4 1 9m64-26 5-2" />
+        </>
+      )}
+      {selected === "shared_wisdom" && (
+        <>
+          <ellipse
+            cx="80"
+            cy="141"
+            rx="65"
+            ry="8"
+            fill={p.ink}
+            stroke="none"
+            opacity=".1"
+          />
+          <path d="m20 118 59-22 61 26-59 23Z" fill={p.yellow} />
+          <path d="m20 118 61 27v8l-61-27Z" fill={p.coral} />
+          <path d="m81 145 59-23v8l-59 23Z" fill={p.pink} />
+          <path d="m34 37 79-15 15 7-80 16Z" fill={p.paper} />
+          <path d="m34 37 14 8v84l-14-8Z" fill={p.blue} />
+          <path d="m48 45 80-16v84l-80 16Z" fill={p.teal} />
+          <path d="m55 52 65-13v29l-65 13Z" fill={p.dark} />
+          <path d="m55 88 65-13v29l-65 13Z" fill={p.paper} />
+          <path d="m59 57 9-2v22l-9 2Z" fill={p.yellow} />
+          <path d="m70 55 10-2v22l-10 2Z" fill={p.pink} />
+          <path d="m83 53 9-2v22l-9 2Z" fill={p.coral} />
+          <path d="m95 53 9-4 8 19-9 4Z" fill={p.blue} />
+          <path d="m62 63 3-1m8 6 4-1m8-9 4-1" strokeWidth="1" />
+          <path d="m63 92 13-3 1 24-14 3Z" fill={p.pink} />
+          <path d="m81 88 14-3 1 25-14 3Z" fill={p.yellow} />
+          <path d="m100 84 12-3 1 25-12 3Z" fill={p.blue} />
+          <path
+            d="m67 97 5-1m-5 6 5-1m13-9 5-1m-5 6 5-1m13-9 5-1m-5 6 5-1"
+            strokeWidth="1.1"
+          />
+          <path
+            d="m52 118 73-15v7l-73 15Z"
+            fill={`url(#${id}-stipple)`}
+            stroke="none"
+          />
+          <path
+            d="M30 80c-8-4-14-12-13-20 9 0 15 8 13 20Zm0-8c-1-11 5-17 12-19 2 10-3 17-12 19Z"
+            fill={p.teal}
+          />
+          <path d="m22 82 16-3-1 18-13 3Z" fill={p.yellow} />
+          <path d="m126 47 6-2m-4-4 1 8" />
+        </>
+      )}
+      {selected === "community_guide" && (
+        <>
+          <ellipse
+            cx="80"
+            cy="141"
+            rx="65"
+            ry="8"
+            fill={p.ink}
+            stroke="none"
+            opacity=".1"
+          />
+          <path d="m21 118 57-21 61 25-58 23Z" fill={p.paper} />
+          <path d="m21 118 60 27v8l-60-27Z" fill={p.pink} />
+          <path d="m81 145 58-23v8l-58 23Z" fill={p.blue} />
+          <path d="m28 108 33-12 32 13-34 13Z" fill={p.teal} />
+          <path d="m28 108 31 14v13l-31-14Z" fill={p.blue} />
+          <path d="m59 122 34-13v13l-34 13Z" fill={p.paper} />
+          <path d="m34 99 34-12 31 13-34 13Z" fill={p.yellow} />
+          <path d="m34 99 31 14v9l-31-14Z" fill={p.coral} />
+          <path d="m65 113 34-13v9l-34 13Z" fill={p.pink} />
+          <path d="M57 51V37c0-9 7-14 15-14s15 5 15 14v14" strokeWidth="3" />
+          <path d="m48 54 24-10 24 10-24 10Z" fill={p.yellow} />
+          <path d="m48 54 24 10v40l-24-11Z" fill={p.coral} />
+          <path d="m72 64 24-10v39l-24 11Z" fill={p.blue} />
+          <path d="m54 63 13 6v25l-13-6Z" fill={p.paper} />
+          <path d="m77 69 13-6v25l-13 6Z" fill={p.yellow} />
+          <path d="m48 93 24 11 24-11v9l-24 11-24-11Z" fill={p.yellow} />
+          <path d="M60 82c-7-5-7-13-3-18 2 7 10 9 9 17" fill={p.yellow} />
+          <path d="m67 41 5-2 5 2v5l-5 2-5-2Z" fill={p.teal} />
+          <path d="M117 122V57" strokeWidth="3" />
+          <path d="m106 58 25-5 7 7-7 8-25 5Z" fill={p.teal} />
+          <path d="m103 78 25-5v14l-25 5-6-6Z" fill={p.pink} />
+          <path d="m112 61 11-2m-15 24 11-2" stroke={p.paper} />
+          <path d="m108 125 17-6 8 4-18 7Z" fill={p.yellow} />
+          <path d="m27 48 8 3m-3-8-2 11m66-22 6-4" />
+          <path
+            d="m39 115 14 6v6l-14-6Z"
+            fill={`url(#${id}-stipple)`}
+            stroke="none"
+          />
         </>
       )}
     </svg>
