@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { Button, Input } from "@pixelvault/ui";
 import { Loader2, MapPin, Search, X } from "lucide-react";
 import type { MapPlace } from "./types";
@@ -10,48 +10,57 @@ interface GeocodeFeature {
     mapbox_id?: string;
     feature_type?: string;
     name?: string;
-    full_address?: string;
     place_formatted?: string;
   };
 }
+
 export function PlaceSearch({
   token,
+  value,
+  onChange,
   onSelect,
 }: {
   token: string;
+  value: string;
+  onChange: (value: string) => void;
   onSelect: (place: MapPlace) => void;
 }) {
-  const [value, setValue] = useState("");
+  const id = useId();
+  const [lookup, setLookup] = useState<{
+    query: string;
+    attempt: number;
+  } | null>(null);
   const [results, setResults] = useState<MapPlace[]>([]);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
-  const [retry, setRetry] = useState(0);
   useEffect(() => {
-    const query = value.trim();
     setResults([]);
     setError("");
     setPending(false);
-    if (!token || !open || query.length < 2) return;
-    if (query.length > 80 || !/^[\p{L}\p{M}\s.'’\-]+$/u.test(query)) {
+    if (!token || !lookup || lookup.query !== value.trim()) return;
+    if (
+      lookup.query.length > 80 ||
+      !/^[\p{L}\p{M}\s.'’\-]+$/u.test(lookup.query)
+    ) {
       setError(
-        "Search by city or area name, without street numbers or personal details.",
+        "Use a city or neighborhood name for place search, without street numbers.",
       );
       return;
     }
     const controller = new AbortController();
-    const timer = window.setTimeout(async () => {
-      setPending(true);
-      const url = new URL("https://api.mapbox.com/search/geocode/v6/forward");
-      url.search = new URLSearchParams({
-        q: query,
-        types: "place,locality,neighborhood",
-        country: "ph",
-        autocomplete: "true",
-        limit: "5",
-        language: "en",
-        access_token: token,
-      }).toString();
+    setPending(true);
+    const url = new URL("https://api.mapbox.com/search/geocode/v6/forward");
+    url.search = new URLSearchParams({
+      q: lookup.query,
+      types: "place,locality,neighborhood",
+      country: "ph",
+      autocomplete: "true",
+      limit: "5",
+      language: "en",
+      access_token: token,
+    }).toString();
+    void (async () => {
       try {
         const response = await fetch(url.toString(), {
           signal: controller.signal,
@@ -95,109 +104,158 @@ export function PlaceSearch({
       } catch {
         if (!controller.signal.aborted)
           setError(
-            "Place search is unavailable. Try again or choose an area below.",
+            "Places could not load. Try again; lender and offer search still works.",
           );
       } finally {
         if (!controller.signal.aborted) setPending(false);
       }
-    }, 350);
-    return () => {
-      window.clearTimeout(timer);
-      controller.abort();
-    };
-  }, [value, token, open, retry]);
+    })();
+    return () => controller.abort();
+  }, [lookup, token, value]);
+  const showSuggestions = open && value.trim().length >= 2;
   return (
-    <div className="discovery-place-search">
-      <div className="discovery-place-input">
-        <Search size={18} aria-hidden="true" />
+    <div
+      className="relative min-w-0"
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+          setOpen(false);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") {
+          setOpen(false);
+          event.stopPropagation();
+        }
+      }}
+    >
+      <div className="relative">
+        <Search
+          className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+          aria-hidden="true"
+        />
         <Input
-          aria-label="Search Philippine cities and areas"
-          aria-expanded={open && !!results.length}
-          aria-controls="discovery-place-results"
+          aria-label="Search lending offers"
+          aria-description="Search lenders, offers or areas. Choose Find a place to search Mapbox."
+          aria-expanded={showSuggestions}
+          aria-controls={showSuggestions ? id : undefined}
           autoComplete="off"
+          maxLength={80}
           value={value}
-          disabled={!token}
-          placeholder={
-            token
-              ? "Search a city or area"
-              : "Place search needs Mapbox configuration"
-          }
+          placeholder="Search a lender, offer or place"
+          className="h-11 bg-background pl-9! pr-11! text-sm"
           onChange={(event) => {
-            setValue(event.target.value);
+            onChange(event.target.value);
+            setLookup(null);
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}
-          onKeyDown={(event) => {
-            if (event.key === "Escape") setOpen(false);
-          }}
         />
-        {pending ? (
-          <Loader2 className="spin" size={17} aria-label="Searching areas" />
-        ) : (
-          value && (
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Clear place search"
-              onClick={() => {
-                setValue("");
-                setOpen(false);
-              }}
-            >
-              <X size={15} />
-            </Button>
-          )
+        {value && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-0 top-0 size-11!"
+            aria-label="Clear search"
+            onClick={() => {
+              onChange("");
+              setLookup(null);
+              setOpen(false);
+            }}
+          >
+            <X size={16} />
+          </Button>
         )}
       </div>
-      {open &&
-        (error ||
-          results.length > 0 ||
-          (!pending && value.trim().length >= 2 && token)) && (
-          <div className="discovery-place-results" id="discovery-place-results">
-            {error ? (
-              <div role="alert">
-                <p>{error}</p>
-                {error.startsWith("Place search") && (
-                  <Button
-                    variant="ghost"
-                    onClick={() => setRetry((current) => current + 1)}
-                  >
-                    Try place search again
-                  </Button>
+      {showSuggestions && (
+        <div
+          id={id}
+          className="absolute inset-x-0 top-full z-20 mt-2 max-h-72 overflow-y-auto rounded-xl border border-border bg-popover p-2 text-popover-foreground shadow-lg"
+          aria-label="Search options"
+        >
+          <p className="px-2 py-2 text-xs text-muted-foreground">
+            Lenders and offers filter as you type.
+          </p>
+          {token ? (
+            <>
+              <Button
+                variant="ghost"
+                className="h-auto! min-h-11 w-full justify-start! whitespace-normal! text-left text-xs"
+                aria-disabled={pending}
+                onClick={() =>
+                  !pending &&
+                  setLookup((previous) => ({
+                    query: value.trim(),
+                    attempt: (previous?.attempt ?? 0) + 1,
+                  }))
+                }
+              >
+                {pending ? (
+                  <Loader2
+                    size={16}
+                    className="shrink-0 animate-spin motion-reduce:animate-none"
+                  />
+                ) : (
+                  <MapPin size={16} className="shrink-0" />
                 )}
-              </div>
-            ) : results.length ? (
-              <ul aria-label="Matching Philippine areas">
-                {results.map((place) => (
-                  <li key={place.id}>
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                        onSelect(place);
-                        setValue(place.name);
-                        setOpen(false);
-                      }}
-                      aria-label={`Show ${place.name} on map`}
-                    >
-                      <MapPin size={17} />
-                      <span>
-                        <strong>{place.name}</strong>
-                        <small>{place.context}</small>
-                      </span>
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              !pending && (
-                <p role="status">No matching areas. Try a nearby city.</p>
-              )
-            )}
-            <small>
-              City and neighborhood names only. Search is provided by Mapbox.
-            </small>
-          </div>
-        )}
+                {pending ? "Finding places…" : `Find a place: ${value.trim()}`}
+              </Button>
+              {error ? (
+                <p role="alert" className="px-2 py-2 text-xs text-destructive">
+                  {error}
+                </p>
+              ) : results.length ? (
+                <ul
+                  aria-label="Matching Philippine areas"
+                  className="border-t border-border pt-1"
+                >
+                  {results.map((place) => (
+                    <li key={place.id}>
+                      <Button
+                        variant="ghost"
+                        className="h-auto! min-h-12 w-full justify-start! whitespace-normal! text-left"
+                        aria-label={`Search around ${place.name}, ${place.context}`}
+                        onClick={() => {
+                          onSelect(place);
+                          setOpen(false);
+                          setLookup(null);
+                        }}
+                      >
+                        <MapPin size={16} className="shrink-0 text-primary" />
+                        <span className="min-w-0">
+                          <strong className="block text-xs">
+                            {place.name}
+                          </strong>
+                          <small className="block text-[11px] font-normal text-muted-foreground">
+                            {place.context}
+                          </small>
+                        </span>
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                lookup &&
+                !pending && (
+                  <p
+                    role="status"
+                    className="px-2 py-2 text-xs text-muted-foreground"
+                  >
+                    No matching places. Try a nearby city.
+                  </p>
+                )
+              )}
+              <p className="px-2 pt-2 text-[10px] leading-relaxed text-muted-foreground">
+                Place searches are sent to Mapbox only when you choose Find a
+                place.
+              </p>
+            </>
+          ) : (
+            <p className="px-2 py-2 text-xs text-muted-foreground">
+              Place search needs Mapbox configuration. Lender and offer search
+              is available.
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

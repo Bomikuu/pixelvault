@@ -19,6 +19,12 @@ vi.mock("mapbox-gl", () => ({
       flyTo = vi.fn();
       resize = vi.fn();
       addControl = vi.fn();
+      getSource = vi.fn();
+      addSource = vi.fn();
+      addLayer = vi.fn();
+      fitBounds = vi.fn();
+      zoomIn = vi.fn();
+      zoomOut = vi.fn();
       constructor(options: any) {
         this.options = options;
         state.maps.push(this);
@@ -171,7 +177,7 @@ it("offers an honest WebGL fallback and recoverable provider authorization error
   expect(await screen.findByRole("alert")).toHaveTextContent("WebGL enabled");
   unmount();
   state.supported = true;
-  render(
+  const { rerender } = render(
     <CommunityMap
       token="pk.synthetic-test"
       offers={[cityOffer]}
@@ -187,6 +193,15 @@ it("offers an honest WebGL fallback and recoverable provider authorization error
   expect(screen.getByRole("alert")).toHaveTextContent(
     "could not authorize this site",
   );
-  await userEvent.click(screen.getByRole("button", { name: "Retry map" }));
+  rerender(
+    <CommunityMap
+      token="pk.synthetic-test"
+      offers={[cityOffer]}
+      selectedId={null}
+      onSelect={() => {}}
+      place={null}
+      command={{ type: "retry", sequence: 1 }}
+    />,
+  );
   await waitFor(() => expect(state.maps).toHaveLength(2));
 });

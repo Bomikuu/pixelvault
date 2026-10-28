@@ -437,6 +437,11 @@
         "name": "The Tailwind First Rule",
         "body": "Express new feature layout, typography, responsive behavior, hover, focus and motion directly with Tailwind utilities in TSX. Keep semantic tokens and canonical control foundations in their existing shared stylesheets; do not add feature stylesheets when utilities express the design. The browser root View Transition pseudo-element rules are the approved shared CSS exception for the theme reveal.",
         "section": "components"
+      },
+      {
+        "name": "The Explore Control Rule",
+        "body": "Explore uses one right-side control/posting container, one local/provider search field, one map/list destination action, an explicit radius selector and a secondary filter popover. Mobile places controls before map and posts. Hover/focus highlights approximate grouped markers without camera movement; device location is optional and ephemeral.",
+        "section": "components"
       }
     ],
     "overview": "The existing blue PixelVault identity frames an information-rich community and lending workspace. Manrope, cool white or navy surfaces, and thin-ink isometric artwork remain the incumbent visual world. The connected-shell revision expands usable space and makes displayed podium positions distinct while preserving factual amounts, visible XP and member-controlled sharing.",

@@ -1,45 +1,30 @@
 import { OfferLikeButton } from "../engagement/OfferLikeButton";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
   Button,
-  Input,
-  Label,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@pixelvault/ui";
+import { ArrowRight, MapPin, Radio, RefreshCw } from "lucide-react";
 import {
-  ArrowDownWideNarrow,
-  ArrowRight,
-  ChevronDown,
-  ChevronUp,
-  List,
-  Map as MapIcon,
-  MapPin,
-  Plus,
-  Radio,
-  RefreshCw,
-  Search,
-} from "lucide-react";
-import {
-  ActionLink,
   Empty,
   ErrorNotice,
-  IllustratedInfoDialog,
   Loading,
   MemberAvatar,
   PersonName,
 } from "../../components";
 import { date, label, money } from "../../lib/format";
 import { CommunityMap } from "./CommunityMap";
-import { PlaceSearch } from "./PlaceSearch";
+import { ExploreControls } from "./ExploreControls";
+import {
+  DEFAULT_PLACE,
+  distanceKm,
+  publicAreaCenter,
+  type MapCommand,
+} from "./geography";
 import { useCommunityActivity } from "./useCommunityActivity";
 import { mapboxPublicToken, type DiscoveryOffer, type MapPlace } from "./types";
 import "./discovery.css";
@@ -51,7 +36,9 @@ interface Props {
   sort: string;
   minimum: string;
   view: string;
+  radius: number;
   setFilter: (key: string, value: string) => void;
+  setFilters: (values: Record<string, string>) => void;
   onClear: () => void;
   renderOffer: (offer: DiscoveryOffer) => ReactNode;
   pending: boolean;
@@ -62,14 +49,16 @@ interface Props {
   loadNext: () => void;
 }
 export function DiscoveryWorkspace({
-  offers,
+  offers: loadedOffers,
   areas,
   search,
   area,
   sort,
   minimum,
   view,
+  radius,
   setFilter,
+  setFilters,
   onClear,
   renderOffer,
   pending,
@@ -80,10 +69,38 @@ export function DiscoveryWorkspace({
   loadNext,
 }: Props) {
   const token = mapboxPublicToken();
-  const [place, setPlace] = useState<MapPlace | null>(null);
+  const [place, setPlace] = useState<MapPlace>(DEFAULT_PLACE);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [panelOpen, setPanelOpen] = useState(true);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [focusedId, setFocusedId] = useState<string | null>(null);
+  const [mapReady, setMapReady] = useState(false);
+  const [command, setCommand] = useState<MapCommand | null>(null);
+  const [locating, setLocating] = useState(false);
+  const [locationError, setLocationError] = useState("");
+  const mounted = useRef(true);
+  const locationRequest = useRef(0);
+  const currentFilters = useRef({ radius, setFilter });
+  useEffect(() => {
+    currentFilters.current = { radius, setFilter };
+  }, [radius, setFilter]);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      locationRequest.current += 1;
+    };
+  }, []);
   const activity = useCommunityActivity();
+  const offers = useMemo(
+    () =>
+      !radius
+        ? loadedOffers
+        : loadedOffers.filter((offer) => {
+            const center = publicAreaCenter(offer.coarseArea);
+            return center && distanceKm(place.center, center) <= radius;
+          }),
+    [loadedOffers, place, radius],
+  );
   useEffect(() => {
     if (!selectedId) return;
     document.getElementById(`discovery-offer-${selectedId}`)?.scrollIntoView({
@@ -96,16 +113,79 @@ export function DiscoveryWorkspace({
   const selected = offers.some((offer) => offer.id === selectedId)
     ? selectedId
     : null;
-  const chooseOffer = (id: string) => {
-    setSelectedId(id);
-    setPanelOpen(true);
-  };
+  const highlight = hoveredId ?? focusedId;
+  const chooseOffer = (id: string) => setSelectedId(id);
+  function clearFilters() {
+    setPlace(DEFAULT_PLACE);
+    setSelectedId(null);
+    setLocationError("");
+    locationRequest.current += 1;
+    setLocating(false);
+    onClear();
+  }
+  function selectPlace(next: MapPlace) {
+    locationRequest.current += 1;
+    setLocating(false);
+    setPlace(next);
+    setSelectedId(null);
+    setLocationError("");
+    setFilters({ q: "", radius: String(radius || 10), view: "map" });
+  }
+  function locate() {
+    setLocationError("");
+    if (!navigator.geolocation) {
+      setLocationError(
+        "Location is unavailable in this browser. Search for a city or area instead.",
+      );
+      return;
+    }
+    const request = ++locationRequest.current;
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        if (!mounted.current || request !== locationRequest.current) return;
+        setLocating(false);
+        if (
+          !Number.isFinite(coords.latitude) ||
+          !Number.isFinite(coords.longitude) ||
+          coords.latitude < 4 ||
+          coords.latitude > 22 ||
+          coords.longitude < 116 ||
+          coords.longitude > 127
+        ) {
+          setLocationError(
+            "Explore currently covers the Philippines. Search for a Philippine city or area instead.",
+          );
+          return;
+        }
+        setPlace({
+          id: "device-location",
+          name: "Your location",
+          context: "Used only for this search",
+          center: [coords.longitude, coords.latitude],
+        });
+        setSelectedId(null);
+        if (!currentFilters.current.radius)
+          currentFilters.current.setFilter("radius", "10");
+      },
+      (error) => {
+        if (!mounted.current || request !== locationRequest.current) return;
+        setLocating(false);
+        setLocationError(
+          error.code === 1
+            ? "Location permission was declined. Search for a city or area instead."
+            : "Your location could not be found. Try again or search for a city.",
+        );
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 },
+    );
+  }
   const resultSummary = `${offers.length} ${offers.length === 1 ? "offer" : "offers"} to explore`;
   const loadMore =
     hasNext && !pending && !error ? (
       <Button
         variant="outline"
-        className="discovery-load-more"
+        className="mx-auto my-4 flex"
         disabled={fetchingNext}
         onClick={loadNext}
       >
@@ -124,17 +204,36 @@ export function DiscoveryWorkspace({
             <article
               key={offer.id}
               id={`discovery-offer-${offer.id}`}
-              className={`discovery-posting ${selected === offer.id ? "is-selected" : ""}`}
+              onMouseEnter={() => setHoveredId(offer.id)}
+              onMouseLeave={() => setHoveredId(null)}
+              onFocusCapture={() => setFocusedId(offer.id)}
+              onBlurCapture={(event) => {
+                if (
+                  !event.currentTarget.contains(
+                    event.relatedTarget as Node | null,
+                  )
+                )
+                  setFocusedId(null);
+              }}
+              className={`discovery-posting transition-colors hover:bg-muted/60 focus-within:bg-muted/60 motion-reduce:transition-none ${selected === offer.id ? "is-selected" : ""}`}
             >
               <div className="discovery-posting-person">
-                <PersonName person={offer.lender} subtitle={offer.area} />
+                <PersonName
+                  person={offer.lender}
+                  subtitle={
+                    radius && publicAreaCenter(offer.coarseArea)
+                      ? `${offer.area} · ~${distanceKm(place.center, publicAreaCenter(offer.coarseArea)!).toFixed(1)} km`
+                      : offer.area
+                  }
+                />
                 <Button
                   variant={selected === offer.id ? "secondary" : "ghost"}
                   size="icon"
                   aria-label={`Show ${offer.title} on map`}
                   aria-pressed={selected === offer.id}
                   onClick={() => chooseOffer(offer.id)}
-                  disabled={!offer.coarseArea?.approximate}
+                  className="size-11!"
+                  disabled={!mapReady || !offer.coarseArea?.approximate}
                 >
                   <MapPin size={17} />
                 </Button>
@@ -190,7 +289,7 @@ export function DiscoveryWorkspace({
       <Empty
         title="No offers match this view."
         action={
-          <Button variant="outline" onClick={onClear}>
+          <Button variant="outline" onClick={clearFilters}>
             Clear filters
           </Button>
         }
@@ -203,269 +302,221 @@ export function DiscoveryWorkspace({
     </>
   );
   return (
-    <div
-      className={[
-        "discovery-surface",
-        "dark:[&_.offer-list]:bg-card! dark:[&_.offer-list]:border-border! dark:[&_.discovery-list-workspace]:bg-card! dark:[&_.discovery-list-workspace]:border-border! dark:[&_.discovery-sheet-toggle]:bg-card! dark:[&_.discovery-sheet-toggle]:text-foreground!",
-        "dark:[&_.discovery-posting-panel]:bg-card! dark:[&_.discovery-posting-panel]:border-border! dark:[&_.discovery-workspace]:border-border!",
-        "dark:[&_.discovery-place-input]:bg-card! dark:[&_.discovery-lender-search]:bg-card! dark:[&_.discovery-view-switch]:bg-card! dark:[&_.discovery-place-results]:bg-card!",
-        "dark:[&_.discovery-place-input]:text-muted-foreground! dark:[&_.discovery-lender-search]:text-muted-foreground! dark:[&_.discovery-place-results]:border-border!",
-        "dark:[&_.discovery-heading_p]:text-muted-foreground! dark:[&_.discovery-amount_label]:text-muted-foreground! dark:[&_.discovery-results-heading_small]:text-muted-foreground!",
-        "dark:[&_.discovery-posting]:border-border! dark:[&_.discovery-posting.is-selected]:bg-accent! dark:[&_.discovery-posting-title]:text-foreground! dark:[&_.person_small]:text-muted-foreground!",
-        "dark:[&_.discovery-posting-money_span]:text-muted-foreground! dark:[&_.discovery-posting-plan]:text-muted-foreground! dark:[&_.discovery-posting-cost]:bg-muted! dark:[&_.discovery-posting-cost_span]:text-muted-foreground! dark:[&_.discovery-posting-cost_small]:text-muted-foreground!",
-        "dark:[&_.discovery-posting-bottom]:text-muted-foreground! dark:[&_.discovery-posting-bottom>a]:text-primary! dark:[&_.discovery-live-status]:text-muted-foreground! dark:[&_.discovery-live-status.is-live]:text-[#6ee7b7]!",
-        "dark:[&_.discovery-map-state]:bg-muted! dark:[&_.discovery-map-state_p]:text-muted-foreground! dark:[&_.discovery-map-loading]:bg-muted! dark:[&_.discovery-map-privacy]:bg-card! dark:[&_.discovery-map-privacy]:text-muted-foreground!",
-        "dark:[&_.discovery-place-results_strong]:text-foreground! dark:[&_.discovery-place-results_small]:text-muted-foreground! dark:[&_.discovery-place-results_p]:text-muted-foreground! dark:[&_.discovery-place-caption]:text-muted-foreground!",
-        "dark:[&_.discovery-recent-posts_article]:border-border! dark:[&_.discovery-recent-posts_small]:text-muted-foreground! dark:[&_.discovery-recent-posts_p]:text-muted-foreground!",
-      ].join(" ")}
-    >
-      <header className="discovery-heading">
-        <div>
-          <h1>Meet your lending community.</h1>
-          <p>People nearby. Clear terms. A private next step.</p>
-        </div>
-        <div>
-          <IllustratedInfoDialog
-            title="Nearby, with boundaries."
-            description="Explore public lending intentions by approximate area. Review the complete terms before applying."
-            scene="finding-your-way"
-            triggerLabel="How discovery works"
+    <div className="min-w-0 [&_.discovery-posting]:border-border! [&_.discovery-posting-title]:text-foreground! [&_.person_small]:text-muted-foreground! [&_.discovery-posting-money_span]:text-muted-foreground! [&_.discovery-posting-plan]:text-muted-foreground! [&_.discovery-posting-cost]:bg-muted! [&_.discovery-posting-cost_span]:text-muted-foreground! [&_.discovery-posting-cost_small]:text-muted-foreground! [&_.discovery-posting-bottom]:text-muted-foreground! [&_.discovery-posting-bottom>a]:text-primary! [&_.discovery-posting.is-selected]:bg-accent!">
+      <div
+        className={`grid min-w-0 grid-cols-1 lg:items-start lg:gap-0 ${view === "map" ? "lg:h-[max(640px,calc(100dvh-180px))] lg:max-h-[960px] lg:grid-cols-[minmax(0,1fr)_minmax(340px,390px)] lg:overflow-hidden lg:rounded-2xl lg:border lg:border-border" : "gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(340px,390px)] lg:gap-5"}`}
+      >
+        {view === "map" ? (
+          <div className="order-2 h-[360px] min-w-0 overflow-hidden border-x border-border lg:order-1 lg:h-full lg:border-0 [&_.discovery-map]:h-full [&_.discovery-map-state]:bg-muted! [&_.discovery-map-state_p]:text-muted-foreground! [&_.discovery-map-loading]:bg-muted! [&_.discovery-map-privacy]:bg-card! [&_.discovery-map-privacy]:text-muted-foreground!">
+            <CommunityMap
+              token={token}
+              offers={offers}
+              selectedId={selected}
+              highlightedId={highlight}
+              onSelect={chooseOffer}
+              place={place}
+              radiusKm={radius}
+              command={command}
+              onReadyChange={setMapReady}
+            />
+          </div>
+        ) : (
+          <section
+            className="order-2 min-w-0 rounded-2xl border border-border bg-card p-4 lg:order-1 lg:p-5"
+            aria-label="Lending offer list"
           >
-            <p>
-              Markers group public city or area centers. They never show
-              anyone’s home. A listing is an intention to lend, not approved
-              credit or guaranteed funding.
-            </p>
-          </IllustratedInfoDialog>
-          <ActionLink to="/offers/new">
-            <Plus size={17} />
-            Post an offer
-          </ActionLink>
-        </div>
-      </header>
-      <div className="discovery-toolbar">
-        <PlaceSearch
-          token={token}
-          onSelect={(next) => {
-            setPlace(next);
-            setFilter("view", "map");
-          }}
-        />
-        <div className="discovery-lender-search">
-          <Search size={17} />
-          <Input
-            aria-label="Search lending offers"
-            value={search}
-            onChange={(event) => setFilter("q", event.target.value)}
-            placeholder="Lender or offer"
-          />
-        </div>
-        <div className="discovery-view-switch" aria-label="Discovery view">
-          <Button
-            variant={view === "map" ? "secondary" : "ghost"}
-            aria-pressed={view === "map"}
-            onClick={() => setFilter("view", "map")}
-          >
-            <MapIcon size={16} />
-            Map
-          </Button>
-          <Button
-            variant={view === "list" ? "secondary" : "ghost"}
-            aria-pressed={view === "list"}
-            onClick={() => setFilter("view", "list")}
-          >
-            <List size={16} />
-            List
-          </Button>
-        </div>
-      </div>
-      <div className="discovery-filter-bar">
-        <Select
-          value={area}
-          onValueChange={(value) => setFilter("area", value)}
+            <div className="mb-4">
+              <h2 className="text-sm font-bold" aria-live="polite">
+                {resultSummary}
+              </h2>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {hasNext
+                  ? "Matching loaded posts. Load more to extend your search."
+                  : "Private applications. Individual decisions."}
+              </p>
+            </div>
+            {offerContent}
+          </section>
+        )}
+        <aside
+          aria-label="Community postings"
+          className={`contents min-w-0 bg-card lg:order-2 lg:flex lg:flex-col ${view === "map" ? "lg:h-full lg:min-h-0 lg:border-l lg:border-border" : "lg:rounded-2xl lg:border lg:border-border"}`}
         >
-          <SelectTrigger aria-label="Filter by approximate area">
-            <MapPin size={14} />
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All areas</SelectItem>
-            {areas.map((name) => (
-              <SelectItem value={name} key={name}>
-                {name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <div className="discovery-amount">
-          <Label htmlFor="discovery-minimum">Minimum available ₱</Label>
-          <Input
-            id="discovery-minimum"
-            type="number"
-            min={0}
-            value={minimum}
-            placeholder="Any"
-            onChange={(event) => setFilter("amount", event.target.value)}
-          />
-        </div>
-        <Select
-          value={sort}
-          onValueChange={(value) => setFilter("sort", value)}
-        >
-          <SelectTrigger aria-label="Sort offers">
-            <ArrowDownWideNarrow size={14} />
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="recent">Recently listed</SelectItem>
-            <SelectItem value="amount">Available amount</SelectItem>
-            <SelectItem value="rate">Annual interest</SelectItem>
-          </SelectContent>
-        </Select>
-        <div className={`discovery-live-status is-${activity.status}`}>
-          <Radio size={14} />
-          <span>
-            {activity.status === "live"
-              ? "Live updates connected"
-              : activity.status === "paused"
-                ? "Updates paused while this tab is hidden"
-                : activity.status === "fallback"
-                  ? "Live connection unavailable · checking every minute"
-                  : "Connecting to community updates…"}
-          </span>
-          {activity.status === "fallback" && (
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Reconnect live updates"
-              onClick={activity.reconnect}
-            >
-              <RefreshCw size={13} />
-            </Button>
-          )}
-        </div>
-      </div>
-      {activity.hasUpdates && (
-        <div className="discovery-update-banner" role="status">
-          <span>Updated postings are available.</span>
-          <Button
-            variant="outline"
-            onClick={() => void activity.applyUpdates()}
-            disabled={activity.isFetching}
-          >
-            Show updated postings <RefreshCw size={14} />
-          </Button>
-        </div>
-      )}
-      {activity.hasUpdates && activity.error && (
-        <ErrorNotice
-          error={activity.error}
-          retry={() => void activity.applyUpdates()}
-        />
-      )}
-      {place && (
-        <p className="discovery-place-caption">
-          Map centered on {place.name}. Offer filters stay unchanged.
-        </p>
-      )}
-      {view === "map" ? (
-        <div
-          className={`discovery-workspace ${panelOpen ? "panel-open" : "panel-collapsed"}`}
-        >
-          <CommunityMap
+          <ExploreControls
             token={token}
-            offers={offers}
-            selectedId={selected}
-            onSelect={chooseOffer}
+            search={search}
+            areas={areas}
+            area={area}
+            minimum={minimum}
+            sort={sort}
+            view={view}
+            radius={radius}
             place={place}
+            mapReady={mapReady}
+            locating={locating}
+            locationError={locationError}
+            setFilter={setFilter}
+            selectPlace={selectPlace}
+            clearPlace={() => {
+              locationRequest.current += 1;
+              setLocating(false);
+              setPlace(DEFAULT_PLACE);
+              setSelectedId(null);
+              setLocationError("");
+              setFilter("radius", "");
+            }}
+            locate={locate}
+            command={(type) =>
+              setCommand((previous) => ({
+                type,
+                sequence: (previous?.sequence ?? 0) + 1,
+              }))
+            }
           />
-          <aside
-            className="discovery-posting-panel"
-            aria-label="Community postings"
+          <div
+            className={`order-3 min-h-0 rounded-b-2xl border border-t-0 border-border bg-card lg:rounded-none lg:border-0 ${view === "map" ? "lg:flex lg:flex-1 lg:flex-col lg:overflow-hidden" : "px-4 pb-4"}`}
           >
-            <Button
-              className="discovery-sheet-toggle"
-              variant="ghost"
-              aria-expanded={panelOpen}
-              onClick={() => setPanelOpen((open) => !open)}
-            >
-              <span>{resultSummary}</span>
-              {panelOpen ? <ChevronDown size={17} /> : <ChevronUp size={17} />}
-            </Button>
-            <Tabs defaultValue="offers" className="discovery-posting-tabs">
-              <TabsList>
-                <TabsTrigger value="offers">Lending offers</TabsTrigger>
-                <TabsTrigger value="recent">Recent posts</TabsTrigger>
-              </TabsList>
-              <TabsContent value="offers">
-                <div className="discovery-results-heading">
-                  <strong>{resultSummary}</strong>
-                  <small>Individual lenders decide privately.</small>
-                </div>
-                {offerContent}
-              </TabsContent>
-              <TabsContent value="recent">
-                <div className="discovery-results-heading">
-                  <strong>Recent community posts</strong>
-                  <small>Public offers, in posting order.</small>
-                </div>
-                {activity.error ? (
+            <div className="flex min-h-9 items-center justify-between gap-2 px-4 py-2 text-[10px] text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <Radio
+                  size={12}
+                  className={
+                    activity.status === "live"
+                      ? "text-emerald-700 dark:text-emerald-300"
+                      : ""
+                  }
+                />
+                {activity.status === "live"
+                  ? "Live updates connected"
+                  : activity.status === "paused"
+                    ? "Updates paused"
+                    : activity.status === "fallback"
+                      ? "Checking every minute"
+                      : "Connecting to updates…"}
+              </span>
+              {activity.status === "fallback" && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-9! min-h-9!"
+                  aria-label="Reconnect live updates"
+                  onClick={activity.reconnect}
+                >
+                  <RefreshCw size={13} />
+                </Button>
+              )}
+            </div>
+            {activity.hasUpdates && (
+              <div
+                className="mx-4 mb-3 rounded-xl bg-accent p-3 text-accent-foreground"
+                role="status"
+              >
+                <p className="mb-2 text-xs">Updated postings are available.</p>
+                <Button
+                  variant="outline"
+                  className="text-xs"
+                  onClick={() => void activity.applyUpdates()}
+                  disabled={activity.isFetching}
+                >
+                  Show updated postings <RefreshCw size={14} />
+                </Button>
+                {activity.error && (
                   <ErrorNotice
                     error={activity.error}
-                    retry={() => void activity.refetch()}
+                    retry={() => void activity.applyUpdates()}
                   />
-                ) : !activity.snapshot ? (
-                  <Loading text="Loading recent posts…" />
-                ) : activity.snapshot.posts.length ? (
-                  <div className="discovery-recent-posts">
-                    {activity.snapshot.posts.map((post) => (
-                      <article key={post.id}>
-                        <MemberAvatar
-                          name={post.lender.display_name}
-                          avatarKey={post.lender.avatar_key}
-                          photoUrl={post.lender.photo_url}
-                          reputation={post.lender.reputation}
-                          size={40}
-                        />
-                        <div>
-                          <strong>{post.lender.display_name}</strong>
-                          <Link to={`/offers/${post.id}`}>
-                            {post.title}
-                            <ArrowRight size={13} />
-                          </Link>
-                          <small>
-                            <MapPin size={12} />
-                            {post.area.name} ·{" "}
-                            <time dateTime={post.created_at}>
-                              {date(post.created_at)}
-                            </time>
-                          </small>
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                ) : (
-                  <Empty title="No recent offers yet">
-                    New public lending offers will appear here.
-                  </Empty>
                 )}
-              </TabsContent>
-            </Tabs>
-          </aside>
-        </div>
-      ) : (
-        <section
-          className="discovery-list-workspace"
-          aria-label="Lending offer list"
-        >
-          <div className="discovery-results-heading">
-            <strong>{resultSummary}</strong>
-            <small>Private applications. Individual decisions.</small>
+              </div>
+            )}
+            {view === "map" && (
+              <Tabs
+                defaultValue="offers"
+                className="flex min-h-0 flex-1 flex-col gap-0"
+              >
+                <TabsList className="mx-4 mb-3 grid h-11! w-auto! shrink-0 grid-cols-2">
+                  <TabsTrigger value="offers">Lending offers</TabsTrigger>
+                  <TabsTrigger value="recent">Recent posts</TabsTrigger>
+                </TabsList>
+                <TabsContent
+                  value="offers"
+                  className="min-h-0 overflow-y-auto px-4 pb-4"
+                >
+                  <div className="pb-3">
+                    <h2 className="text-sm font-bold" aria-live="polite">
+                      {resultSummary}
+                    </h2>
+                    <p className="mt-1 text-[11px] text-muted-foreground">
+                      {hasNext
+                        ? "Matching loaded posts. Load more to extend your search."
+                        : "Individual lenders decide privately."}
+                    </p>
+                  </div>
+                  {offerContent}
+                </TabsContent>
+                <TabsContent
+                  value="recent"
+                  className="min-h-0 overflow-y-auto px-4 pb-4"
+                >
+                  <h2 className="mb-3 text-sm font-bold">
+                    Recent community posts
+                  </h2>
+                  <p className="mb-2 text-[11px] text-muted-foreground">
+                    Public posts across all areas, before your filters.
+                  </p>
+                  {activity.error ? (
+                    <ErrorNotice
+                      error={activity.error}
+                      retry={() => void activity.refetch()}
+                    />
+                  ) : !activity.snapshot ? (
+                    <Loading text="Loading recent posts…" />
+                  ) : activity.snapshot.posts.length ? (
+                    <div>
+                      {activity.snapshot.posts.map((post) => (
+                        <article
+                          key={post.id}
+                          className="flex gap-3 border-t border-border py-4"
+                        >
+                          <MemberAvatar
+                            name={post.lender.display_name}
+                            avatarKey={post.lender.avatar_key}
+                            photoUrl={post.lender.photo_url}
+                            reputation={post.lender.reputation}
+                            size={40}
+                          />
+                          <div className="min-w-0">
+                            <strong className="text-xs">
+                              {post.lender.display_name}
+                            </strong>
+                            <Link
+                              className="my-1 flex items-start gap-2 text-sm font-bold text-primary hover:underline"
+                              to={`/offers/${post.id}`}
+                            >
+                              {post.title}
+                              <ArrowRight size={13} className="mt-1 shrink-0" />
+                            </Link>
+                            <small className="block text-[10px] text-muted-foreground">
+                              {post.area.name} ·{" "}
+                              <time dateTime={post.created_at}>
+                                {date(post.created_at)}
+                              </time>
+                            </small>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  ) : (
+                    <Empty title="No recent offers yet">
+                      New public lending offers will appear here.
+                    </Empty>
+                  )}
+                </TabsContent>
+              </Tabs>
+            )}
           </div>
-          {offerContent}
-        </section>
-      )}
-      <p className="discovery-footnote">
+        </aside>
+      </div>
+      <p className="mt-3 max-w-[90ch] text-[11px] leading-relaxed text-muted-foreground">
         Rates alone do not show total cost. Open an offer for principal,
         interest, fees and exact dates. Public map markers use approximate area
         centers.

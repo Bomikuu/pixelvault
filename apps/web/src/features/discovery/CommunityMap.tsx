@@ -1,11 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import type { Map as MapboxMap, Marker as MapboxMarker } from "mapbox-gl";
+import type {
+  Map as MapboxMap,
+  Marker as MapboxMarker,
+  GeoJSONSource,
+} from "mapbox-gl";
 import { Button } from "@pixelvault/ui";
-import { MapPin, RefreshCw, WifiOff } from "lucide-react";
+import { MapPin, WifiOff } from "lucide-react";
 import { MemberAvatar } from "../../components";
 import type { DiscoveryOffer, MapPlace } from "./types";
 import "mapbox-gl/dist/mapbox-gl.css";
+import {
+  DEFAULT_PLACE,
+  publicAreaCenter,
+  radiusPolygon,
+  type MapCommand,
+} from "./geography";
 interface OfferGroup {
   key: string;
   center: [number, number];
@@ -15,18 +25,10 @@ interface OfferGroup {
 export function groupAreaOffers(offers: DiscoveryOffer[]): OfferGroup[] {
   const groups: OfferGroup[] = [];
   for (const offer of offers) {
-    const area = offer.coarseArea;
-    if (
-      !area ||
-      area.approximate !== true ||
-      !Number.isFinite(area.latitude) ||
-      !Number.isFinite(area.longitude)
-    )
-      continue;
-    const latitude = Number(area.latitude),
-      longitude = Number(area.longitude);
-    if (latitude < 4 || latitude > 22 || longitude < 116 || longitude > 127)
-      continue;
+    const center = publicAreaCenter(offer.coarseArea);
+    if (!center) continue;
+    const [longitude, latitude] = center;
+    const area = offer.coarseArea!;
     // Group nearby public centroids; never jitter a member into a fabricated street position.
     const group = groups.find(
       (item) =>
@@ -52,12 +54,20 @@ export function CommunityMap({
   token,
   offers,
   selectedId,
+  highlightedId = null,
+  radiusKm = 0,
+  command = null,
+  onReadyChange,
   onSelect,
   place,
 }: {
   token: string;
   offers: DiscoveryOffer[];
   selectedId: string | null;
+  highlightedId?: string | null;
+  radiusKm?: number;
+  command?: MapCommand | null;
+  onReadyChange?: (ready: boolean) => void;
   onSelect: (id: string) => void;
   place: MapPlace | null;
 }) {
@@ -67,6 +77,11 @@ export function CommunityMap({
   const [ready, setReady] = useState(false);
   const [error, setError] = useState("");
   const [attempt, setAttempt] = useState(0);
+  const lastCommand = useRef(command?.sequence ?? 0);
+  useEffect(() => {
+    onReadyChange?.(ready && !error);
+    return () => onReadyChange?.(false);
+  }, [ready, error, onReadyChange]);
   const groups = useMemo(
     () =>
       groupAreaOffers(offers).map((group) => ({
@@ -104,7 +119,7 @@ export function CommunityMap({
           container: container.current,
           accessToken: token,
           style: "mapbox://styles/mapbox/standard",
-          center: [121.03, 14.62],
+          center: DEFAULT_PLACE.center,
           zoom: 10.3,
           minZoom: 4.5,
           maxZoom: 14,
@@ -117,10 +132,6 @@ export function CommunityMap({
           attributionControl: true,
         });
         map.current = instance;
-        instance.addControl(
-          new mapbox.NavigationControl({ showCompass: false }),
-          "bottom-right",
-        );
         instance.on("load", () => {
           if (!disposed) {
             setReady(true);
@@ -194,14 +205,119 @@ export function CommunityMap({
       });
   }, [selectedId, groups, ready]);
   useEffect(() => {
-    if (ready && map.current && place)
-      map.current.flyTo({
-        center: place.center,
-        zoom: 11,
-        duration: reducedMotion() ? 0 : 650,
-        essential: false,
+    if (!ready || !map.current) return;
+    const instance = map.current;
+    const center = (place ?? DEFAULT_PLACE).center;
+    const data = radiusKm
+      ? radiusPolygon(center, radiusKm)
+      : { type: "FeatureCollection" as const, features: [] };
+    const source = instance.getSource("explore-radius") as
+      GeoJSONSource | undefined;
+    if (source) source.setData(data);
+    else {
+      instance.addSource("explore-radius", { type: "geojson", data });
+      instance.addLayer({
+        id: "explore-radius-fill",
+        type: "fill",
+        source: "explore-radius",
+        slot: "middle",
+        paint: { "fill-color": "#0866ff", "fill-opacity": 0.1 },
       });
-  }, [place, ready]);
+      instance.addLayer({
+        id: "explore-radius-outline",
+        type: "line",
+        source: "explore-radius",
+        slot: "middle",
+        paint: {
+          "line-color": "#0866ff",
+          "line-width": 2,
+          "line-dasharray": [3, 2],
+        },
+      });
+    }
+    const origin = radiusKm
+      ? {
+          type: "Feature" as const,
+          properties: {},
+          geometry: { type: "Point" as const, coordinates: center },
+        }
+      : { type: "FeatureCollection" as const, features: [] };
+    const originSource = instance.getSource("explore-origin") as
+      GeoJSONSource | undefined;
+    if (originSource) originSource.setData(origin);
+    else {
+      instance.addSource("explore-origin", { type: "geojson", data: origin });
+      instance.addLayer({
+        id: "explore-origin-dot",
+        type: "circle",
+        source: "explore-origin",
+        slot: "top",
+        paint: {
+          "circle-radius": 6,
+          "circle-color": "#0866ff",
+          "circle-stroke-color": "#ffffff",
+          "circle-stroke-width": 3,
+        },
+      });
+    }
+    fitSearchArea();
+    function fitSearchArea() {
+      if (radiusKm) {
+        const ring = radiusPolygon(center, radiusKm).geometry.coordinates[0];
+        instance.fitBounds(
+          [
+            [
+              Math.min(...ring.map((p) => p[0])),
+              Math.min(...ring.map((p) => p[1])),
+            ],
+            [
+              Math.max(...ring.map((p) => p[0])),
+              Math.max(...ring.map((p) => p[1])),
+            ],
+          ],
+          { padding: 48, duration: reducedMotion() ? 0 : 650, maxZoom: 12 },
+        );
+      } else if (place)
+        instance.flyTo({
+          center,
+          zoom: 11,
+          duration: reducedMotion() ? 0 : 650,
+          essential: false,
+        });
+    }
+  }, [place, radiusKm, ready]);
+  useEffect(() => {
+    if (!command || command.sequence === lastCommand.current) return;
+    lastCommand.current = command.sequence;
+    if (command.type === "retry") {
+      setAttempt((current) => current + 1);
+      return;
+    }
+    if (!ready || !map.current) return;
+    const instance = map.current;
+    const options = { duration: reducedMotion() ? 0 : 300 };
+    if (command.type === "zoom-in") instance.zoomIn(options);
+    else if (command.type === "zoom-out") instance.zoomOut(options);
+    else {
+      const center = (place ?? DEFAULT_PLACE).center;
+      if (radiusKm) {
+        const ring = radiusPolygon(center, radiusKm).geometry.coordinates[0];
+        instance.fitBounds(
+          [
+            [
+              Math.min(...ring.map((p) => p[0])),
+              Math.min(...ring.map((p) => p[1])),
+            ],
+            [
+              Math.max(...ring.map((p) => p[0])),
+              Math.max(...ring.map((p) => p[1])),
+            ],
+          ],
+          { padding: 48, maxZoom: 12, ...options },
+        );
+      } else instance.flyTo({ center, zoom: 10.3, ...options });
+    }
+  }, [command, ready, place, radiusKm]);
   return (
     <div
       className="discovery-map"
@@ -222,13 +338,9 @@ export function CommunityMap({
           <WifiOff size={28} />
           <h2>The map is unavailable.</h2>
           <p>{error}</p>
-          <Button
-            variant="outline"
-            onClick={() => setAttempt((current) => current + 1)}
-          >
-            <RefreshCw size={15} />
-            Retry map
-          </Button>
+          <p className="mt-3">
+            Use Retry map in the controls, or switch to the list.
+          </p>
         </div>
       ) : !ready ? (
         <div className="discovery-map-loading" role="status">
@@ -241,12 +353,22 @@ export function CommunityMap({
       </div>
       {ready &&
         groups.map((group) => {
+          const highlighted = group.offers.some(
+            (offer) => offer.id === highlightedId,
+          );
+          group.element.style.zIndex = highlighted
+            ? "5"
+            : group.offers.some((offer) => offer.id === selectedId)
+              ? "4"
+              : "1";
           const representative =
+            group.offers.find((offer) => offer.id === highlightedId) ||
             group.offers.find((offer) => offer.id === selectedId) ||
             group.offers[0];
           return createPortal(
             <Button
-              className={`discovery-person-marker ${group.offers.some((offer) => offer.id === selectedId) ? "is-selected" : ""}`}
+              className={`discovery-person-marker origin-bottom transition-[transform,border-color,box-shadow] duration-200 ease-out motion-reduce:transition-none ${highlighted ? "scale-110 border-primary! shadow-lg! ring-4 ring-primary/25" : ""} ${group.offers.some((offer) => offer.id === selectedId) ? "is-selected" : ""}`}
+              data-highlighted={highlighted || undefined}
               variant="outline"
               aria-label={`Explore ${group.offers.length} ${group.offers.length === 1 ? "offer" : "offers"} near ${group.name}`}
               aria-pressed={group.offers.some(

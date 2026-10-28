@@ -218,13 +218,16 @@ export function ExplorePage() {
   const view = params.get("view") === "list" ? "list" : "map";
   const sort = params.get("sort") || "recent";
   const minimum = params.get("amount") || "";
+  const radius = [5, 10, 50].includes(Number(params.get("radius")))
+    ? Number(params.get("radius"))
+    : 0;
   const areas = [
     ...new Set((query.data || []).map((offer) => offer.area).filter(Boolean)),
   ];
   const offers = useMemo(() => {
     const result = (query.data || []).filter(
       (offer) =>
-        `${offer.title} ${offer.lender.display_name}`
+        `${offer.title} ${offer.lender.display_name} ${offer.area}`
           .toLowerCase()
           .includes(search.toLowerCase()) &&
         (area === "all" || offer.area === area) &&
@@ -242,8 +245,13 @@ export function ExplorePage() {
     return result;
   }, [query.data, search, area, sort, minimum]);
   function setFilter(key: string, value: string) {
+    setFilters({ [key]: value });
+  }
+  function setFilters(values: Record<string, string>) {
     const next = new URLSearchParams(params);
-    value && value !== "all" ? next.set(key, value) : next.delete(key);
+    Object.entries(values).forEach(([key, value]) => {
+      value && value !== "all" ? next.set(key, value) : next.delete(key);
+    });
     setParams(next, { replace: true });
   }
   return (
@@ -255,7 +263,9 @@ export function ExplorePage() {
       sort={sort}
       minimum={minimum}
       view={view}
+      radius={radius}
       setFilter={setFilter}
+      setFilters={setFilters}
       onClear={() => setParams({ view })}
       renderOffer={(offer) => <OfferRow offer={offer} />}
       pending={query.isPending}

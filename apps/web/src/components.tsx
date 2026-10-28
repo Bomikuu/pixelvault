@@ -280,20 +280,28 @@ export function IllustratedInfoDialog({
   description,
   scene,
   triggerLabel,
+  iconOnly = false,
   children,
 }: {
   title: string;
   description: string;
   scene: Parameters<typeof ContextIllustration>[0]["scene"];
   triggerLabel: string;
+  iconOnly?: boolean;
   children?: ReactNode;
 }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button type="button" variant="outline">
+        <Button
+          type="button"
+          variant="outline"
+          size={iconOnly ? "icon" : "default"}
+          aria-label={iconOnly ? triggerLabel : undefined}
+          title={iconOnly ? triggerLabel : undefined}
+        >
           <Info size={17} />
-          {triggerLabel}
+          {!iconOnly && triggerLabel}
         </Button>
       </DialogTrigger>
       <DialogContent className="illustrated-dialog">

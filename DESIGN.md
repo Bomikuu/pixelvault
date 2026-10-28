@@ -228,6 +228,10 @@ The latest approved distinct-position treatment supersedes the earlier neutral-p
 
 Two visible badges precede a count derived from the remaining selected public badges. The public showcase cap remains three, so three selected badges produce +1. Never fabricate +3 or enlarge the showcase capacity for presentation.
 
+### Explore control container
+
+Explore keeps one shared search field, one destination-named map/list toggle and an Any distance / 5 / 10 / 50 km selector in the desktop right-side posting container. Secondary area/amount/sort choices use the canonical filter popover. Location and zoom/fit/retry actions occupy one compact row; attribution remains map-owned. On narrow screens controls precede the map and postings. Local lender/offer/area filtering and explicit Mapbox place lookup share the field; no lender query is automatically sent to the provider. Offer hover and keyboard focus highlight grouped avatar markers without moving the camera. Radius results and the geodesic map boundary use validated public approximate area centers. Device location is optional, ephemeral and user-triggered. See [the community contract](docs/surfaces/community.md) for state and verification limits.
+
 ### Offer likes
 
 List offers and the map sidebar expose the same pill-shaped canonical Like control, selected filled-heart state and actual count. Saving disables the action; errors expose feedback and a retry when loading fails. Viewer-specific liked state and aggregate counts come from the existing desired-state PUT service and bulk discovery projection, with private no-store discovery responses. These counts express likes, not financial quality or repayment assurance.
