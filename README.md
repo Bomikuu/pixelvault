@@ -28,7 +28,7 @@ The seed command refuses live mode, does not overwrite existing demo users, send
 
 ## Implemented flows
 
-- One account with borrower/lender views; separate public display identity and private email; session/CSRF protection.
+- One account with borrower/lender views; private email and normalized Philippine mobile registration/settings; session/CSRF protection. Saving contact details does not verify ownership, and changes require fresh contact evidence. Email/SMS delivery remains unconfigured.
 - Private encrypted evidence, quarantined uploads, explicit sandbox scanning, 60-second owner-bound download grants, assigned review, independent lender-registration records and audit history.
 - Offers, private applications, capacity reservations, immutable disclosures, two-party exact-hash acceptance and reproducible private agreement PDFs.
 - Reducing-balance schedules, weekly/twice-monthly/monthly/maturity frequencies, exact dated cost calculation, partial/early collection and compensating reversals.
@@ -37,6 +37,9 @@ The seed command refuses live mode, does not overwrite existing demo users, send
 - Mapbox GL discovery with a full map workspace, posting sidebar and list toggle. Avatar markers group approximate public area centers; city/municipality/neighborhood search uses Mapbox Geocoding v6 restricted to the Philippines.
 - Recent public posts and server-sent revision updates, with bounded reconnection and an explicit once-per-minute REST fallback. A banner lets the reader apply updated postings without interrupting the current view.
 - Private inbox, ten original achievements, evidence-based award correction, moderated transaction reviews and contribution/literacy progression. Optional community XP, an opt-in leaderboard, eight profile characters, unlocked avatar frames and eligible achievement flair.
+- Larger profile pictures, a generated illustrated cover, active profile tabs, separate setup/XP progress and moderated transaction-review recommendations. Members can upload a validated JPEG/PNG/WebP photo or keep an illustrated avatar; photos are decoded and re-encoded without metadata, limited to 3 MiB input and 768px output, and shown consistently beside people.
+- Persisted offer likes, moderated comments, current eligible earned-badge reactions and interactive server-calculated amount/term comparisons. Alternate preview terms never silently change the lender’s actual offer or application.
+- Private co-borrower invitations with manually shared signed links, explicit recipient consent/current checks, withdrawal and optional application association. Phone/Facebook details stay between the inviting and consenting members; the lender receives identity and consent status only. No joint repayment liability or loan/document access is granted.
 - Private complaints/hardship, mutual amendments without capitalizing old interest, policy-limited notices, period analytics and scoped formula-safe exports.
 - Admin verification/registration, cases/moderation, commissions/reconciliation, policies, template status and audit records.
 
@@ -66,7 +69,7 @@ Real PixelFlow checkout needs a configured approved test routing profile and ser
 
 Private evidence uses encrypted local storage for development. A production S3-compatible storage adapter, reviewed retention schedule, secure key rotation, actual scanner/MFA, signing requirements, jurisdiction-specific rate/fee/tax rules, regulatory classification and approved per-lender money routing remain deployment work. No permissive production fallback is supplied.
 
-See [implementation status](docs/IMPLEMENTATION.md) for automated verification results and deployment limits. The [artwork catalog](docs/brand/artwork-catalog.svg) shows all ten achievement illustrations and eight profile avatars; [scene prompts](docs/brand/illustration-prompts.md) record the built-in image-generation inputs. Open your profile editor to select and save a character. Portable SVGs live beside the UI source in packages/ui/src/assets; regenerate them with `node scripts/export-artwork.mjs`.
+See [implementation status](docs/IMPLEMENTATION.md) for automated verification results and deployment limits. The [artwork catalog](docs/brand/artwork-catalog.svg) shows all ten achievement illustrations and eight profile avatars; [scene prompts](docs/brand/illustration-prompts.md) and the [profile cover prompt](docs/brand/profile-cover-prompt.txt) record the built-in image-generation inputs. Open your profile editor to upload a photo or select a character. Portable SVGs live beside the UI source in packages/ui/src/assets; regenerate them with `node scripts/export-artwork.mjs`.
 
 See [product context](PRODUCT.md), [design](DESIGN.md), [design specification](docs/specs/2026-10-28-pixelvault-design.md), [phase plans](docs/plans/2026-10-28-pixelvault-implementation.md), [PixelFlow evidence](docs/PIXELFLOW-INTEGRATION.md), and [operations](docs/operations/deployment.md).
 

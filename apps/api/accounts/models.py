@@ -19,6 +19,14 @@ AVATAR_KEYS = frozenset(key for key, _ in AVATAR_CHOICES)
 class Member(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
+    mobile_number = models.CharField(max_length=20, blank=True)
+    photo_mode = models.CharField(
+        max_length=10,
+        choices=(("avatar", "Illustrated avatar"), ("photo", "Uploaded photo")),
+        default="avatar",
+    )
+    profile_photo_id = models.UUIDField(null=True, blank=True, unique=True, editable=False)
+    profile_photo = models.BinaryField(default=bytes, blank=True, editable=False)
     display_name = models.CharField(max_length=100, blank=True)
     area = models.CharField(max_length=80, default="Quezon City")
     bio = models.CharField(max_length=400, blank=True)

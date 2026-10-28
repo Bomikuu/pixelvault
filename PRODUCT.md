@@ -29,6 +29,7 @@ Individual-to-individual lending is mandatory. PixelVault combines nearby offers
 - Philippines first; PHP integer centavos, en-PH formatting, Asia/Manila contractual dates and UTC event timestamps.
 - Community discovery, private member dashboard and restricted administration are separate areas.
 - Borrowers privately apply; lenders choose; both accept final terms. One lender and one borrower per loan in the first release.
+- Proposed co-borrowers use private invitations, their own current identity/contact checks and explicit sharing consent. An application may reference an accepted invitation, but this does not add a contractual debtor, joint liability or loan/document access. Accepted invitation access is bound to member IDs, not a reusable email address.
 - One-time commission per confirmed funded loan; no platform commission on repayments. Lender-paid commission is the proposed initial policy, not a confirmed price.
 - PixelFlow is the shared payment-collection integration. Loan obligations and allocation records remain PixelVault's responsibility.
 

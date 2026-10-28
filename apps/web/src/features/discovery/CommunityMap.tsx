@@ -257,6 +257,7 @@ export function CommunityMap({
               <MemberAvatar
                 name={representative.lender.display_name}
                 avatarKey={representative.lender.avatar_key}
+                photoUrl={representative.lender.photo_url}
                 reputation={representative.lender.reputation}
                 size={42}
               />

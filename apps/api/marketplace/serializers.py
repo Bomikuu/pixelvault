@@ -32,6 +32,8 @@ class OfferInput(serializers.Serializer):
 
 
 def application_data(application):
+    from connections.services import application_companion
+
     agreement = (
         application.reservation.agreements.order_by("-version").first()
         if hasattr(application, "reservation")
@@ -55,6 +57,7 @@ def application_data(application):
         "purpose": application.purpose,
         "summary": application.summary,
         "status": application.status,
+        "co_borrower": application_companion(application),
         "test_mode": True,
     }
 

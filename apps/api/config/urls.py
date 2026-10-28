@@ -1,7 +1,10 @@
 from accounts.admin_views import AuditView, PoliciesView, RegistrationQueueView, TemplatesView
 from accounts.views import (
+    ContactView,
     LiteracyView,
+    ProfilePhotoView,
     ProfileView,
+    PublicPhotoView,
     RegisterView,
     SessionView,
     SignInView,
@@ -36,6 +39,9 @@ urlpatterns = [
     path("api/v1/auth/sign-in", SignInView.as_view()),
     path("api/v1/auth/sign-out", SignOutView.as_view()),
     path("api/v1/auth/profile", ProfileView.as_view()),
+    path("api/v1/auth/contacts", ContactView.as_view()),
+    path("api/v1/auth/profile/photo", ProfilePhotoView.as_view()),
+    path("api/v1/community/photos/<uuid:photo_id>", PublicPhotoView.as_view()),
     path("api/v1/auth/step-up", StepUpView.as_view()),
     path("api/v1/literacy/complete", LiteracyView.as_view()),
     path("api/v1/verification", VerificationView.as_view()),
@@ -63,4 +69,6 @@ urlpatterns = [
     path("api/v1/", include("community.urls")),
     path("api/v1/", include("cases.urls")),
     path("api/v1/", include("reporting.urls")),
+    path("api/v1/", include("engagement.urls")),
+    path("api/v1/", include("connections.urls")),
 ]

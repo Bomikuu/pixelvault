@@ -85,27 +85,76 @@ it("renders schedule columns with semantic shared table controls", () => {
   expect(screen.getByRole("cell", { name: "₱1,030.00" })).toBeInTheDocument();
 });
 
+it.each(["map", "list"])(
+  "preserves registered profile photos in %s discovery and recent postings",
+  async (view) => {
+    vi.stubEnv("VITE_MAPBOX_ACCESS_TOKEN", "");
+    const photo =
+      "/api/v1/community/photos/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+    const envelope = discoveryEnvelope([offer]);
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockImplementation((url: string) =>
+          Promise.resolve(
+            jsonResponse(
+              url.endsWith("/community/activity")
+                ? {
+                    posts: [
+                      {
+                        id: offer.id,
+                        title: offer.title,
+                        lender: { ...offer.lender, photo_url: photo },
+                        area: { name: offer.area },
+                        created_at: "2026-10-28T12:00:00Z",
+                      },
+                    ],
+                    revision: "test-photo",
+                  }
+                : {
+                    ...envelope,
+                    offers: envelope.offers.map((row) => ({
+                      ...row,
+                      lender: { ...row.lender, photo_url: photo },
+                    })),
+                  },
+            ),
+          ),
+        ),
+    );
+    renderApp(<ExplorePage />, { route: `/explore?view=${view}` });
+    expect(
+      await screen.findByRole("img", { name: "Elias Test’s profile photo" }),
+    ).toHaveAttribute("src", photo);
+    if (view === "map") {
+      await userEvent.click(screen.getByRole("tab", { name: "Recent posts" }));
+      expect(
+        await screen.findByRole("img", { name: "Elias Test’s profile photo" }),
+      ).toHaveAttribute("src", photo);
+    }
+  },
+);
+
 it("keeps pagination reachable when the currently loaded page has no matching offers", async () => {
   vi.stubEnv("VITE_MAPBOX_ACCESS_TOKEN", "");
-  const fetch = vi
-    .fn()
-    .mockImplementation((url: string) =>
-      Promise.resolve(
-        jsonResponse(
-          url.endsWith("/community/activity")
-            ? { posts: [], revision: "r1" }
-            : url.includes("cursor=30")
-              ? discoveryEnvelope([
-                  {
-                    ...offer,
-                    id: "later-offer",
-                    title: "A later matching offer",
-                  },
-                ])
-              : { ...discoveryEnvelope([offer]), next_cursor: "30" },
-        ),
+  const fetch = vi.fn().mockImplementation((url: string) =>
+    Promise.resolve(
+      jsonResponse(
+        url.endsWith("/community/activity")
+          ? { posts: [], revision: "r1" }
+          : url.includes("cursor=30")
+            ? discoveryEnvelope([
+                {
+                  ...offer,
+                  id: "later-offer",
+                  title: "A later matching offer",
+                },
+              ])
+            : { ...discoveryEnvelope([offer]), next_cursor: "30" },
       ),
-    );
+    ),
+  );
   vi.stubGlobal("fetch", fetch);
   renderApp(<ExplorePage />, { route: "/explore?view=list&q=later" });
   expect(

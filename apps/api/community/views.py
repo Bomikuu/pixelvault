@@ -68,11 +68,27 @@ class PublicProfileView(APIView):
 
 class ProfileView(MemberView):
     def get(self, request):
-        return Response(public_profile(handle=request.user.username, viewer_id=request.user.id))
+        return Response(self.own_data(request.user))
+
+    @staticmethod
+    def own_data(member, data=None):
+        from accounts.profile import own_profile_details
+
+        from .reputation import reputation_summary, xp_progress
+
+        data = data if data is not None else public_profile(handle=member.username)
+        return {
+            **data,
+            **own_profile_details(member),
+            "reputation": reputation_summary(member, own=True),
+            "xp_progress": xp_progress(member, own=True),
+        }
 
     @transaction.atomic
     def patch(self, request):
-        return Response(update_profile(actor_id=request.user.id, data=request.data))
+        data = update_profile(actor_id=request.user.id, data=request.data)
+        member = member_for(request.user.id)
+        return Response(self.own_data(member, data))
 
 
 class AchievementCatalogView(APIView):
@@ -149,6 +165,7 @@ class ThreadView(MemberView):
                     "other_display_name": identity.get("display_name", ""),
                     "other_handle": identity.get("handle", ""),
                     "other_avatar_key": other.avatar_key if other else "",
+                    "other_photo_url": identity.get("photo_url") if other else None,
                     "other_reputation": identity.get("reputation") if other else None,
                     "latest_at": thread.latest_at.isoformat() if thread.latest_at else None,
                 }

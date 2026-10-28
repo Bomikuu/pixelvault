@@ -182,6 +182,7 @@ export function Shell() {
             name={member?.display_name || "Guest"}
             avatarKey={member?.avatar_key}
             reputation={member?.community_reputation}
+            photoUrl={member?.photo_url}
           />
           <div>
             <strong>{member?.display_name || "Welcome to PixelVault"}</strong>
@@ -250,6 +251,7 @@ export function Shell() {
                   name={member.display_name}
                   avatarKey={member.avatar_key}
                   reputation={member.community_reputation}
+                  photoUrl={member.photo_url}
                   className="topbar-avatar"
                   size={34}
                 />

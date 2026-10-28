@@ -406,6 +406,7 @@ export function DiscoveryWorkspace({
                         <MemberAvatar
                           name={post.lender.display_name}
                           avatarKey={post.lender.avatar_key}
+                          photoUrl={post.lender.photo_url}
                           reputation={post.lender.reputation}
                           size={40}
                         />

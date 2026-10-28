@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "community",
     "cases",
     "reporting",
+    "engagement",
+    "connections",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -94,6 +96,10 @@ REST_FRAMEWORK = {
         "auth": "30/hour",
         "community_activity": "600/hour",
         "community_stream": "120/hour",
+        "engagement_write": "30/min",
+        "engagement_comment": "6/min",
+        "engagement_preview": "60/min",
+        "co_borrower_invite": "10/hour",
     },
 }
 SPECTACULAR_SETTINGS = {

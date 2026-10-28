@@ -19,7 +19,7 @@ PRIVATE_OR_THREAT = re.compile(
 
 
 @transaction.atomic
-def submit_review(*, actor_id, loan_id, ratings, body, operation_id):
+def submit_review(*, actor_id, loan_id, ratings, body, operation_id, recommendation=None):
     member = member_for(actor_id)
     type(member).objects.select_for_update().get(pk=actor_id)
     loan = eligible_review_loan(loan_id, actor_id)
@@ -30,9 +30,19 @@ def submit_review(*, actor_id, loan_id, ratings, body, operation_id):
     ):
         raise DomainError("invalid_ratings", "Rate all four conduct categories from 1 to 5.")
     body = clean_text(body, 2000) if body else ""
+    if recommendation not in (None, "up", "down"):
+        raise DomainError(
+            "invalid_recommendation",
+            "Choose thumbs up, thumbs down, or leave the recommendation blank.",
+        )
     previous = Review.objects.filter(author_id=actor_id, operation_id=operation_id).first()
     if previous:
-        if previous.loan_id != loan.id or previous.ratings != ratings or previous.body != body:
+        if (
+            previous.loan_id != loan.id
+            or previous.ratings != ratings
+            or previous.body != body
+            or previous.recommendation != recommendation
+        ):
             raise DomainError("idempotency_conflict", "This key was used for another review.", 409)
         return previous
     if Review.objects.filter(author_id=actor_id, loan_id=loan.id).exists():
@@ -46,6 +56,7 @@ def submit_review(*, actor_id, loan_id, ratings, body, operation_id):
         subject_id=subject_id,
         ratings=ratings,
         body=body,
+        recommendation=recommendation,
         operation_id=operation_id,
         status="held" if PRIVATE_OR_THREAT.search(body) else "pending",
         moderation_reason="Private information or financial allegation requires case handling."

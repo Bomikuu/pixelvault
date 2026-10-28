@@ -233,3 +233,16 @@
     animation: none;
   }
 }
+:where([data-slot="popover-content"]) {
+  z-index: 70;
+  width: min(360px, calc(100vw - 24px));
+  max-height: min(420px, var(--radix-popover-content-available-height, 420px));
+  overflow-y: auto;
+  padding: 20px;
+  background: var(--popover);
+  color: var(--popover-foreground);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 12px 36px #0b142829;
+  outline: none;
+}

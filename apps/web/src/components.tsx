@@ -195,14 +195,25 @@ export function MemberAvatar({
   className = "",
   size = 40,
   reputation,
+  photoUrl,
 }: {
   name: string;
   avatarKey?: string;
   className?: string;
   size?: number;
   reputation?: CommunityReputation;
+  photoUrl?: string | null;
 }) {
   const hasPortrait = AVATAR_OPTIONS.some((option) => option.key === avatarKey);
+  const [failedPhoto, setFailedPhoto] = useState<string | null>(null);
+  // Public and owner-only profile photos share this validated raster endpoint.
+  // Never fetch an arbitrary profile-supplied URL or a private document route.
+  const safePhoto =
+    /^\/api\/v1\/community\/photos\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      photoUrl || "",
+    )
+      ? photoUrl!
+      : null;
   const frame = ["plain", "blue", "leaf", "gold", "orbit"].includes(
     reputation?.frame || "",
   )
@@ -211,10 +222,29 @@ export function MemberAvatar({
   return (
     <span
       className={`member-avatar-shell frame-${frame} ${className}`}
-      style={{ width: size, height: size }}
+      style={{
+        width: `var(--member-avatar-size, ${size}px)`,
+        height: `var(--member-avatar-size, ${size}px)`,
+      }}
     >
-      <Avatar className="member-avatar" style={{ width: size, height: size }}>
-        {hasPortrait ? (
+      <Avatar
+        className="member-avatar"
+        style={{
+          width: `var(--member-avatar-size, ${size}px)`,
+          height: `var(--member-avatar-size, ${size}px)`,
+        }}
+      >
+        {safePhoto && failedPhoto !== safePhoto ? (
+          <img
+            className="member-photo"
+            src={safePhoto}
+            alt={`${name}’s profile photo`}
+            loading="lazy"
+            decoding="async"
+            referrerPolicy="no-referrer"
+            onError={() => setFailedPhoto(safePhoto)}
+          />
+        ) : hasPortrait ? (
           <AvatarArt
             avatarKey={avatarKey!}
             size={size}
@@ -320,6 +350,7 @@ export function PersonName({
         name={person.display_name}
         avatarKey={person.avatar_key}
         reputation={person.reputation}
+        photoUrl={person.photo_url}
       />
       <div>
         <Link
@@ -562,6 +593,12 @@ export function RecordRows({
   return (
     <div className="record-list">
       {records.map((record, index) => {
+        const identity =
+          record.member &&
+          typeof record.member === "object" &&
+          !Array.isArray(record.member)
+            ? (record.member as DataRecord)
+            : record;
         const heading = String(
           record.title ||
             record.name ||
@@ -574,6 +611,23 @@ export function RecordRows({
         );
         const content = (
           <>
+            {typeof identity.display_name === "string" &&
+              (typeof identity.photo_url === "string" ||
+                typeof identity.avatar_key === "string") && (
+                <MemberAvatar
+                  name={identity.display_name}
+                  avatarKey={
+                    typeof identity.avatar_key === "string"
+                      ? identity.avatar_key
+                      : undefined
+                  }
+                  photoUrl={
+                    typeof identity.photo_url === "string"
+                      ? identity.photo_url
+                      : null
+                  }
+                />
+              )}
             <div>
               <strong>{label(heading)}</strong>
               <p>

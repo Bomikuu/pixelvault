@@ -56,6 +56,9 @@ import { HelpPage } from "../features/HelpPage";
 import { HowItWorksPage } from "../features/HowItWorksPage";
 import { Leaderboard, ReputationPage } from "../features/ReputationPages";
 import { ActionLink } from "../components";
+import { ContactSettings } from "../features/connections/ContactSettings";
+import { CoBorrowersPage } from "../features/connections/CoBorrowersPage";
+import { InvitationClaimPage } from "../features/connections/InvitationReview";
 const member = (element: React.ReactNode) => (
   <RequireMember>{element}</RequireMember>
 );
@@ -128,6 +131,12 @@ export const routes = [
       { path: "members/:handle", element: <MemberProfile /> },
       { path: "profile", element: member(<OwnProfile />) },
       { path: "profile/edit", element: member(<EditProfile />) },
+      { path: "profile/contacts", element: member(<ContactSettings />) },
+      { path: "profile/co-borrowers", element: member(<CoBorrowersPage />) },
+      {
+        path: "co-borrowers/invite/:token",
+        element: member(<InvitationClaimPage />),
+      },
       { path: "profile/appearance", element: member(<ReputationPage />) },
       { path: "profile/badges", element: member(<AchievementsPage />) },
       { path: "badges/:key", element: <BadgeDetail /> },

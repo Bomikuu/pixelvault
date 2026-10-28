@@ -7,6 +7,21 @@ export interface CommunityReputation {
   flair: Award | null;
   show_points: boolean;
 }
+export interface XpProgress {
+  current_level: string;
+  current_level_points: number | null;
+  next_level: string | null;
+  next_level_points: number | null;
+  points_in_level: number | null;
+  points_to_next: number | null;
+  progress_percent: number | null;
+}
+export interface SetupCompleteness {
+  completed: number;
+  total: number;
+  percent: number;
+  steps: { key: string; label: string; complete: boolean; href: string }[];
+}
 export interface ReputationWorkspace {
   reputation: CommunityReputation;
   frames: {
@@ -39,6 +54,7 @@ export interface LeaderboardPage {
     handle: string;
     display_name: string;
     avatar_key?: string;
+    photo_url?: string | null;
     reputation: CommunityReputation;
   }[];
   next_cursor: string | null;
@@ -50,6 +66,11 @@ export interface Member {
   email: string;
   display_name: string;
   avatar_key?: string;
+  photo_url?: string | null;
+  photo_mode?: "avatar" | "photo";
+  has_photo?: boolean;
+  stored_photo_url?: string | null;
+  mobile_number?: string;
   community_reputation?: CommunityReputation;
   handle?: string;
   area: string;
@@ -68,6 +89,7 @@ export interface Person {
   id: string;
   display_name: string;
   avatar_key?: string;
+  photo_url?: string | null;
   handle?: string;
   area?: string;
   reputation?: CommunityReputation;
@@ -133,6 +155,11 @@ export interface Application {
   agreement_id?: string;
   created_at?: string;
   version?: number;
+  co_borrower?: {
+    member: Omit<Person, "id">;
+    status: string;
+    joint_liability: false;
+  } | null;
 }
 export interface Agreement {
   id: string;
@@ -190,6 +217,8 @@ export interface Award {
 export interface Review {
   id: string;
   author_display_name: string;
+  author?: Omit<Person, "id">;
+  recommendation?: "up" | "down" | null;
   ratings: Record<string, number>;
   body: string;
   published_at: string;
@@ -200,10 +229,17 @@ export interface Profile {
   handle: string;
   display_name: string;
   avatar_key?: string;
+  photo_url?: string | null;
+  photo_mode?: "avatar" | "photo";
+  has_photo?: boolean;
+  stored_photo_url?: string | null;
   reputation?: CommunityReputation;
   bio: string;
   area: string;
   community_level: string;
+  recommendation_summary?: { up: number; down: number; total: number };
+  xp_progress?: XpProgress;
+  setup_completeness?: SetupCompleteness;
   badges: Award[];
   reviews: Review[];
 }
@@ -213,6 +249,7 @@ export interface Thread {
   application_id?: string;
   other_display_name: string;
   other_avatar_key?: string;
+  other_photo_url?: string | null;
   other_reputation?: CommunityReputation;
   latest_at: string;
 }

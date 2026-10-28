@@ -9,6 +9,10 @@ import {
   MapPin,
   MessageSquare,
   ShieldCheck,
+  Palette,
+  Pencil,
+  ThumbsUp,
+  ThumbsDown,
 } from "lucide-react";
 import {
   BadgeArt,
@@ -44,6 +48,13 @@ import {
   IllustratedInfoDialog,
 } from "../components";
 import { ReputationSettings } from "./ReputationPages";
+import { ProfileNavigation } from "./profile/ProfileNavigation";
+import { ProfilePhotoPicker } from "./profile/ProfilePhotoPicker";
+import {
+  PrivateProfileSetup,
+  ProfileXpProgress,
+  RecommendationSummary,
+} from "./profile/ProfileProgress";
 import { date, label, text } from "../lib/format";
 export function MemberProfile() {
   const { handle } = useParams();
@@ -63,21 +74,25 @@ function ProfileView({
   own?: boolean;
 }) {
   return (
-    <>
+    <div className="profile-page">
       <div className="profile-cover">
-        <span className="profile-cover-grid" />
-        <span className="profile-cover-text">
-          Borrow today.
-          <br />
-          Build tomorrow.
-        </span>
+        <img
+          src="/illustrations/profile-community-cover.png"
+          alt=""
+          width={1536}
+          height={640}
+          loading="eager"
+          decoding="async"
+        />
       </div>
-      <section className="profile-heading">
+      <section className="profile-heading profile-identity">
         <MemberAvatar
           name={profile.display_name}
           avatarKey={profile.avatar_key}
           reputation={profile.reputation}
-          size={80}
+          photoUrl={profile.photo_url}
+          className="profile-main-avatar"
+          size={120}
         />
         <div>
           <h1>{profile.display_name}</h1>
@@ -87,21 +102,22 @@ function ProfileView({
             <span>·</span>
             {profile.reputation?.level || profile.community_level || "Newcomer"}
           </p>
+          <RecommendationSummary summary={profile.recommendation_summary} />
         </div>
         {own && (
-          <ActionLink to="/profile/edit" variant="outline">
-            Edit profile
-          </ActionLink>
+          <div className="profile-primary-actions">
+            <ActionLink to="/profile/edit" variant="outline">
+              <Pencil size={16} />
+              Edit profile
+            </ActionLink>
+            <ActionLink to="/profile/appearance">
+              <Palette size={16} />
+              Avatar frames & flair
+            </ActionLink>
+          </div>
         )}
       </section>
-      {own && (
-        <nav className="profile-tools" aria-label="Profile settings">
-          <Link to="/profile/appearance">Avatar frames & flair</Link>
-          <Link to="/profile/badges">Achievement showcase</Link>
-          <Link to="/reviews">My review history</Link>
-          <Link to="/settings/notifications">Reminder preferences</Link>
-        </nav>
-      )}
+      {own && <ProfileNavigation />}
       <div className="profile-layout">
         <div>
           <section className="surface">
@@ -138,10 +154,40 @@ function ProfileView({
               <div className="review-list">
                 {profile.reviews.map((review) => (
                   <article className="review" key={review.id}>
-                    <div>
-                      <strong>{review.author_display_name}</strong>
-                      <small>{date(review.published_at)}</small>
+                    <div className="review-attribution">
+                      <MemberAvatar
+                        name={
+                          review.author?.display_name ||
+                          review.author_display_name
+                        }
+                        avatarKey={review.author?.avatar_key}
+                        photoUrl={review.author?.photo_url}
+                        reputation={review.author?.reputation}
+                      />
+                      <div>
+                        {review.author?.handle ? (
+                          <Link to={`/members/${review.author.handle}`}>
+                            {review.author.display_name}
+                          </Link>
+                        ) : (
+                          <strong>{review.author_display_name}</strong>
+                        )}
+                        <small>{date(review.published_at)}</small>
+                      </div>
                     </div>
+                    {review.recommendation && (
+                      <span className="review-recommendation">
+                        {review.recommendation === "up" ? (
+                          <ThumbsUp size={15} />
+                        ) : (
+                          <ThumbsDown size={15} />
+                        )}
+                        {review.recommendation === "up"
+                          ? "Would recommend"
+                          : "Would not recommend"}
+                        <small>Transaction review</small>
+                      </span>
+                    )}
                     <p>{review.body}</p>
                     <div className="review-categories">
                       {Object.entries(review.ratings).map(([key, value]) => (
@@ -164,19 +210,23 @@ function ProfileView({
           </section>
         </div>
         <aside className="profile-aside">
-          <ShieldCheck size={24} />
-          <h2>People, with boundaries.</h2>
-          <p>
-            Public profiles never show income documents, exact addresses,
-            outstanding debt or private risk records.
-          </p>
-          <Link to="/help#privacy">
-            How your information is protected
-            <ArrowRight size={15} />
-          </Link>
+          <ProfileXpProgress profile={profile} />
+          {own && <PrivateProfileSetup />}
+          <section className="profile-privacy-context">
+            <ShieldCheck size={24} />
+            <h2>People, with boundaries.</h2>
+            <p>
+              Public profiles never show income documents, exact addresses,
+              outstanding debt or private risk records.
+            </p>
+            <Link to="/help#privacy">
+              How your information is protected
+              <ArrowRight size={15} />
+            </Link>
+          </section>
         </aside>
       </div>
-    </>
+    </div>
   );
 }
 export function BadgeShelf({ awards }: { awards: Award[] }) {
@@ -225,14 +275,19 @@ export function EditProfile() {
   const [selectedAvatar, setSelectedAvatar] = useState(
     member.avatar_key || "sprout",
   );
+  const [photoMode, setPhotoMode] = useState<"avatar" | "photo">(
+    member.photo_mode || "avatar",
+  );
   return (
     <>
       <PageHeading
         title="Make your profile yours."
         description="Share a little about yourself. Keep financial documents and exact addresses private."
       />
+      <ProfileNavigation />
       <div className="profile-edit-layout">
         <section className="surface">
+          <ProfilePhotoPicker mode={photoMode} onModeChange={setPhotoMode} />
           <ApiForm
             onSubmit={async (data) => {
               await apiRequest("/auth/profile", {
@@ -242,6 +297,7 @@ export function EditProfile() {
                   bio: text(data, "bio"),
                   area: text(data, "area"),
                   avatar_key: selectedAvatar,
+                  photo_mode: photoMode,
                 }),
               });
               await refresh();
@@ -268,7 +324,10 @@ export function EditProfile() {
                     className={`avatar-choice ${selectedAvatar === option.key ? "is-selected" : ""}`}
                     aria-pressed={selectedAvatar === option.key}
                     aria-label={`Choose ${option.name}`}
-                    onClick={() => setSelectedAvatar(option.key)}
+                    onClick={() => {
+                      setSelectedAvatar(option.key);
+                      setPhotoMode("avatar");
+                    }}
                   >
                     <AvatarArt avatarKey={option.key} size={76} />
                     <strong>{option.name}</strong>
@@ -309,14 +368,19 @@ export function EditProfile() {
           <ContextIllustration scene="community-workshop" eager />
           <h2>Every person brings something.</h2>
           <p>
-            Your chosen character appears beside your offers, conversations and
-            profile. Pick whichever feels like you.
+            Your profile picture appears beside your offers, conversations and
+            profile. Choose a photo or a character that feels like you.
           </p>
           <div className="avatar-preview">
             <MemberAvatar
               name={member.display_name}
               avatarKey={selectedAvatar}
               reputation={member.community_reputation}
+              photoUrl={
+                photoMode === "photo"
+                  ? member.photo_url || member.stored_photo_url
+                  : null
+              }
               size={64}
             />
             <div>
@@ -426,6 +490,7 @@ export function AchievementsPage() {
           />
         }
       />
+      <ProfileNavigation />
       <section className="achievement-intro surface">
         <div>
           <h2>Small steps. A bigger story.</h2>
@@ -614,6 +679,7 @@ export function InboxPage() {
                   name={t.other_display_name}
                   avatarKey={t.other_avatar_key}
                   reputation={t.other_reputation}
+                  photoUrl={t.other_photo_url}
                 />
                 <span>
                   <strong>{t.other_display_name}</strong>
@@ -730,6 +796,10 @@ export function ReviewForm() {
                 ].map((k) => [k, Number(data.get(k))]),
               ),
               body: text(data, "body"),
+              recommendation:
+                text(data, "recommendation") === "none"
+                  ? null
+                  : text(data, "recommendation") || null,
               operation_id: text(data, "operation_id"),
             })
           }
@@ -742,6 +812,17 @@ export function ReviewForm() {
             belong in a case.
           </Notice>
           {!loan && <Field name="loan_id" label="Loan reference" required />}
+          <SelectField
+            name="recommendation"
+            label="Overall transaction recommendation"
+            defaultValue="none"
+            options={[
+              { value: "none", label: "No overall recommendation" },
+              { value: "up", label: "I would recommend this person" },
+              { value: "down", label: "I would not recommend this person" },
+            ]}
+            help="Optional feedback about this eligible transaction. Counts appear only after eligibility, publication and moderation conditions are met."
+          />
           {[
             "communication",
             "clarity_of_terms",

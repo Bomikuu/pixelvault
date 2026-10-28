@@ -1,5 +1,6 @@
 import uuid
 
+from accounts.profile import photo_url
 from accounts.services import validate_avatar_key
 from config.errors import DomainError
 from django.contrib.auth import get_user_model
@@ -52,6 +53,7 @@ def public_identity(member, *, include_reputation=True):
         "handle": handle,
         "display_name": member.display_name or fallback,
         "avatar_key": member.avatar_key,
+        "photo_url": photo_url(member),
     }
     if include_reputation:
         from .reputation import reputation_summary
@@ -142,35 +144,56 @@ def public_profile(*, handle, viewer_id=None):
     review_rows = (
         Review.objects.filter(subject=member, status="approved", published_at__isnull=False)
         .select_related("author")
-        .order_by("-published_at")[:50]
+        .order_by("-published_at")
     )
     reviews = []
+    recommendations = {"up": 0, "down": 0, "total": 0}
     # A reopened loan must remove publication immediately, even before a background re-evaluation.
     for review in review_rows:
         from .domain import eligible_review_loan
 
         try:
-            eligible_review_loan(review.loan_id)
+            reviewed_loan = eligible_review_loan(review.loan_id, review.author_id)
         except DomainError:
             continue
+        expected_subject = (
+            reviewed_loan.borrower_id
+            if review.author_id == reviewed_loan.lender_id
+            else reviewed_loan.lender_id
+        )
+        if review.subject_id != expected_subject:
+            continue
+        if review.recommendation in ("up", "down"):
+            recommendations[review.recommendation] += 1
+            recommendations["total"] += 1
+        if len(reviews) >= 50:
+            continue
+        author = public_identity(review.author)
         reviews.append(
             {
                 "id": str(review.id),
-                "author_display_name": public_identity(review.author, include_reputation=False)[
-                    "display_name"
-                ],
+                "author_display_name": author["display_name"],
+                "author_handle": author["handle"],
+                "author_avatar_key": author["avatar_key"],
+                "author_photo_url": author["photo_url"],
+                "author": author,
+                "recommendation": review.recommendation,
                 "ratings": review.ratings,
                 "body": review.body,
                 "published_at": review.published_at.isoformat(),
                 "response": review.response if review.response_status == "approved" else "",
             }
         )
+    from .reputation import xp_progress
+
     return {
         "id": str(member.id),
         **public_identity(member),
         "bio": member.bio,
         "area": public_area(member),
         "community_level": community_level(member),
+        "xp_progress": xp_progress(member),
+        "recommendation_summary": recommendations,
         "badges": [award_data(a, public=True) for a in awards],
         "reviews": reviews,
     }
@@ -184,6 +207,7 @@ def update_profile(*, actor_id, data):
         "area",
         "public_award_ids",
         "avatar_key",
+        "photo_mode",
         "avatar_frame",
         "avatar_flair_id",
         "show_reputation",
@@ -198,6 +222,15 @@ def update_profile(*, actor_id, data):
     member = type(member).objects.select_for_update().get(pk=member.id)
     if "avatar_key" in data:
         member.avatar_key = validate_avatar_key(data["avatar_key"])
+        if "photo_mode" not in data:
+            member.photo_mode = "avatar"
+    if "photo_mode" in data:
+        mode = data["photo_mode"]
+        if mode not in ("avatar", "photo") or (mode == "photo" and not member.profile_photo_id):
+            raise DomainError(
+                "INVALID_PHOTO_MODE", "Upload a photo first, or choose an illustrated avatar."
+            )
+        member.photo_mode = mode
     for field, maximum in (("display_name", 100), ("bio", 400)):
         if field in data:
             value = str(data[field]).strip()
@@ -208,7 +241,7 @@ def update_profile(*, actor_id, data):
             setattr(member, field, value)
     if "area" in data:
         member.area = coarse_area(area_code=data["area"])["name"]
-    member.save(update_fields=["display_name", "bio", "area", "avatar_key"])
+    member.save(update_fields=["display_name", "bio", "area", "avatar_key", "photo_mode"])
     if "public_award_ids" in data:
         set_public_badges(member_id=actor_id, award_ids=data["public_award_ids"])
     from .reputation import update_reputation_settings

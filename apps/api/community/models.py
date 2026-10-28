@@ -104,6 +104,13 @@ class Review(Record):
     )
     ratings = models.JSONField()
     body = models.TextField(blank=True)
+    recommendation = models.CharField(
+        max_length=4,
+        choices=(("up", "Recommend"), ("down", "Do not recommend")),
+        null=True,
+        blank=True,
+        default=None,
+    )
     operation_id = models.UUIDField()
     status = models.CharField(max_length=20, default="pending")
     moderation_reason = models.TextField(blank=True)

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 import { BrandMark, Button } from "@pixelvault/ui";
 import {
@@ -16,6 +16,7 @@ export function AuthPage({ register = false }: { register?: boolean }) {
   const { refresh, session } = useSession(),
     navigate = useNavigate();
   const [demo, setDemo] = useState("");
+  const location = useLocation();
   return (
     <div className="auth-page">
       <div className="auth-story">
@@ -87,6 +88,7 @@ export function AuthPage({ register = false }: { register?: boolean }) {
                 register
                   ? {
                       email: text(data, "email"),
+                      mobile_number: text(data, "mobile_number"),
                       password: String(data.get("password") || ""),
                       display_name: text(data, "display_name"),
                       accepted_policy_version: data.get("policy")
@@ -99,7 +101,15 @@ export function AuthPage({ register = false }: { register?: boolean }) {
                     },
               );
               await refresh();
-              navigate("/dashboard");
+              const from = location.state?.from;
+              navigate(
+                typeof from === "string" &&
+                  from.startsWith("/") &&
+                  !from.startsWith("//") &&
+                  !["/sign-in", "/register"].includes(from)
+                  ? from
+                  : "/dashboard",
+              );
             }}
             submitLabel={register ? "Create my account" : "Sign in"}
           >
@@ -135,6 +145,17 @@ export function AuthPage({ register = false }: { register?: boolean }) {
               }
             />
             {register && (
+              <Field
+                name="mobile_number"
+                label="Philippine mobile number"
+                type="tel"
+                required
+                autoComplete="tel"
+                placeholder="0917 000 0000"
+                help="Private contact detail. Saving it does not verify ownership; complete the contact check before lending activity."
+              />
+            )}
+            {register && (
               <CheckField name="policy" required>
                 I accept the{" "}
                 <Link to="/help#terms">test participation terms</Link> and{" "}
@@ -144,7 +165,14 @@ export function AuthPage({ register = false }: { register?: boolean }) {
           </ApiForm>
           <p className="auth-switch">
             {register ? "Already have an account?" : "New to the community?"}{" "}
-            <Link to={register ? "/sign-in" : "/register"}>
+            <Link
+              to={register ? "/sign-in" : "/register"}
+              state={
+                typeof location.state?.from === "string"
+                  ? { from: location.state.from }
+                  : undefined
+              }
+            >
               {register ? "Sign in" : "Create an account"}
             </Link>
           </p>

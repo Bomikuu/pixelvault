@@ -18,10 +18,13 @@ def test_profile_allowlist_excludes_legal_identity_income_and_debt(members):
         "handle",
         "display_name",
         "avatar_key",
+        "photo_url",
         "reputation",
         "bio",
         "area",
         "community_level",
+        "xp_progress",
+        "recommendation_summary",
         "badges",
         "reviews",
     }

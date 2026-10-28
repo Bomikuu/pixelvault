@@ -104,7 +104,13 @@ class OfferPublishView(MemberView):
 
 class ApplyView(MemberView):
     def post(self, request, offer_id):
-        if set(request.data) - {"principal", "purpose", "summary", "operation_id"}:
+        if set(request.data) - {
+            "principal",
+            "purpose",
+            "summary",
+            "operation_id",
+            "co_borrower_invitation_id",
+        }:
             raise DomainError("server_terms", "Interest, fees and routing are fixed by the server.")
         application = apply_to_offer(
             borrower_id=request.user.id,
@@ -113,6 +119,7 @@ class ApplyView(MemberView):
             purpose=str(request.data.get("purpose", "")),
             summary=request.data.get("summary", {}),
             operation_id=operation_id(request.data),
+            co_borrower_invitation_id=request.data.get("co_borrower_invitation_id"),
         )
         return Response(application_data(application), status=201)
 

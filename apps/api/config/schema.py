@@ -18,6 +18,14 @@ class PixelVaultSchema(AutoSchema):
     def get_request_serializer(self):
         if hasattr(self.view, "serializer_class"):
             return super().get_request_serializer()
+        if self.view.__class__.__name__ == "ProfilePhotoView" and self.method == "POST":
+            return {
+                "multipart/form-data": {
+                    "type": "object",
+                    "properties": {"photo": {"type": "string", "format": "binary"}},
+                    "required": ["photo"],
+                }
+            }
         if self.view.__class__.__name__ == "UploadView":
             return {
                 "multipart/form-data": {
@@ -43,6 +51,8 @@ class PixelVaultSchema(AutoSchema):
     def get_response_serializers(self):
         if self.view.__class__.__name__ == "ActivityStreamView":
             return {(200, "text/event-stream"): {"type": "string"}}
+        if self.view.__class__.__name__ == "PublicPhotoView":
+            return {(200, "image/jpeg"): {"type": "string", "format": "binary"}}
         if hasattr(self.view, "serializer_class"):
             return super().get_response_serializers()
         if self.view.__class__.__name__ in {

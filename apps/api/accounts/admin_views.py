@@ -139,6 +139,8 @@ class TemplatesView(MemberView):
 
 class RegistrationQueueView(MemberView):
     def get(self, request):
+        from community.profiles import public_identity
+
         require_staff(request.user, {"reviewer"})
         return Response(
             [
@@ -146,6 +148,7 @@ class RegistrationQueueView(MemberView):
                     **registration_data(row),
                     "member_id": str(row.member_id),
                     "member_name": str(row.member),
+                    "member": {"id": str(row.member_id), **public_identity(row.member)},
                 }
                 for row in LenderRegistration.objects.select_related("member").order_by(
                     "created_at"

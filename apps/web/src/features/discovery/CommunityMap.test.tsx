@@ -50,6 +50,10 @@ vi.mock("mapbox-gl", () => ({
 }));
 const cityOffer: DiscoveryOffer = {
   ...offer,
+  lender: {
+    ...offer.lender,
+    photo_url: "/api/v1/community/photos/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+  },
   coarseArea: {
     code: "quezon-city",
     name: "Quezon City",
@@ -84,6 +88,9 @@ it("uses the real Mapbox SDK options and groups avatars only at public approxima
     attributionControl: true,
   });
   await act(async () => state.maps[0].handlers.load());
+  expect(
+    await screen.findByRole("img", { name: "Elias Test’s profile photo" }),
+  ).toHaveAttribute("src", cityOffer.lender.photo_url);
   const marker = await screen.findByRole("button", {
     name: "Explore 2 offers near Quezon City",
   });

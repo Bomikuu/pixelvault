@@ -49,6 +49,7 @@ import {
   Notice,
   PageHeading,
   PersonName,
+  MemberAvatar,
   RecordRows,
   SelectField,
   Status,
@@ -77,14 +78,22 @@ export function LoanRow({ loan }: { loan: Loan }) {
     session?.member?.id === loan.lender.id ? loan.borrower : loan.lender;
   return (
     <Link to={`/loans/${loan.id}`} className="loan-row">
-      <div>
-        <strong>{other.display_name}</strong>
-        <small>
-          {loan.borrower.id === session?.member?.id
-            ? "Borrowing from"
-            : "Lending to"}{" "}
-          · Loan {loan.id.slice(0, 8)}
-        </small>
+      <div className="loan-row-person">
+        <MemberAvatar
+          name={other.display_name}
+          avatarKey={other.avatar_key}
+          photoUrl={other.photo_url}
+          reputation={other.reputation}
+        />
+        <div>
+          <strong>{other.display_name}</strong>
+          <small>
+            {loan.borrower.id === session?.member?.id
+              ? "Borrowing from"
+              : "Lending to"}{" "}
+            · Loan {loan.id.slice(0, 8)}
+          </small>
+        </div>
       </div>
       <div>
         <small>Remaining principal</small>
@@ -253,12 +262,22 @@ export function Dashboard() {
                   className="record-row"
                   key={a.id}
                 >
-                  <div>
-                    <strong>{a.purpose || "Private application"}</strong>
-                    <p>
-                      {money(a.principal)} ·{" "}
-                      {a.borrower?.display_name || "Your request"}
-                    </p>
+                  <div className="application-person">
+                    {a.borrower && (
+                      <MemberAvatar
+                        name={a.borrower.display_name}
+                        avatarKey={a.borrower.avatar_key}
+                        photoUrl={a.borrower.photo_url}
+                        reputation={a.borrower.reputation}
+                      />
+                    )}
+                    <div>
+                      <strong>{a.purpose || "Private application"}</strong>
+                      <p>
+                        {money(a.principal)} ·{" "}
+                        {a.borrower?.display_name || "Your request"}
+                      </p>
+                    </div>
                   </div>
                   <Status value={a.status} />
                 </Link>
@@ -371,13 +390,23 @@ export function ApplicationsPage() {
               to={`/applications/${a.id}`}
               className="record-row"
             >
-              <div>
-                <strong>{a.purpose || "Application"}</strong>
-                <p>
-                  {a.borrower?.display_name || "Your request"} ·{" "}
-                  {money(a.principal)}
-                  {a.created_at ? ` · ${date(a.created_at)}` : ""}
-                </p>
+              <div className="application-person">
+                {a.borrower && (
+                  <MemberAvatar
+                    name={a.borrower.display_name}
+                    avatarKey={a.borrower.avatar_key}
+                    photoUrl={a.borrower.photo_url}
+                    reputation={a.borrower.reputation}
+                  />
+                )}
+                <div>
+                  <strong>{a.purpose || "Application"}</strong>
+                  <p>
+                    {a.borrower?.display_name || "Your request"} ·{" "}
+                    {money(a.principal)}
+                    {a.created_at ? ` · ${date(a.created_at)}` : ""}
+                  </p>
+                </div>
               </div>
               <div className="record-end">
                 <Status value={a.status} />
@@ -433,6 +462,35 @@ export function ApplicationDetail() {
               ["Submitted", date(a.created_at)],
             ]}
           />
+          {a.co_borrower && (
+            <section
+              className="application-co-borrower"
+              aria-labelledby="application-companion-heading"
+            >
+              <h2 id="application-companion-heading">Proposed co-borrower</h2>
+              <div className="person">
+                <MemberAvatar
+                  name={a.co_borrower.member.display_name}
+                  avatarKey={a.co_borrower.member.avatar_key}
+                  photoUrl={a.co_borrower.member.photo_url}
+                  reputation={a.co_borrower.member.reputation}
+                />
+                <div>
+                  <strong>{a.co_borrower.member.display_name}</strong>
+                  <p className="small-text">
+                    {a.co_borrower.status === "consented"
+                      ? "Consent and required checks are current."
+                      : "Consent or required checks are not current."}
+                  </p>
+                </div>
+              </div>
+              <Notice>
+                This invitation link creates no repayment liability or access to
+                loans and documents. Any joint obligation would require separate
+                accepted terms.
+              </Notice>
+            </section>
+          )}
           <h2>Repayment context</h2>
           {typeof a.summary === "object" ? (
             <DefinitionList

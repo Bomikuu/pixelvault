@@ -9,6 +9,7 @@ from .models import Loan
 
 
 def member_summary(member):
+    from accounts.profile import photo_url
     from community.reputation import reputation_summary
 
     return {
@@ -16,6 +17,7 @@ def member_summary(member):
         "display_name": member.display_name,
         "area": member.area,
         "avatar_key": member.avatar_key if member.avatar_key in AVATAR_KEYS else "",
+        "photo_url": photo_url(member),
         "reputation": reputation_summary(member),
     }
 

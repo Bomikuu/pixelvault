@@ -169,6 +169,37 @@ def reputation_details(*, member):
     }
 
 
+def xp_progress(member, *, own=False):
+    facts = community_facts(member)
+    visible = (
+        own
+        or ProfileSettings.objects.filter(member=member, show_reputation=False).exists() is False
+    )
+    current_threshold = next(
+        threshold for threshold, _name in reversed(LEVELS) if facts["points"] >= threshold
+    )
+    upcoming = next(
+        ((threshold, name) for threshold, name in LEVELS if threshold > facts["points"]), None
+    )
+    return {
+        "current_level": facts["level"],
+        "current_level_points": current_threshold if visible else None,
+        "next_level": upcoming[1] if upcoming else None,
+        "next_level_points": upcoming[0] if visible and upcoming else None,
+        "points_in_level": facts["points"] - current_threshold if visible else None,
+        "points_to_next": upcoming[0] - facts["points"]
+        if visible and upcoming
+        else (0 if visible else None),
+        "progress_percent": (
+            round((facts["points"] - current_threshold) * 100 / (upcoming[0] - current_threshold))
+            if upcoming
+            else 100
+        )
+        if visible
+        else None,
+    }
+
+
 def update_reputation_settings(*, member, data):
     selected = {
         key: data[key]

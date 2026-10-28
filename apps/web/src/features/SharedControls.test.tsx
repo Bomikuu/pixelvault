@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { render, screen } from "@testing-library/react";
 import { ArrowRight } from "lucide-react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, expect, it } from "vitest";
 import {
   Button,
@@ -152,4 +153,73 @@ it("wraps profile section actions onto readable rows on narrow screens", () => {
   expect(
     getComputedStyle(container.querySelector(".section-heading")!).flexWrap,
   ).toBe("wrap");
+});
+
+it("allows long profile actions to grow instead of clipping within a fixed button height", () => {
+  const profileCss = readFileSync(
+    "apps/web/src/features/profile/profile.css",
+    "utf8",
+  );
+  const rule = profileCss.match(
+    /\.profile-page\s+\.profile-identity\s+\.profile-primary-actions\s*>\s*\[data-slot="button"\]\s*\{[^}]+\}/,
+  )?.[0];
+  expect(rule).toBeTruthy();
+  const style = document.createElement("style");
+  style.dataset.controlsTest = "true";
+  style.textContent = `${css}\n[data-slot="button"] { height: 36px; }\n${rule}`;
+  document.head.append(style);
+  render(
+    <div className="profile-page">
+      <div className="profile-identity">
+        <div className="profile-primary-actions">
+          <Button asChild>
+            <a href="/profile/appearance">
+              <ArrowRight />
+              Avatar frames & flair
+            </a>
+          </Button>
+        </div>
+      </div>
+    </div>,
+  );
+  const action = getComputedStyle(
+    screen.getByRole("link", { name: "Avatar frames & flair" }),
+  );
+  expect(action.height).toBe("auto");
+  expect(action.minHeight).toBe("44px");
+  expect(action.flexBasis).toBe("170px");
+  expect(action.whiteSpace).toBe("normal");
+});
+
+it("keeps the focused skip link visibly white on navy despite the global anchor reset", async () => {
+  const appCss = readFileSync("apps/web/src/styles.css", "utf8");
+  const reset = appCss.match(
+    /a:not\(\[data-slot="button"\]\)\s*\{[^}]+\}/,
+  )?.[0];
+  const rule = appCss.match(/a\.skip-link\s*\{[^}]+\}/)?.[0];
+  const focused = appCss.match(/a\.skip-link:focus\s*\{[^}]+\}/)?.[0];
+  expect(rule).toBeTruthy();
+  expect(focused).toBeTruthy();
+  const style = document.createElement("style");
+  style.dataset.controlsTest = "true";
+  style.textContent = `${reset}\n${rule}\n${focused}`;
+  document.head.append(style);
+  render(
+    <a className="skip-link" href="#main-content">
+      Skip to content
+    </a>,
+  );
+  const link = screen.getByRole("link", { name: "Skip to content" });
+  expect(getComputedStyle(link).transform).toBe("translateY(-160%)");
+  await userEvent.tab();
+  expect(link).toHaveFocus();
+  expect(getComputedStyle(link).color).toBe("rgb(255, 255, 255)");
+  expect(getComputedStyle(link).backgroundColor).toBe("rgb(11, 20, 40)");
+  // jsdom does not apply focused transform rules reliably. Verify the real
+  // focus selector/declaration here; browser QA checks rendered visibility.
+  const focusRule = [...style.sheet!.cssRules].find(
+    (rule) =>
+      rule instanceof CSSStyleRule && rule.selectorText === "a.skip-link:focus",
+  ) as CSSStyleRule;
+  expect(focusRule.style.getPropertyValue("transform")).toBe("none");
 });

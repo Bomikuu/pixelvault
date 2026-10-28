@@ -316,7 +316,14 @@ def test_leaderboard_is_explicit_opt_in_excludes_inactive_and_suspended_and_expo
     data = APIClient().get("/api/v1/community/leaderboard").json()
     assert len(data["entries"]) == 1
     assert data["entries"][0]["handle"] == members[0].username
-    assert set(data["entries"][0]) == {"rank", "handle", "display_name", "avatar_key", "reputation"}
+    assert set(data["entries"][0]) == {
+        "rank",
+        "handle",
+        "display_name",
+        "avatar_key",
+        "photo_url",
+        "reputation",
+    }
     assert data["rules"] == REPUTATION_RULES
     assert "Dense ranks" in data["notice"]
     assert all(member.email not in str(data) for member in members)

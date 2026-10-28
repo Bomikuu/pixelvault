@@ -22,6 +22,7 @@ import type {
 } from "@pixelvault/contracts";
 import { ApiError, apiRequest } from "../app/api";
 import { useSession } from "../app/session";
+import { ProfileNavigation } from "./profile/ProfileNavigation";
 import {
   ActionLink,
   ApiForm,
@@ -60,6 +61,7 @@ export function ReputationPage() {
         title="Your community XP & avatar extras."
         description="Choose unlocked frames, wear an earned achievement and control your public participation."
       />
+      <ProfileNavigation />
       <section className="surface appearance-workspace">
         <ReputationSettings />
       </section>
@@ -176,6 +178,7 @@ export function ReputationSettings() {
                 <MemberAvatar
                   name={member?.display_name || "Your avatar"}
                   avatarKey={member?.avatar_key}
+                  photoUrl={member?.photo_url}
                   reputation={{
                     ...data.reputation,
                     frame: option.key,
@@ -339,6 +342,7 @@ export function Leaderboard() {
                   <MemberAvatar
                     name={entry.display_name}
                     avatarKey={entry.avatar_key}
+                    photoUrl={entry.photo_url}
                     reputation={entry.reputation}
                     size={48}
                   />

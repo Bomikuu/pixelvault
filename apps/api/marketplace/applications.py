@@ -16,19 +16,29 @@ def apply_to_offer(
     operation_id,
     purpose="",
     summary=None,
+    co_borrower_invitation_id=None,
 ):
     if summary is not None and not isinstance(summary, dict):
         raise DomainError("invalid_summary", "Application summary must be an object.")
     principal = requested_terms.principal if requested_terms is not None else principal
-    digest = fingerprint(
-        {
-            "borrower": str(borrower_id),
-            "offer": str(offer_id),
-            "principal": principal,
-            "purpose": purpose,
-            "summary": summary or {},
-        }
-    )
+    payload = {
+        "borrower": str(borrower_id),
+        "offer": str(offer_id),
+        "principal": principal,
+        "purpose": purpose,
+        "summary": summary or {},
+    }
+    if co_borrower_invitation_id:
+        import uuid
+
+        try:
+            co_borrower_invitation_id = uuid.UUID(str(co_borrower_invitation_id))
+        except (ValueError, TypeError):
+            raise DomainError(
+                "invalid_invitation", "Choose a valid co-borrower invitation."
+            ) from None
+        payload["co_borrower_invitation_id"] = str(co_borrower_invitation_id)
+    digest = fingerprint(payload)
     existing = LoanApplication.objects.filter(operation_id=operation_id).first()
     if existing:
         if existing.payload_hash != digest:
@@ -66,7 +76,7 @@ def apply_to_offer(
             for key, value in (summary or {}).items()
             if key in {"employment_type", "income_band", "repayment_experience"}
         }
-        return LoanApplication.objects.create(
+        application = LoanApplication.objects.create(
             offer=offer,
             borrower_id=borrower_id,
             terms=terms.to_dict(),
@@ -76,3 +86,8 @@ def apply_to_offer(
             operation_id=operation_id,
             payload_hash=digest,
         )
+        if co_borrower_invitation_id:
+            from connections.services import attach_to_application
+
+            attach_to_application(application=application, invitation_id=co_borrower_invitation_id)
+        return application

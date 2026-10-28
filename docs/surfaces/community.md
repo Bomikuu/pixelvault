@@ -19,3 +19,5 @@
 **Recent activity:** public posts have real server timestamps. SSE revision events and reconnects offer a staged refresh; they do not fabricate new-post counts or reorder a reader’s current view. An explicit 60-second polling fallback is labeled when streaming cannot recover.
 
 **Community expression:** optional learning/contribution XP, an opt-in leaderboard, avatar frames and eligible badge flair support participation without borrowing incentives. Public financial history and private recovery recognition remain outside the leaderboard.
+
+**Profile and offer expansion:** the [profile/social direction](profile-social-expansion.md) records the illustrated cover, larger photo/character, active profile tabs, private setup versus public XP progress, factual recommendation counts, earned-badge popup, interactive calculator and private consent invitation flow. Private contacts and co-borrowers are reachable from own-profile navigation. Likes/reactions never alter financial terms or XP; alternate calculator terms are comparison-only.

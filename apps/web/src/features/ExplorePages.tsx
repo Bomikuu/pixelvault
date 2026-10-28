@@ -71,6 +71,9 @@ import {
 } from "../components";
 import { cents, date, label, money, text } from "../lib/format";
 import { DiscoveryWorkspace } from "./discovery/DiscoveryWorkspace";
+import { OfferCalculator } from "./engagement/OfferCalculator";
+import { OfferSocial } from "./engagement/OfferSocial";
+import { CoBorrowerApplicationField } from "./connections/CoBorrowerApplicationField";
 import type { CoarseArea, DiscoveryOffer } from "./discovery/types";
 interface DiscoveryPage {
   offers: {
@@ -111,6 +114,7 @@ export function useOffers() {
               handle: row.lender.handle,
               display_name: row.lender.display_name,
               avatar_key: row.lender.avatar_key,
+              photo_url: row.lender.photo_url,
               reputation: row.lender.reputation,
             },
             area: row.area.name,
@@ -374,13 +378,20 @@ export function OfferDetail() {
         description="Review the full terms before starting a private application."
         action={<Status value={offer.status} />}
       />
+      <section
+        className="offer-lender-summary"
+        aria-label="Offer lender and capacity"
+      >
+        <PersonName person={offer.lender} subtitle={offer.area} />
+        <div className="offer-detail-amount">
+          <span>Self-declared amount available to lend</span>
+          <strong>{money(offer.available_amount)}</strong>
+        </div>
+      </section>
+      <OfferCalculator offer={offer} canApply={!owned} />
       <div className="detail-layout">
         <section className="surface">
-          <PersonName person={offer.lender} subtitle={offer.area} />
-          <div className="offer-detail-amount">
-            <span>Self-declared amount available to lend</span>
-            <strong>{money(offer.available_amount)}</strong>
-          </div>
+          <h2>The lender’s original offer</h2>
           <DefinitionList
             rows={[
               [
@@ -451,6 +462,7 @@ export function OfferDetail() {
           </div>
         </aside>
       </div>
+      <OfferSocial offerId={offer.id} />
     </>
   );
 }
@@ -625,6 +637,15 @@ export function ApplyPage() {
                   repayment_experience: text(data, "summary"),
                 },
                 operation_id: text(data, "operation_id"),
+                ...(text(data, "co_borrower_invitation_id") &&
+                text(data, "co_borrower_invitation_id") !== "none"
+                  ? {
+                      co_borrower_invitation_id: text(
+                        data,
+                        "co_borrower_invitation_id",
+                      ),
+                    }
+                  : {}),
               })
             }
             onSuccess={(data) =>
@@ -637,9 +658,32 @@ export function ApplyPage() {
               type="number"
               step="0.01"
               min={Number(query.data.min_amount) / 100}
-              max={Number(query.data.max_amount) / 100}
+              max={
+                Math.min(
+                  Number(query.data.max_amount),
+                  Number(query.data.available_amount),
+                ) / 100
+              }
+              defaultValue={
+                /^\d+$/.test(params.get("amount") || "") &&
+                Number(params.get("amount")) >= Number(query.data.min_amount) &&
+                Number(params.get("amount")) <=
+                  Math.min(
+                    Number(query.data.max_amount),
+                    Number(query.data.available_amount),
+                  )
+                  ? Number(params.get("amount")) / 100
+                  : undefined
+              }
               required
             />
+            <Notice>
+              This application uses {query.data.installment_count}{" "}
+              {label(query.data.frequency).toLowerCase()} payments from the
+              lender’s original offer. Calculator comparison terms are never
+              applied automatically.
+            </Notice>
+            <CoBorrowerApplicationField />
             <TextField
               name="purpose"
               label="What will this help you do?"

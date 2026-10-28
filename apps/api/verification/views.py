@@ -15,10 +15,13 @@ KINDS = ["identity", "income", "contact", "funding_account"]
 
 
 def case_data(case):
+    from community.profiles import public_identity
+
     return {
         "id": str(case.pk),
         "member_id": str(case.member_id),
         "member_name": str(case.member),
+        "member": {"id": str(case.member_id), **public_identity(case.member)},
         "kind": case.kind,
         "status": case.status,
         "reason": case.reason,

@@ -14,7 +14,13 @@ export function RequireMember({
   if (loading) return <Loading />;
   if (!session?.member)
     return (
-      <Navigate to="/sign-in" state={{ from: location.pathname }} replace />
+      <Navigate
+        to="/sign-in"
+        state={{
+          from: `${location.pathname}${location.search}${location.hash}`,
+        }}
+        replace
+      />
     );
   if (staff && !session.member.is_staff)
     return (

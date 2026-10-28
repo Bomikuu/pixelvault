@@ -328,6 +328,59 @@ paths:
                     type: object
                     additionalProperties: true
           description: ''
+  /api/v1/admin/offer-comments:
+    get:
+      operationId: get_api_v1_admin_offer_comments
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
+  /api/v1/admin/offer-comments/{comment_id}/review:
+    post:
+      operationId: post_api_v1_admin_offer_comments_comment_id_review
+      parameters:
+      - in: path
+        name: comment_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
   /api/v1/admin/policies:
     get:
       operationId: get_api_v1_admin_policies
@@ -962,6 +1015,51 @@ paths:
                     type: object
                     additionalProperties: true
           description: ''
+  /api/v1/auth/contacts:
+    get:
+      operationId: get_api_v1_auth_contacts
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
+    patch:
+      operationId: patch_api_v1_auth_contacts
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
   /api/v1/auth/profile:
     patch:
       operationId: patch_api_v1_auth_profile
@@ -973,6 +1071,56 @@ paths:
             schema:
               type: object
               additionalProperties: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
+  /api/v1/auth/profile/photo:
+    post:
+      operationId: post_api_v1_auth_profile_photo
+      tags:
+      - v1
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                photo:
+                  type: string
+                  format: binary
+              required:
+              - photo
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
+    delete:
+      operationId: delete_api_v1_auth_profile_photo
+      tags:
+      - v1
       security:
       - cookieAuth: []
       responses:
@@ -1580,6 +1728,29 @@ paths:
                     type: object
                     additionalProperties: true
           description: ''
+  /api/v1/community/photos/{photo_id}:
+    get:
+      operationId: get_api_v1_community_photos_photo_id
+      parameters:
+      - in: path
+        name: photo_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+          description: ''
   /api/v1/community/profile:
     get:
       operationId: get_api_v1_community_profile
@@ -1940,6 +2111,110 @@ paths:
                     type: object
                     additionalProperties: true
           description: ''
+  /api/v1/connections/co-borrowers:
+    get:
+      operationId: get_api_v1_connections_co_borrowers
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
+    post:
+      operationId: post_api_v1_connections_co_borrowers
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
+  /api/v1/connections/co-borrowers/{invitation_id}/action:
+    post:
+      operationId: post_api_v1_connections_co_borrowers_invitation_id_action
+      parameters:
+      - in: path
+        name: invitation_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
+  /api/v1/connections/co-borrowers/invite/{token}:
+    get:
+      operationId: get_api_v1_connections_co_borrowers_invite_token
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
   /api/v1/documents:
     get:
       operationId: get_api_v1_documents
@@ -2034,6 +2309,221 @@ paths:
               required:
               - file
               - purpose
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
+  /api/v1/engagement/comments/{comment_id}:
+    delete:
+      operationId: delete_api_v1_engagement_comments_comment_id
+      parameters:
+      - in: path
+        name: comment_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
+  /api/v1/engagement/comments/{comment_id}/report:
+    post:
+      operationId: post_api_v1_engagement_comments_comment_id_report
+      parameters:
+      - in: path
+        name: comment_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
+  /api/v1/engagement/offers/{offer_id}:
+    get:
+      operationId: get_api_v1_engagement_offers_offer_id
+      parameters:
+      - in: path
+        name: offer_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
+  /api/v1/engagement/offers/{offer_id}/calculator:
+    get:
+      operationId: get_api_v1_engagement_offers_offer_id_calculator
+      parameters:
+      - in: path
+        name: offer_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
+  /api/v1/engagement/offers/{offer_id}/comments:
+    post:
+      operationId: post_api_v1_engagement_offers_offer_id_comments
+      parameters:
+      - in: path
+        name: offer_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
+  /api/v1/engagement/offers/{offer_id}/like:
+    put:
+      operationId: put_api_v1_engagement_offers_offer_id_like
+      parameters:
+      - in: path
+        name: offer_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
+  /api/v1/engagement/offers/{offer_id}/reaction:
+    put:
+      operationId: put_api_v1_engagement_offers_offer_id_reaction
+      parameters:
+      - in: path
+        name: offer_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
       security:
       - cookieAuth: []
       responses:

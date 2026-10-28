@@ -1,0 +1,408 @@
+.profile-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0 0 28px;
+  padding: 5px;
+  background: #edf3ff;
+  border: 1px solid #dbe5f5;
+  border-radius: 14px;
+}
+.profile-navigation .profile-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #52637b;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease;
+}
+.profile-navigation .profile-tab:hover {
+  background: #e2ebfb;
+  color: #1648a7;
+}
+.profile-navigation .profile-tab.is-active {
+  background: #fff;
+  color: #1648a7;
+  box-shadow: 0 2px 8px #1328490a;
+}
+.profile-navigation .profile-tab svg {
+  flex-shrink: 0;
+}
+.profile-navigation .profile-tab:focus-visible {
+  outline: 3px solid #0866ff;
+  outline-offset: 2px;
+}
+@media (max-width: 520px) {
+  .profile-navigation {
+    gap: 4px;
+    padding: 4px;
+  }
+  .profile-navigation .profile-tab {
+    flex: 1 1 calc(50% - 4px);
+    justify-content: start;
+    padding: 10px;
+    font-size: 12px;
+    gap: 7px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .profile-navigation .profile-tab {
+    transition: none;
+  }
+}
+.member-avatar-shell .member-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profile-page .profile-cover {
+  height: 220px;
+  background: #eaf7fd;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+}
+.profile-page .profile-cover > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: right center;
+}
+.profile-page .profile-identity {
+  align-items: start;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 0 24px;
+  margin: -60px 0 28px;
+}
+.profile-page .profile-main-avatar {
+  --member-avatar-size: 120px;
+  box-shadow: 0 0 0 7px #f8fafc;
+}
+.profile-page .profile-main-avatar .avatar-xp {
+  font-size: 11px;
+  padding: 2px 7px;
+  bottom: -8px;
+}
+.profile-page .profile-identity > div:nth-child(2) {
+  padding-top: 70px;
+  flex: 1;
+  min-width: 200px;
+}
+.profile-page .profile-identity h1 {
+  font-size: clamp(24px, 2.4vw, 32px);
+}
+.profile-page .profile-identity > div:nth-child(2) > p {
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+.profile-primary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 72px;
+  margin-left: auto;
+  max-width: 100%;
+}
+.profile-primary-actions [data-slot="button"] {
+  font-size: 12px;
+}
+.profile-recommendations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 17px;
+}
+.profile-recommendations > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #1648a7;
+  font-size: 12px;
+}
+.profile-recommendations > span:nth-child(2) {
+  color: #52637b;
+}
+.profile-recommendations > small {
+  flex-basis: 100%;
+  color: #52637b;
+  font-size: 11px;
+  line-height: 1.6;
+  max-width: 65ch;
+}
+.profile-page .profile-aside {
+  display: grid;
+  align-content: start;
+  gap: 28px;
+  padding-top: 0;
+  min-width: 0;
+}
+.profile-page .profile-progress-block {
+  border-bottom: 1px solid #dbe3ee;
+  padding: 0 0 24px;
+}
+.profile-page .profile-progress-block h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 15px;
+  font-size: 17px;
+}
+.profile-page .profile-progress-block > strong {
+  color: #0f172a;
+  font-size: 19px;
+}
+.profile-page .profile-progress-block p {
+  margin: 10px 0;
+  font-size: 12px;
+  line-height: 1.75;
+}
+.profile-page .profile-progress-block progress {
+  display: block;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 16px 0 10px;
+  background: #dbe5f5;
+  color: #0866ff;
+}
+.profile-page .profile-progress-block progress::-webkit-progress-bar {
+  background: #dbe5f5;
+}
+.profile-page .profile-progress-block progress::-webkit-progress-value {
+  background: #0866ff;
+  border-radius: 10px;
+}
+.profile-page .profile-progress-block progress::-moz-progress-bar {
+  background: #0866ff;
+  border-radius: 10px;
+}
+.profile-page .profile-progress-block > span {
+  color: #1648a7;
+  font-size: 12px;
+  font-weight: 700;
+}
+.profile-page .profile-progress-block > a {
+  margin-top: 16px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.profile-page .profile-progress-block .private-progress {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.profile-page .private-setup ul {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+  display: grid;
+  gap: 12px;
+}
+.profile-page .private-setup li {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+}
+.profile-page .private-setup li > svg {
+  color: #047857;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.profile-page .private-setup li > a {
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 0;
+  margin: 0;
+}
+.profile-privacy-context > svg {
+  color: #0866ff;
+  margin-bottom: 12px;
+}
+.profile-page .review-attribution {
+  display: flex;
+  justify-content: start;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.profile-page .review-attribution > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.profile-page .review-attribution a {
+  font-weight: 800;
+}
+.profile-page .review-attribution small {
+  color: #52637b;
+  font-size: 11px;
+}
+.review-recommendation {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  color: #1648a7;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 13px;
+}
+.review-recommendation > small {
+  color: #52637b;
+  font-size: 10px;
+  font-weight: 500;
+}
+.profile-photo-picker {
+  border-bottom: 1px solid #dbe3ee;
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+}
+.profile-picture-preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+  margin: 10px 0 28px;
+}
+.profile-picture-preview > div {
+  flex: 1;
+  min-width: 160px;
+}
+.profile-picture-preview p {
+  color: #52637b;
+  font-size: 13px;
+  margin-top: 10px;
+}
+.photo-mode-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.profile-photo-picker > .api-form {
+  padding: 20px;
+  border: 1px solid #dbe3ee;
+  border-radius: 12px;
+  margin: 0 0 18px;
+}
+.photo-public-note {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+  margin: 16px 0;
+}
+.photo-public-note > svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: #1648a7;
+}
+.profile-photo-picker > .small-text:last-child {
+  margin-top: 18px;
+}
+.profile-photo-picker .field input[type="file"] {
+  max-width: 100%;
+  padding: 9px;
+  font-size: 12px;
+}
+@media (max-width: 1100px) {
+  .profile-primary-actions {
+    width: 100%;
+    padding-top: 0;
+    margin-left: 144px;
+  }
+}
+@media (max-width: 760px) {
+  .profile-page .profile-cover {
+    height: 164px;
+    border-radius: 14px;
+  }
+  .profile-page .profile-identity {
+    margin-top: -52px;
+    padding: 0 12px;
+    gap: 18px;
+  }
+  .profile-page .profile-main-avatar {
+    --member-avatar-size: 104px;
+  }
+  .profile-page .profile-identity > div:nth-child(2) {
+    min-width: 0;
+    flex-basis: 100%;
+    padding-top: 4px;
+  }
+  .profile-page .profile-identity h1 {
+    font-size: 25px;
+  }
+  .profile-primary-actions {
+    margin-left: 0;
+    gap: 9px;
+  }
+  .profile-page
+    .profile-identity
+    .profile-primary-actions
+    > [data-slot="button"] {
+    margin: 0;
+    flex: 1 1 170px;
+    min-width: 0;
+    height: auto;
+    min-height: 44px;
+    padding: 11px 14px;
+    line-height: 1.5;
+  }
+  .profile-page .profile-aside {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .profile-picture-preview {
+    gap: 20px;
+  }
+}
+@media (max-width: 420px) {
+  .profile-navigation .profile-tab {
+    font-size: 11px;
+    padding: 9px 7px;
+    gap: 6px;
+  }
+  .profile-page .profile-identity {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .profile-photo-picker > .api-form {
+    padding: 16px;
+  }
+}
+.loan-row .loan-row-person,
+.application-person {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.loan-row .loan-row-person > div,
+.application-person > div {
+  min-width: 0;
+}
+.loan-row .loan-row-person strong,
+.application-person strong {
+  overflow-wrap: anywhere;
+}
+.application-co-borrower {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #dbe3ee;
+}
+.application-co-borrower > .person {
+  margin: 16px 0 20px;
+}
+.application-co-borrower .person > div {
+  min-width: 0;
+}
