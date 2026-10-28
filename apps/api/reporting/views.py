@@ -11,7 +11,7 @@ class MemberMetricsView(MemberView):
     def get(self, request):
         if set(request.query_params) - {"role", "start", "end"}:
             raise DomainError("invalid_filters", "Reports accept your role and period only.")
-        return Response(
+        response = Response(
             member_metrics(
                 actor_id=request.user.id,
                 role=request.query_params.get("role", "borrower"),
@@ -19,19 +19,23 @@ class MemberMetricsView(MemberView):
                 end=request.query_params.get("end"),
             )
         )
+        response["Cache-Control"] = "private, no-store"
+        return response
 
 
 class OperationsMetricsView(MemberView):
     def get(self, request):
         if set(request.query_params) - {"start", "end"}:
             raise DomainError("invalid_filters", "Reports accept a reporting period only.")
-        return Response(
+        response = Response(
             operations_metrics(
                 actor_id=request.user.id,
                 start=request.query_params.get("start"),
                 end=request.query_params.get("end"),
             )
         )
+        response["Cache-Control"] = "private, no-store"
+        return response
 
 
 class ExportView(MemberView):

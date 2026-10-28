@@ -250,6 +250,12 @@ Offer detail follows the reference-led composition in [the offer contract](docs/
 
 One current server preview drives the payment summary, cost chart, schedule and side-card estimate. A geometric donut explains principal/interest/repayment fees without adding upfront lender fees to borrower repayments. Original terms remain explicit during alternate comparisons; applications carry only a valid selected amount with the original terms. Lender summaries use actual public facts, and unavailable/private values remain explicit. Narrow schedules retain horizontal scrolling, keyboard focus and a visible cue.
 
+### Analytics
+
+Analytics follows [the reference-led surface contract](docs/surfaces/analytics.md): compact date/perspective/export controls, line tabs, four pastel summary tiles, repayment trend and allocation donut, collection-frequency bars, current signed annual rates, and a detailed metric grid with a chart alternative. The title stays 24px; canonical controls, Manrope and semantic light/dark surfaces preserve the existing system. Phones use two summary columns and stacked chart panels; date controls retain their full available width.
+
+**The Analytics Evidence Rule.** Chart only permission-scoped ledger entries inside the selected Manila period, using daily buckets through 93 days and monthly buckets thereafter. Keep exact amounts available as text and chart-data tables. Signed reversals, zero activity and unavailable data remain explicit. Inclusive Through dates map to the API's exclusive end. Distinguish period flows, cutoff balances, current status and contractual projections; never invent growth, sparkline history, an effective rate, or a withdrawable balance to match a reference.
+
 ### Meeting lobby and activity
 
 Every room visit starts in a private lobby within the dedicated full-viewport layout. At desktop widths, scheduling, participant attendance and the existing shared-plan illustrated guide sit beside a 380px local device preview and entry panel. Mobile stacks these groups in one scroll area. Each person accepts the current Manila time before their own server-validated check-in. Lobby presence is distinct from room presence. Returning to the lobby removes the user’s active check-in; rescheduling requires fresh acceptance and check-in.

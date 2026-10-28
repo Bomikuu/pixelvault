@@ -145,6 +145,7 @@ def _metrics(loans, start, end):
 
 def member_metrics(*, actor_id, role, start=None, end=None):
     from servicing.models import Loan
+    from .activity import reporting_activity
 
     member_for(actor_id)
     if role not in ("borrower", "lender"):
@@ -164,6 +165,7 @@ def member_metrics(*, actor_id, role, start=None, end=None):
         "unit": "centavos_as_decimal_strings",
         "metrics": _metrics(loans, start, end),
         "definitions": DEFINITIONS,
+        "activity": reporting_activity(loans, start, end),
         "comparison": None,
         "test_mode": True,
     }
@@ -171,6 +173,7 @@ def member_metrics(*, actor_id, role, start=None, end=None):
 
 def operations_metrics(*, actor_id, start=None, end=None):
     from servicing.models import Loan
+    from .activity import reporting_activity
 
     staff_for(actor_id, ("finance",))
     if not isinstance(start, datetime):
@@ -189,6 +192,7 @@ def operations_metrics(*, actor_id, start=None, end=None):
         "unit": "centavos_as_decimal_strings",
         "metrics": _metrics(Loan.objects.all(), start, end),
         "definitions": DEFINITIONS,
+        "activity": reporting_activity(Loan.objects.all(), start, end),
         "queues": {
             "open_cases": Case.objects.filter(status__in=["open", "needs_information"]).count(),
             "verification_pending": VerificationCase.objects.filter(

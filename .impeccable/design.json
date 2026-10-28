@@ -454,6 +454,11 @@
         "section": "components"
       },
       {
+        "name": "The Analytics Evidence Rule",
+        "body": "Chart only permission-scoped ledger entries inside the selected Manila period, using daily buckets through 93 days and monthly buckets thereafter. Keep exact amounts available as text and chart-data tables. Signed reversals, zero activity and unavailable data remain explicit. Inclusive Through dates map to the API's exclusive end. Distinguish period flows, cutoff balances, current status and contractual projections; never invent growth, sparkline history, an effective rate, or a withdrawable balance to match a reference.",
+        "section": "components"
+      },
+      {
         "name": "The Offer Detail Rule",
         "body": "Offer detail uses the reference-led main calculator/cost/schedule/lender column and 300px sticky side summary at the wide breakpoint, with full-width discussion below. Titles are 24px on phones and 28px on desktop; section titles are 16px with icons and no section numbers. One exact server preview drives every estimate; alternate plans stay comparison-only and lender statistics come from actual public records. Narrow schedules retain a named focusable scroller and visible hint.",
         "section": "components"
