@@ -77,7 +77,13 @@ export function MeetingEntry({
   );
 }
 
-export function InvestmentPitch({ offer }: { offer: Offer }) {
+export function InvestmentPitch({
+  offer,
+  compact = false,
+}: {
+  offer: Offer;
+  compact?: boolean;
+}) {
   const { session } = useSession();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -88,22 +94,33 @@ export function InvestmentPitch({ offer }: { offer: Offer }) {
   const [error, setError] = useState<unknown>();
   if (session?.member?.id === offer.lender.id) return null;
   return (
-    <section className="my-6 flex flex-wrap items-center justify-between gap-4 rounded-[14px] border border-border bg-card p-5 text-foreground">
-      <div className="flex min-w-0 items-start gap-3">
-        <HandCoins className="mt-1 size-6 shrink-0 text-primary" />
-        <div>
-          <h2 className="text-lg! font-extrabold!">
-            Pitch in with this lender
-          </h2>
-          <p className="mt-1! max-w-[65ch] text-sm text-muted-foreground">
-            Discuss a contribution and a share of the interest it earns. Start
-            with a private meeting.
-          </p>
+    <section
+      className={
+        compact
+          ? "w-full"
+          : "my-6 flex flex-wrap items-center justify-between gap-4 rounded-[14px] border border-border bg-card p-5 text-foreground"
+      }
+    >
+      {!compact && (
+        <div className="flex min-w-0 items-start gap-3">
+          <HandCoins className="mt-1 size-6 shrink-0 text-primary" />
+          <div>
+            <h2 className="text-lg! font-extrabold!">
+              Pitch in with this lender
+            </h2>
+            <p className="mt-1! max-w-[65ch] text-sm text-muted-foreground">
+              Discuss a contribution and a share of the interest it earns. Start
+              with a private meeting.
+            </p>
+          </div>
         </div>
-      </div>
+      )}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button>
+          <Button
+            variant={compact ? "outline" : "default"}
+            className={compact ? "w-full whitespace-normal!" : undefined}
+          >
             <CalendarClock size={17} />
             Send an investor pitch
           </Button>

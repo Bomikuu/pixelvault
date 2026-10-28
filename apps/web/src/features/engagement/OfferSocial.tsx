@@ -225,7 +225,33 @@ export function OfferSocial({ offerId }: { offerId: string }) {
           Likes and reactions are community expression. They do not add XP,
           verify a lender or guarantee repayment.
         </p>
-        <h3>Offer discussion</h3>
+        <h3 className="sr-only">Offer discussion</h3>
+        {member ? (
+          <ApiForm
+            submitLabel="Submit comment for moderation"
+            successMessage="Your comment is awaiting moderation. Only you can see it until approval."
+            onSubmit={async (data) => {
+              await post(`/engagement/offers/${offerId}/comments`, {
+                body: text(data, "comment"),
+                operation_id: text(data, "operation_id"),
+              });
+              await refresh();
+            }}
+          >
+            <TextField
+              name="comment"
+              label="Your question or comment"
+              required
+              maxLength={1200}
+              help="Do not include phone numbers, email, ID details, personal debt claims or threats. Every comment needs moderation."
+            />
+          </ApiForm>
+        ) : (
+          <Notice>
+            <Link to="/sign-in">Sign in</Link> to like, react or join the
+            discussion.
+          </Notice>
+        )}
         {comments.length ? (
           <div className="offer-comment-list">
             {comments.map((comment) => (
@@ -313,32 +339,6 @@ export function OfferSocial({ offerId }: { offerId: string }) {
           >
             Load older discussion
           </Button>
-        )}
-        {member ? (
-          <ApiForm
-            submitLabel="Submit comment for moderation"
-            successMessage="Your comment is awaiting moderation. Only you can see it until approval."
-            onSubmit={async (data) => {
-              await post(`/engagement/offers/${offerId}/comments`, {
-                body: text(data, "comment"),
-                operation_id: text(data, "operation_id"),
-              });
-              await refresh();
-            }}
-          >
-            <TextField
-              name="comment"
-              label="Your question or comment"
-              required
-              maxLength={1200}
-              help="Do not include phone numbers, email, ID details, personal debt claims or threats. Every comment needs moderation."
-            />
-          </ApiForm>
-        ) : (
-          <Notice>
-            <Link to="/sign-in">Sign in</Link> to like, react or join the
-            discussion.
-          </Notice>
         )}
         {member?.is_staff &&
           ["moderator", "admin"].includes(member.staff_role) && (

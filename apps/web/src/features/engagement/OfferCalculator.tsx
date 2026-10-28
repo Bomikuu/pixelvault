@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { Offer } from "@pixelvault/contracts";
+import type { Offer, Money } from "@pixelvault/contracts";
 import {
   Input,
   Label,
@@ -8,30 +8,25 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
 } from "@pixelvault/ui";
-import { Calculator, Loader2 } from "lucide-react";
-import {
-  ActionLink,
-  DefinitionList,
-  ErrorNotice,
-  Notice,
-} from "../../components";
+import { Calculator, Info, Loader2 } from "lucide-react";
+import { ActionLink, ErrorNotice } from "../../components";
 import { apiRequest } from "../../app/api";
 import { cents, date, label, money } from "../../lib/format";
 import type { OfferPreview } from "./types";
-import "./engagement.css";
+import {
+  OfferCostPanels,
+  OfferSectionHeading,
+  offerPanel,
+} from "../offers/OfferCostPanels";
 export function OfferCalculator({
   offer,
   canApply = true,
+  onPreviewChange,
 }: {
   offer: Offer;
   canApply?: boolean;
+  onPreviewChange?: (preview: OfferPreview | null) => void;
 }) {
   const maximum = Math.min(
     Number(offer.max_amount),
@@ -113,6 +108,9 @@ export function OfferCalculator({
     maximum,
     offerRevision,
   ]);
+  useEffect(() => {
+    onPreviewChange?.(preview);
+  }, [preview, onPreviewChange]);
   const frequencies = limits?.frequencies || [
     "weekly",
     "twice_monthly",
@@ -120,165 +118,172 @@ export function OfferCalculator({
     "maturity",
   ];
   return (
-    <section
-      className="surface offer-calculator"
-      aria-labelledby="offer-calculator-title"
-    >
-      <div className="offer-section-heading">
-        <Calculator size={21} />
-        <div>
-          <h2 id="offer-calculator-title">Find a plan you can understand.</h2>
-          <p>
-            Compare an amount and repayment rhythm using the server’s exact
-            calculation.
-          </p>
+    <div className="space-y-4">
+      <section className={offerPanel} aria-labelledby="offer-calculator-title">
+        <OfferSectionHeading
+          id="offer-calculator-title"
+          title="Plan your loan"
+          description="Try an amount, payment frequency and number of payments to compare estimated costs."
+          Icon={Calculator}
+        />
+        <div className="grid min-w-0 gap-4 md:grid-cols-[1.1fr_1fr_1fr]">
+          <div className="min-w-0 space-y-2">
+            <Label htmlFor="preview-amount" className="text-xs">
+              Amount to explore (₱)
+            </Label>
+            <Input
+              id="preview-amount"
+              type="number"
+              className="w-full min-w-0"
+              min={Number(offer.min_amount) / 100}
+              max={maximum / 100}
+              step="0.01"
+              value={amount}
+              onChange={(event) => setAmount(event.target.value)}
+              aria-describedby="preview-amount-limits"
+            />
+            <p
+              id="preview-amount-limits"
+              className="text-[10px] leading-relaxed text-muted-foreground"
+            >
+              {money(offer.min_amount)}–{money(maximum)} currently available
+            </p>
+          </div>
+          <div className="min-w-0 space-y-2">
+            <Label htmlFor="preview-frequency" className="text-xs">
+              Payment frequency
+            </Label>
+            <Select
+              value={frequency}
+              onValueChange={(next) => {
+                setFrequency(next);
+                if (next === "maturity") setCount("1");
+              }}
+            >
+              <SelectTrigger id="preview-frequency" className="w-full min-w-0">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {frequencies.map((value) => (
+                  <SelectItem value={value} key={value}>
+                    {label(value)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="min-w-0 space-y-2">
+            <Label htmlFor="preview-count" className="text-xs">
+              Number of payments
+            </Label>
+            <Select
+              value={count}
+              onValueChange={setCount}
+              disabled={frequency === "maturity"}
+            >
+              <SelectTrigger id="preview-count" className="w-full min-w-0">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.from(
+                  { length: limits?.max_installments || 24 },
+                  (_, index) => index + 1,
+                ).map((value) => (
+                  <SelectItem value={String(value)} key={value}>
+                    {value} {value === 1 ? "payment" : "payments"}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-      </div>
-      <div className="offer-calculator-controls">
-        <div className="field">
-          <Label htmlFor="preview-amount">Amount to explore (₱)</Label>
-          <Input
-            id="preview-amount"
-            type="number"
-            min={Number(offer.min_amount) / 100}
-            max={maximum / 100}
-            step="0.01"
-            value={amount}
-            onChange={(event) => setAmount(event.target.value)}
-          />
-          <small>
-            {money(offer.min_amount)}–{money(maximum)} currently available
-          </small>
-        </div>
-        <div className="field">
-          <Label htmlFor="preview-frequency">Payment frequency</Label>
-          <Select
-            value={frequency}
-            onValueChange={(next) => {
-              setFrequency(next);
-              if (next === "maturity") setCount("1");
-            }}
-          >
-            <SelectTrigger id="preview-frequency">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {frequencies.map((value) => (
-                <SelectItem value={value} key={value}>
-                  {label(value)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="field">
-          <Label htmlFor="preview-count">Number of payments</Label>
-          <Select
-            value={count}
-            onValueChange={setCount}
-            disabled={frequency === "maturity"}
-          >
-            <SelectTrigger id="preview-count">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {Array.from(
-                { length: limits?.max_installments || 24 },
-                (_, index) => index + 1,
-              ).map((value) => (
-                <SelectItem value={String(value)} key={value}>
-                  {value} {value === 1 ? "payment" : "payments"}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-      <p className="offer-calculator-fixed">
-        Annual reducing-balance interest:{" "}
-        <strong>{(offer.annual_rate_bps / 100).toFixed(2)}%</strong> · proposed
-        start: {date(offer.terms.effective_date)}
-      </p>
-      {pending && (
-        <p className="offer-calculator-pending" role="status">
-          <Loader2 size={16} className="spin" />
-          Updating your server-calculated preview…
+        <p className="mt-4 text-[11px] leading-relaxed text-muted-foreground">
+          Annual reducing-balance interest:{" "}
+          <strong className="text-foreground">
+            {(offer.annual_rate_bps / 100).toFixed(2)}%
+          </strong>{" "}
+          · proposed start: {date(offer.terms.effective_date)}
         </p>
-      )}
-      {error !== null && <ErrorNotice error={error} />}
-      {preview && (
-        <div className="offer-calculator-result" aria-live="polite">
-          <DefinitionList
-            rows={[
+        {pending && (
+          <p
+            role="status"
+            className="mt-4 flex items-center gap-2 text-xs text-muted-foreground"
+          >
+            <Loader2
+              size={15}
+              className="animate-spin motion-reduce:animate-none"
+            />
+            Updating your server-calculated preview…
+          </p>
+        )}
+        {error !== null && (
+          <div className="mt-4">
+            <ErrorNotice error={error} />
+          </div>
+        )}
+        <div
+          className="mt-5 rounded-xl bg-muted/70 p-3 sm:p-4"
+          aria-live="polite"
+          aria-busy={pending}
+        >
+          <h3 className="mb-3 text-xs font-bold">Estimated payment summary</h3>
+          <dl className="grid grid-cols-2 gap-4 min-[1100px]:grid-cols-4">
+            {[
               [
                 "Net amount received",
-                money(preview.disclosure.net_proceeds as number),
+                preview ? money(preview.disclosure.net_proceeds as Money) : "—",
               ],
               [
-                "Interest across this plan",
-                money(preview.disclosure.total_interest),
+                "First payment",
+                preview ? money(preview.disclosure.schedule?.[0]?.total) : "—",
               ],
-              ["Total repayment", money(preview.disclosure.total_repayment)],
               [
-                "Effective annual interest",
-                `${preview.disclosure.effective_annual_percentage}%`,
+                "Total interest",
+                preview ? money(preview.disclosure.total_interest) : "—",
               ],
-              ["Platform commission on repayments", money(0)],
-            ]}
-          />
-          {preview.simulation_only ? (
-            <Notice tone="warning">
-              This is a comparison only. This lender’s actual offer uses{" "}
-              {offer.installment_count} {label(offer.frequency).toLowerCase()}{" "}
-              payments. The preview does not change those terms.
-            </Notice>
-          ) : (
-            <Notice>
-              This preview uses the lender’s original payment frequency and
-              installment count. Final dates and costs still require agreement
-              review.
-            </Notice>
-          )}
-          <details className="offer-preview-schedule">
-            <summary>
-              See all {preview.disclosure.schedule?.length || 0} payment dates
-            </summary>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Due date</TableHead>
-                  <TableHead>Principal</TableHead>
-                  <TableHead>Interest</TableHead>
-                  <TableHead>Total</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {preview.disclosure.schedule?.map((line, index) => (
-                  <TableRow key={`${line.due_date}-${index}`}>
-                    <TableCell>{date(line.due_date)}</TableCell>
-                    <TableCell>{money(line.principal)}</TableCell>
-                    <TableCell>{money(line.interest)}</TableCell>
-                    <TableCell>{money(line.total)}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </details>
-          {canApply && offer.status === "published" && (
-            <ActionLink
-              to={`/applications/new?offer=${offer.id}&amount=${preview.terms.principal}`}
-            >
-              {preview.simulation_only
-                ? "Use this amount with the original offer terms"
-                : "Use this amount in a private request"}
-            </ActionLink>
-          )}
+              [
+                "Total repayment",
+                preview ? money(preview.disclosure.total_repayment) : "—",
+              ],
+            ].map(([name, value]) => (
+              <div key={name} className="flex min-w-0 flex-col">
+                <dt className="order-2 mt-1 text-[10px] leading-relaxed text-muted-foreground">
+                  {name}
+                </dt>
+                <dd className="order-1 break-words text-sm font-extrabold tabular-nums">
+                  {value}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
-      )}
-      <p className="small-text">
-        No funds move when you calculate. Different preview terms are never
-        submitted as part of your application.
-      </p>
-    </section>
+        <p
+          className={`mt-3 flex items-start gap-2 rounded-lg p-3 text-[11px] leading-relaxed ${preview?.simulation_only ? "bg-[var(--warning-background)] text-[var(--warning)]" : "bg-accent text-accent-foreground"}`}
+        >
+          <Info size={15} className="mt-0.5 shrink-0" />
+          <span>
+            {preview?.simulation_only ? (
+              <>
+                This is a comparison only. This lender’s actual offer uses{" "}
+                {offer.installment_count} {label(offer.frequency).toLowerCase()}{" "}
+                payments. The preview does not change those terms.
+              </>
+            ) : (
+              "This is an estimate using the lender’s current terms. Final dates and costs require agreement review. No funds move when you calculate."
+            )}
+          </span>
+        </p>
+        {preview && canApply && offer.status === "published" && (
+          <ActionLink
+            to={`/applications/new?offer=${offer.id}&amount=${preview.terms.principal}`}
+          >
+            {preview.simulation_only
+              ? "Use this amount with the original offer terms"
+              : "Use this amount in a private request"}
+          </ActionLink>
+        )}
+      </section>
+      <OfferCostPanels preview={preview} pending={pending} />
+    </div>
   );
 }

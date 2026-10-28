@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-28T14:30:44Z",
+  "generatedAt": "2026-10-28T14:59:28Z",
   "title": "Design System: PixelVault",
   "extensions": {
     "colorMeta": {
@@ -451,6 +451,11 @@
       {
         "name": "The Overview Summary Rule",
         "body": "Overview places the borrowing/lending switch inside its summary card. Four hover/focus tiles use role-scoped actual records and exact centavo balances, with pending/unavailable states. A labeled loan-status bar chart follows the next obligation on mobile and sits beside it on desktop; no fabricated historical trend or yield. History and foundation links follow.",
+        "section": "components"
+      },
+      {
+        "name": "The Offer Detail Rule",
+        "body": "Offer detail uses the reference-led main calculator/cost/schedule/lender column and 300px sticky side summary at the wide breakpoint, with full-width discussion below. Titles are 24px on phones and 28px on desktop; section titles are 16px with icons and no section numbers. One exact server preview drives every estimate; alternate plans stay comparison-only and lender statistics come from actual public records. Narrow schedules retain a named focusable scroller and visible hint.",
         "section": "components"
       }
     ],

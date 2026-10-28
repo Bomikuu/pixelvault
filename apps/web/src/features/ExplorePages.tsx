@@ -1,4 +1,3 @@
-import { InvestmentPitch } from "./negotiations/MeetingEntry";
 import { useMemo, useState } from "react";
 import {
   Link,
@@ -68,12 +67,10 @@ import {
   SelectField,
   Status,
   TextField,
-  VerifiedNote,
 } from "../components";
 import { cents, date, label, money, text } from "../lib/format";
 import { DiscoveryWorkspace } from "./discovery/DiscoveryWorkspace";
-import { OfferCalculator } from "./engagement/OfferCalculator";
-import { OfferSocial } from "./engagement/OfferSocial";
+import { OfferDetailContent } from "./offers/OfferDetailContent";
 import { CoBorrowerApplicationField } from "./connections/CoBorrowerApplicationField";
 import type { CoarseArea, DiscoveryOffer } from "./discovery/types";
 interface DiscoveryPage {
@@ -311,106 +308,9 @@ export function OfferDetail() {
   if (query.error) return <ErrorNotice error={query.error} />;
   const offer = query.data;
   const owned = session?.member?.id === offer.lender.id;
-  return (
-    <>
-      <Link className="back-link" to="/explore">
-        <ArrowLeft size={16} />
-        Explore offers
-      </Link>
-      <PageHeading
-        title={offer.title}
-        description="Review the full terms before starting a private application."
-        action={<Status value={offer.status} />}
-      />
-      <section
-        className="offer-lender-summary"
-        aria-label="Offer lender and capacity"
-      >
-        <PersonName person={offer.lender} subtitle={offer.area} />
-        <div className="offer-detail-amount">
-          <span>Self-declared amount available to lend</span>
-          <strong>{money(offer.available_amount)}</strong>
-        </div>
-      </section>
-      <OfferCalculator offer={offer} canApply={!owned} />
-      <InvestmentPitch offer={offer} />
-      <div className="detail-layout">
-        <section className="surface">
-          <h2>The lender’s original offer</h2>
-          <DefinitionList
-            rows={[
-              [
-                "Annual reducing-balance interest",
-                `${(offer.annual_rate_bps / 100).toFixed(2)}%`,
-              ],
-              ["Payment frequency", label(offer.frequency)],
-              ["Number of installments", offer.installment_count],
-              [
-                "Permitted request",
-                `${money(offer.min_amount)} – ${money(offer.max_amount)}`,
-              ],
-            ]}
-          />
-          <h2>Full cost example</h2>
-          <CostDisclosure offer={offer} />
-          <h2>Repayment schedule</h2>
-          {offer.disclosure.schedule?.length ? (
-            <Schedule rows={offer.disclosure.schedule} />
-          ) : (
-            <Notice>
-              The final schedule is generated from your requested amount and
-              accepted terms.
-            </Notice>
-          )}
-          <VerifiedNote />
-        </section>
-        <aside>
-          <div className="surface sticky-summary">
-            <h2>A private next step.</h2>
-            <p>
-              The lender reviews applications and chooses. You both accept the
-              exact agreement before funding.
-            </p>
-            {owned ? (
-              <>
-                <Notice>
-                  You posted this offer. Review applications in your private
-                  workspace.
-                </Notice>
-                {offer.status === "draft" && (
-                  <ApiForm
-                    onSubmit={(data) =>
-                      post(`/offers/${id}/publish`, {
-                        operation_id: text(data, "operation_id"),
-                      })
-                    }
-                    submitLabel="Publish test offer"
-                    successMessage="Offer published in the test community."
-                  >
-                    {null}
-                  </ApiForm>
-                )}
-                <ActionLink to="/applications" variant="outline">
-                  Review applications
-                </ActionLink>
-              </>
-            ) : (
-              <ActionLink to={`/applications/new?offer=${id}`}>
-                <HandCoins size={17} />
-                Request to borrow
-              </ActionLink>
-            )}
-            <p className="small-text">
-              Applying does not create a loan. No public borrower bidding, and
-              no fee simply for applying.
-            </p>
-          </div>
-        </aside>
-      </div>
-      <OfferSocial offerId={offer.id} />
-    </>
-  );
+  return <OfferDetailContent key={offer.id} offer={offer} owned={owned} />;
 }
+
 export function NewOffer() {
   const navigate = useNavigate();
   return (

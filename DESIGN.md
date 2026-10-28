@@ -244,6 +244,12 @@ Overview opens with a single summary card containing the borrowing/lending switc
 
 The next obligation remains the primary action. A horizontal bar chart beside it on desktop (below it on mobile) shows actual loan counts by lifecycle status, with text values and a zero baseline. Empty history explains when the chart will appear. This is a record snapshot, not a repayment trend, earned-income forecast or wallet balance. History and foundation links follow. Shared semantic colors and Tailwind utilities govern all new layout and interaction states.
 
+### Offer detail
+
+Offer detail follows the reference-led composition in [the offer contract](docs/surfaces/offer-detail.md): a 24px phone/28px desktop title, icon-led 16px section headings without section numbers, main calculator/cost/schedule/lender column, 300px sticky summary at the wide breakpoint and full-width moderated discussion below. Canonical controls and semantic light/dark surfaces retain the PixelVault identity.
+
+One current server preview drives the payment summary, cost chart, schedule and side-card estimate. A geometric donut explains principal/interest/repayment fees without adding upfront lender fees to borrower repayments. Original terms remain explicit during alternate comparisons; applications carry only a valid selected amount with the original terms. Lender summaries use actual public facts, and unavailable/private values remain explicit. Narrow schedules retain horizontal scrolling, keyboard focus and a visible cue.
+
 ### Meeting lobby and activity
 
 Every room visit starts in a private lobby within the dedicated full-viewport layout. At desktop widths, scheduling, participant attendance and the existing shared-plan illustrated guide sit beside a 380px local device preview and entry panel. Mobile stacks these groups in one scroll area. Each person accepts the current Manila time before their own server-validated check-in. Lobby presence is distinct from room presence. Returning to the lobby removes the user’s active check-in; rescheduling requires fresh acceptance and check-in.

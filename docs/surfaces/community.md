@@ -65,3 +65,8 @@ Visual-only captures at 1440px and 390px confirm the distinct list structure and
 The latest user revision removes the list-only maximum-width constraint. Its toolbar and cards use the full available content width with normal 16/24px internal padding. A canonical Button pill row offers recently listed, lower interest first, ₱10,000+ available and up to five real loaded areas. Selected states follow URL filters, amount/area choices toggle off, and choosing a suggestion returns to the offer feed. These are filter shortcuts, not underwriting recommendations. Map layout remains unchanged.
 
 On phones the suggestions scroll horizontally in a named keyboard-focusable region, preserving space for cards. Browser review confirmed full-width desktop composition, mobile scrolling geometry, combined amount/area filters, real no-match state and Clear filters recovery. Evidence: `.runtime/qa/overview-list/`. Verification remained visual only; no build or automated checks ran.
+
+
+## Reference-led offer detail · 2026-10-28
+
+Offer detail now follows the supplied main-column/side-summary composition with smaller titles and icons instead of numbered sections. The calculator, live cost breakdown/donut, schedule and public lender section precede the full-width discussion. The side card reuses application and investor-pitch actions and reads the same current preview. See [the offer-detail contract](offer-detail.md) for financial truth, responsive composition and bounded visual evidence. No backend, provider, permission or contract rule changed.
