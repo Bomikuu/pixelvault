@@ -283,7 +283,17 @@ def leaderboard(*, limit=25, cursor=None):
     ]
     scored.sort(key=lambda item: (-item[1]["points"], str(item[0].id)))
     fingerprint = hashlib.sha256(
-        json.dumps([(str(member.id), facts["points"]) for member, facts in scored]).encode()
+        json.dumps(
+            [
+                (
+                    str(member.id),
+                    facts["points"],
+                    facts["literacy_points"],
+                    facts["approved_contributions"],
+                )
+                for member, facts in scored
+            ]
+        ).encode()
     ).hexdigest()
     if position and position.get("fingerprint") != fingerprint:
         raise DomainError(
@@ -311,10 +321,20 @@ def leaderboard(*, limit=25, cursor=None):
                 "reputation": reputation_summary(
                     member, preferences=member.community_settings, facts=facts
                 ),
+                "activity": {
+                    "learning_completed": bool(facts["literacy_points"]),
+                    "approved_contributions": facts["approved_contributions"],
+                },
             }
             for member, facts in page
         ],
         "next_cursor": next_cursor,
+        "summary": {
+            "participants": len(scored),
+            "learning_completed": sum(bool(facts["literacy_points"]) for _, facts in scored),
+            "approved_contributions": sum(facts["approved_contributions"] for _, facts in scored),
+            "total_xp": sum(facts["points"] for _, facts in scored),
+        },
         "rules": REPUTATION_RULES,
         "notice": LEADERBOARD_NOTICE,
     }

@@ -323,12 +323,23 @@ def test_leaderboard_is_explicit_opt_in_excludes_inactive_and_suspended_and_expo
         "avatar_key",
         "photo_url",
         "reputation",
+        "activity",
     }
     assert data["rules"] == REPUTATION_RULES
     assert "Dense ranks" in data["notice"]
     assert all(member.email not in str(data) for member in members)
     assert "staff_role" not in str(data)
     assert "evidence" not in str(data)
+    assert data["summary"] == {
+        "participants": 1,
+        "learning_completed": 0,
+        "approved_contributions": 1,
+        "total_xp": 50,
+    }
+    assert data["entries"][0]["activity"] == {
+        "learning_completed": False,
+        "approved_contributions": 1,
+    }
 
 
 def test_leaderboard_dense_ties_and_signed_pagination_are_deterministic(members):
@@ -363,6 +374,60 @@ def test_leaderboard_dense_ties_and_signed_pagination_are_deterministic(members)
         client.get("/api/v1/community/leaderboard", {"limit": 1, "cursor": tampered}).status_code
         == 400
     )
+
+
+def test_leaderboard_summary_uses_all_visible_participants_and_capped_distinct_xp_activity(members):
+    members[0].literacy_completed = True
+    members[0].save(update_fields=["literacy_completed"])
+    members[1].literacy_completed = False
+    members[1].save(update_fields=["literacy_completed"])
+    opt_in(members[0])
+    opt_in(members[1])
+    opt_in(members[2], visible=False)
+    contributions(members[0], 22)
+    contributions(members[1], 2, status="pending")
+    contributions(members[2], 10)
+    client = APIClient()
+    first = client.get("/api/v1/community/leaderboard", {"limit": 1}).json()
+    second = client.get(
+        "/api/v1/community/leaderboard", {"limit": 1, "cursor": first["next_cursor"]}
+    ).json()
+    assert (
+        first["summary"]
+        == second["summary"]
+        == {
+            "participants": 2,
+            "learning_completed": 1,
+            "approved_contributions": 20,
+            "total_xp": 1100,
+        }
+    )
+    assert first["entries"][0]["activity"] == {
+        "learning_completed": True,
+        "approved_contributions": 20,
+    }
+    assert second["entries"][0]["activity"] == {
+        "learning_completed": False,
+        "approved_contributions": 0,
+    }
+
+
+def test_leaderboard_restarts_when_activity_changes_without_changing_total_xp(members):
+    for member in members:
+        opt_in(member)
+    member = members[0]
+    member.literacy_completed = True
+    member.save(update_fields=["literacy_completed"])
+    client = APIClient()
+    first = client.get("/api/v1/community/leaderboard", {"limit": 1}).json()
+    member.literacy_completed = False
+    member.save(update_fields=["literacy_completed"])
+    contributions(member, 2)
+    changed = client.get(
+        "/api/v1/community/leaderboard", {"limit": 1, "cursor": first["next_cursor"]}
+    )
+    assert changed.status_code == 409
+    assert changed.json()["code"] == "leaderboard_changed"
     assert (
         client.get(
             "/api/v1/community/leaderboard", {"limit": 2, "cursor": first["next_cursor"]}

@@ -1,0 +1,16 @@
+PixelVault community podium illustration
+Generated with the built-in image_gen tool on 2026-10-28.
+Source output: /home/micxsz/.codex/generated_images/01a180ce-2409-7ef0-8842-b2944078f85a/exec-2a677c86-0786-4a28-97e4-15504aa7ff59.png
+Workspace asset: apps/web/public/illustrations/community-podium.png
+Reference 1: user-supplied leaderboard composition, /tmp/codex-clipboard-d08df3aa-9755-4ff4-b78f-4b2d3e37d889.png
+Reference 2: established PixelVault illustration family, apps/web/public/illustrations/profile-community-cover.png
+Both references were inspected. No input pixels or permanent brand assets were modified.
+
+Exact prompt:
+Use case: editorial-illustration.
+Asset type: wide hero illustration for PixelVault community leaderboard.
+Primary request: Generate an ORIGINAL celebratory community-learning podium scene. Reference image 1 is a UI screenshot: use ONLY its general three-person awards-podium subject, do not reproduce the UI, text, logos, names or numbers. Reference image 2 is PixelVault's actual illustration family: follow its thin charcoal line work, isometric block geometry, flat cobalt/teal/coral/mustard fills, sparse stipple on ivory surfaces, paper/editorial feeling and understated friendly Filipino adult characters.
+Subject: three diverse Filipino adult community contributors celebrating shared learning. Center adult standing on a taller mustard podium, holding a simple trophy. Left adult on a lower cobalt block holding an open book; right adult on a lower coral block with a small award rosette. A few books, broad teal leaves, a cobalt arch and tiny scattered geometric celebratory pieces. All three fully visible, believable hands and feet, no money/currency/loan imagery.
+Composition: a wide landscape 2:1 standalone illustration with pale ice blue background #EFF7FF, subject centered across full illustration, generous top/bottom breathing room, no embedded copy; it will sit to the right of actual HTML copy, so image itself should be visually balanced and readable at 600px wide.
+Style: crisp 2D editorial pen-and-flat-color, intentional isometric object planes and ink shadows. Match reference 2's restraint and line detail. Not glossy 3D, not painterly, not generic rounded cartoon.
+Text: none. No numbers on podium, no UI, no logos, no wordmark, no watermark. Do not alter either input asset; create a new artwork.

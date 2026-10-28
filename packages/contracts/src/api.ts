@@ -56,8 +56,18 @@ export interface LeaderboardPage {
     avatar_key?: string;
     photo_url?: string | null;
     reputation: CommunityReputation;
+    activity?: {
+      learning_completed: boolean;
+      approved_contributions: number;
+    };
   }[];
   next_cursor: string | null;
+  summary?: {
+    participants: number;
+    learning_completed: number;
+    approved_contributions: number;
+    total_xp: number;
+  };
   rules: ReputationWorkspace["rules"];
   notice: string;
 }

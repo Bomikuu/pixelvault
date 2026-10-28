@@ -1,58 +1,24 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  useInfiniteQuery,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-import {
-  ArrowRight,
-  BookOpen,
-  Check,
-  LockKeyhole,
-  Sparkles,
-  Trophy,
-  Users,
-} from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Check, LockKeyhole, Sparkles } from "lucide-react";
 import { Button, Checkbox, Label } from "@pixelvault/ui";
 import type {
   AwardCollection,
-  LeaderboardPage,
   ReputationWorkspace,
 } from "@pixelvault/contracts";
-import { ApiError, apiRequest } from "../app/api";
+import { apiRequest } from "../app/api";
 import { useSession } from "../app/session";
+import { ReputationExplanation } from "./leaderboard/CommunityXpInfo";
 import { ProfileNavigation } from "./profile/ProfileNavigation";
 import {
-  ActionLink,
   ApiForm,
-  ContextIllustration,
-  Empty,
   ErrorNotice,
-  IllustratedInfoDialog,
   Loading,
   MemberAvatar,
   Notice,
   PageHeading,
   SelectField,
 } from "../components";
-
-function ReputationExplanation() {
-  return (
-    <IllustratedInfoDialog
-      title="Experience comes from contribution."
-      description="Community experience recognizes learning and approved educational contributions. Loan size, outstanding debt, borrowing frequency and payment hardship never add or remove community XP."
-      scene="community-workshop"
-      triggerLabel="How community XP works"
-    >
-      <p>
-        Your optional frame and eligible award flair make your avatar yours.
-        Public rankings require your explicit opt-in, and you can leave at any
-        time. An XP level is not a credit score or repayment guarantee.
-      </p>
-    </IllustratedInfoDialog>
-  );
-}
 
 export function ReputationPage() {
   return (
@@ -257,131 +223,4 @@ export function ReputationSettings() {
   );
 }
 
-export function Leaderboard() {
-  const client = useQueryClient();
-  const { session } = useSession();
-  const query = useInfiniteQuery({
-    queryKey: ["community-leaderboard"],
-    initialPageParam: "",
-    queryFn: ({ pageParam }) =>
-      apiRequest<LeaderboardPage>(
-        `/community/leaderboard?limit=25${pageParam ? `&cursor=${encodeURIComponent(pageParam)}` : ""}`,
-      ),
-    getNextPageParam: (page) => page.next_cursor || undefined,
-  });
-  const rows = query.data?.pages.flatMap((page) => page.entries) || [];
-  const first = query.data?.pages[0];
-  return (
-    <>
-      <PageHeading
-        title="Community leaderboard."
-        description="An optional community board for learning and educational contributions."
-        action={<ReputationExplanation />}
-      />
-      <header className="community-board-intro">
-        <div>
-          <Trophy size={30} aria-hidden="true" />
-          <h2>Community experience, earned by helping.</h2>
-          <p>
-            Learn something useful. Share something useful. Every point comes
-            from recorded learning and approved contributions.
-          </p>
-          <ActionLink
-            to={session?.member ? "/profile/edit" : "/sign-in"}
-            variant="outline"
-          >
-            <Users size={17} />
-            {session?.member
-              ? "Manage my participation"
-              : "Sign in to participate"}
-          </ActionLink>
-        </div>
-        <ContextIllustration scene="community-workshop" eager />
-      </header>
-      {query.isPending ? (
-        <Loading text="Loading the community board…" />
-      ) : query.error ? (
-        <ErrorNotice
-          error={
-            query.error instanceof ApiError && query.error.status === 409
-              ? new Error(
-                  "The community board changed. Refresh to see the current rankings.",
-                )
-              : query.error
-          }
-          retry={() => {
-            void client.resetQueries({
-              queryKey: ["community-leaderboard"],
-              exact: true,
-            });
-          }}
-        />
-      ) : (
-        <section
-          className="surface community-board"
-          aria-labelledby="community-board-title"
-        >
-          <div className="section-heading">
-            <h2 id="community-board-title">The community board</h2>
-            <span className="small-text">Opt-in members only</span>
-          </div>
-          <p className="small-text">
-            {first?.notice ||
-              "Community XP is not a credit score, lending authorization or repayment guarantee."}
-          </p>
-          {rows.length ? (
-            <ol className="leaderboard-list" role="list">
-              {rows.map((entry) => (
-                <li key={entry.handle}>
-                  <span
-                    className="leaderboard-rank"
-                    aria-label={`Rank ${entry.rank}`}
-                  >
-                    {entry.rank}
-                  </span>
-                  <MemberAvatar
-                    name={entry.display_name}
-                    avatarKey={entry.avatar_key}
-                    photoUrl={entry.photo_url}
-                    reputation={entry.reputation}
-                    size={48}
-                  />
-                  <div>
-                    <Link to={`/members/${entry.handle}`}>
-                      {entry.display_name}
-                    </Link>
-                    <span>{entry.reputation.level}</span>
-                  </div>
-                  <strong>
-                    {entry.reputation.points.toLocaleString("en-PH")}{" "}
-                    <span>XP</span>
-                  </strong>
-                </li>
-              ))}
-            </ol>
-          ) : (
-            <Empty title="There’s room for a first contributor." icon={Users}>
-              No members are visible on this board yet. You can learn and
-              contribute without joining the rankings.
-            </Empty>
-          )}
-          {query.hasNextPage && (
-            <Button
-              variant="outline"
-              disabled={query.isFetchingNextPage}
-              onClick={() => {
-                void query.fetchNextPage();
-              }}
-            >
-              Load more members <ArrowRight size={16} />
-            </Button>
-          )}
-          <Link className="text-link" to="/learn">
-            <BookOpen size={16} />
-            Visit the learning room <ArrowRight size={16} />
-          </Link>
-        </section>
-      )}
-    </>
-  );
-}
+export { Leaderboard } from "./leaderboard/Leaderboard";

@@ -45,6 +45,8 @@ The seed command refuses live mode, does not overwrite existing demo users, send
 
 Community XP comes from completed literacy (100 points) and distinct moderator-approved educational contributions (50 each, up to 20 contributions). It does not depend on loan size, borrowing or repayment. Profile settings control public points, leaderboard participation, frames and eligible badge flair; Fresh Start stays private. The [leaderboard](http://127.0.0.1:5178/leaderboard) includes only opted-in members with visible points and shares ranks for equal scores. XP is recognition, not a credit or lending-authority assessment.
 
+The leaderboard now pairs an original illustrated podium with a top-three XP count-up, factual participant totals and a member comparison table. Counts cover opted-in visible members only; contribution counts show the distinct approved contributions that earn XP, capped at 20 per member. Reduced motion shows final scores immediately, and narrow tables provide a named keyboard-scroll region and visible scrolling cue. The [surface record](docs/surfaces/leaderboard.md) and [art prompt](docs/brand/leaderboard-podium-prompt.txt) preserve the reference adaptation and provenance.
+
 ## Automated verification
 
 ```bash
