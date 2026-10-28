@@ -33,8 +33,6 @@ import {
   X,
 } from "lucide-react";
 import {
-  Avatar,
-  AvatarFallback,
   BrandMark,
   Button,
   Dialog,
@@ -43,8 +41,7 @@ import {
   DialogTrigger,
 } from "@pixelvault/ui";
 import { useSession } from "./session";
-import { initials } from "../lib/format";
-import { ActionLink, ErrorNotice, Loading } from "../components";
+import { ActionLink, ErrorNotice, Loading, MemberAvatar } from "../components";
 const community = [
   ["/explore", "Explore offers", Compass],
   ["/offers/new", "Post an offer", Plus],
@@ -176,11 +173,10 @@ export function Shell() {
           to={member ? "/profile" : "/sign-in"}
           onClick={() => setMenu(false)}
         >
-          <Avatar>
-            <AvatarFallback>
-              {initials(member?.display_name || "Guest")}
-            </AvatarFallback>
-          </Avatar>
+          <MemberAvatar
+            name={member?.display_name || "Guest"}
+            avatarKey={member?.avatar_key}
+          />
           <div>
             <strong>{member?.display_name || "Welcome to PixelVault"}</strong>
             <small>
@@ -242,11 +238,12 @@ export function Shell() {
             </Link>
             {member ? (
               <>
-                <Avatar className="topbar-avatar">
-                  <AvatarFallback>
-                    {initials(member.display_name)}
-                  </AvatarFallback>
-                </Avatar>
+                <MemberAvatar
+                  name={member.display_name}
+                  avatarKey={member.avatar_key}
+                  className="topbar-avatar"
+                  size={34}
+                />
                 <Button
                   variant="ghost"
                   size="icon"

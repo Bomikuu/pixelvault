@@ -1,6 +1,7 @@
 from datetime import date
 from decimal import Decimal
 
+from accounts.models import AVATAR_KEYS
 from agreements.schedule import rounded
 from django.utils import timezone
 
@@ -8,7 +9,12 @@ from .models import Loan
 
 
 def member_summary(member):
-    return {"id": str(member.id), "display_name": member.display_name, "area": member.area}
+    return {
+        "id": str(member.id),
+        "display_name": member.display_name,
+        "area": member.area,
+        "avatar_key": member.avatar_key if member.avatar_key in AVATAR_KEYS else "",
+    }
 
 
 def get_loan_projection(*, loan_id, as_of=None):

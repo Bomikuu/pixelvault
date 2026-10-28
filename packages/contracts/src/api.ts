@@ -4,6 +4,7 @@ export interface Member {
   id: string;
   email: string;
   display_name: string;
+  avatar_key?: string;
   handle?: string;
   area: string;
   bio: string;
@@ -20,6 +21,7 @@ export interface Session {
 export interface Person {
   id: string;
   display_name: string;
+  avatar_key?: string;
   handle?: string;
   area?: string;
 }
@@ -117,6 +119,17 @@ export interface Loan {
   lender: Person;
   test_mode: boolean;
 }
+export interface AwardDefinition {
+  key: string;
+  name: string;
+  criteria: string;
+  private: boolean;
+}
+export interface AwardCollection {
+  awards: Award[];
+  catalog: AwardDefinition[];
+  community_level: string;
+}
 export interface Award {
   id: string;
   key: string;
@@ -125,6 +138,7 @@ export interface Award {
   earned_at?: string;
   public?: boolean;
   eligible?: boolean;
+  private?: boolean;
 }
 export interface Review {
   id: string;
@@ -138,6 +152,7 @@ export interface Profile {
   id: string;
   handle: string;
   display_name: string;
+  avatar_key?: string;
   bio: string;
   area: string;
   community_level: string;
@@ -149,6 +164,7 @@ export interface Thread {
   loan_id?: string;
   application_id?: string;
   other_display_name: string;
+  other_avatar_key?: string;
   latest_at: string;
 }
 export interface Message {

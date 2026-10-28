@@ -17,6 +17,7 @@ def test_profile_allowlist_excludes_legal_identity_income_and_debt(members):
         "id",
         "handle",
         "display_name",
+        "avatar_key",
         "bio",
         "area",
         "community_level",

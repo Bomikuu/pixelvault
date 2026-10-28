@@ -1,5 +1,6 @@
 import uuid
 
+from accounts.services import validate_avatar_key
 from config.errors import DomainError
 from django.contrib.auth import get_user_model
 from django.db import transaction
@@ -27,10 +28,21 @@ BADGES = {
 }
 
 
+def achievement_catalog():
+    return [
+        {"key": key, "name": name, "criteria": criteria, "private": key == "fresh_start"}
+        for key, (name, criteria) in BADGES.items()
+    ]
+
+
 def public_identity(member):
     handle = member.username if "@" not in member.username else str(member.id)
     fallback = member.username if "@" not in member.username else f"Member {str(member.id)[:8]}"
-    return {"handle": handle, "display_name": member.display_name or fallback}
+    return {
+        "handle": handle,
+        "display_name": member.display_name or fallback,
+        "avatar_key": member.avatar_key,
+    }
 
 
 def public_area(member):
@@ -128,13 +140,15 @@ def public_profile(*, handle, viewer_id=None):
 
 @transaction.atomic
 def update_profile(*, actor_id, data):
-    allowed = {"display_name", "bio", "area", "public_award_ids"}
+    allowed = {"display_name", "bio", "area", "public_award_ids", "avatar_key"}
     if set(data) - allowed:
         raise DomainError(
             "invalid_fields",
-            "Only display name, bio, city and badge selections may be edited here.",
+            "Only display name, bio, city, avatar and badge selections may be edited here.",
         )
     member = member_for(actor_id)
+    if "avatar_key" in data:
+        member.avatar_key = validate_avatar_key(data["avatar_key"])
     for field, maximum in (("display_name", 100), ("bio", 400)):
         if field in data:
             value = str(data[field]).strip()
@@ -145,7 +159,7 @@ def update_profile(*, actor_id, data):
             setattr(member, field, value)
     if "area" in data:
         member.area = coarse_area(area_code=data["area"])["name"]
-    member.save(update_fields=["display_name", "bio", "area"])
+    member.save(update_fields=["display_name", "bio", "area", "avatar_key"])
     if "public_award_ids" in data:
         set_public_badges(member_id=actor_id, award_ids=data["public_award_ids"])
     return public_profile(handle=member.username, viewer_id=actor_id)

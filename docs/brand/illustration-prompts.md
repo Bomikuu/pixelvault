@@ -1,0 +1,16 @@
+# Product scene illustration prompts
+
+Created with the built-in image generation tool on 2026-10-28 using the user-provided reference for visual language. The generated scenes are original compositions; the reference was not edited or shipped as artwork. Files are copied into the app; originals remain in the generated-images library.
+
+## community-workshop
+
+File: `apps/web/public/illustrations/community-workshop.png`
+
+Use case: illustration-story. Create one polished editorial illustration for PixelVault, a Philippines-first individual-to-individual lending community. The supplied image is STYLE REFERENCE ONLY: thin dark hand-drawn ink contours, stylized small people, isometric theatrical platforms, flat solid color blocks, playful oversized everyday objects, sparse stipple/maze-like texture, strong graphic cast shadows. Create an ORIGINAL composition, do not reproduce the reference scenes. Scene: three friendly adult neighbors collaborate around a large open blue book that becomes a small community meeting table; one reads a clear payment calendar sheet, another adds a small potted sprout, a third sits on a low step listening. A simple house-like blue arch and paired speech bubbles connect the figures. The metaphor is shared understanding, learning and private agreement, with no cash giveaway or guaranteed credit promise. Use PixelVault cobalt blue #0866ff and deep navy as anchors, with mustard yellow, muted coral-pink, teal green, cream paper and charcoal outlines as accents. Clean white background, spacious asymmetrical composition with crisp silhouettes. Wide 3:2 landscape artwork, all scene elements comfortably inside bounds, no text/letters/numbers, no labels, no logos, no gradients, no glossy 3D, no photographic textures. Accessibility-friendly uncluttered scene. This is a finished app illustration, not a mockup or collage sheet.
+
+## shared-plan
+
+File: `apps/web/public/illustrations/shared-plan.png`
+
+Use case: illustration-story. Create one original premium editorial illustration for PixelVault, a Philippines-first P2P lending app about clear agreements and personal progress. Match only the VISUAL LANGUAGE of the supplied STYLE REFERENCE: fine charcoal ink outlines, stylized adult figures with simple faces, isometric dimensional geometric platforms, confident flat color areas, playful scale, a few subtle stipple/hand-drawn texture marks, crisp black offset cast shadows and plenty of clean white negative space. Do not copy any scene. Scene: two friendly adult people on opposite sides of an oversized upright calendar/document on a cobalt-blue plinth, pointing to the same blank calendar row; a small mustard desk clock, a growing plant in a coral pot, and three gentle ascending blue steps suggest a manageable shared plan. One person seated on a low stool and one standing; warm collaborative mood. Important: this is a clear-agreement illustration, no money raining, no trophy for taking loans, no credit score or guarantee. PixelVault cobalt #0866ff, navy, muted coral pink, mustard, teal green, cream white. Wide landscape 3:2 composition, centered low compact arrangement, all artwork in bounds. No text/letters/numbers, no logos or UI screen, no gradients, no photorealism, no glossy 3D, no floating random symbols. Finished app artwork on a pure white background.
+

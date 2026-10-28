@@ -12,7 +12,14 @@ from .locations import AREAS, coarse_area
 from .messaging import clean_text, ensure_thread, report_content, send_message, thread_for
 from .models import Award, ContentReport, Contribution, Review, Thread
 from .permissions import member_for, staff_for
-from .profiles import award_data, community_level, public_profile, update_profile
+from .profiles import (
+    achievement_catalog,
+    award_data,
+    community_level,
+    public_identity,
+    public_profile,
+    update_profile,
+)
 from .reviews import appeal_review, moderate_content, respond_review, submit_review
 from .search import search_offers
 from .serializers import MessageInput, ModerationInput, ReviewInput, message_data, review_data
@@ -68,6 +75,13 @@ class ProfileView(MemberView):
         return Response(update_profile(actor_id=request.user.id, data=request.data))
 
 
+class AchievementCatalogView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        return Response({"catalog": achievement_catalog()})
+
+
 class AwardsView(MemberView):
     def get(self, request):
         settings = getattr(request.user, "community_settings", None)
@@ -76,7 +90,13 @@ class AwardsView(MemberView):
             {**award_data(award), "public": str(award.id) in selected}
             for award in Award.objects.filter(member=request.user)
         ]
-        return Response({"awards": awards, "community_level": community_level(request.user)})
+        return Response(
+            {
+                "awards": awards,
+                "community_level": community_level(request.user),
+                "catalog": achievement_catalog(),
+            }
+        )
 
     def post(self, request):
         evaluation = evaluate_awards(member_id=request.user.id)
@@ -99,12 +119,15 @@ class ThreadView(MemberView):
                 (member for member in thread.participants.all() if member.id != request.user.id),
                 None,
             )
+            identity = public_identity(other) if other else {}
             rows.append(
                 {
                     "id": str(thread.id),
                     "loan_id": str(thread.loan_id) if thread.loan_id else None,
                     "application_id": str(thread.application_id) if thread.application_id else None,
-                    "other_display_name": (other.display_name or other.username) if other else "",
+                    "other_display_name": identity.get("display_name", ""),
+                    "other_handle": identity.get("handle", ""),
+                    "other_avatar_key": other.avatar_key if other else "",
                     "latest_at": thread.latest_at.isoformat() if thread.latest_at else None,
                 }
             )

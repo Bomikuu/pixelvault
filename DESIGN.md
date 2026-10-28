@@ -41,6 +41,8 @@ Use information-rich rows for comparing offers and managing loans. A listing sho
 
 ## Brand expression and social features
 
+The user-supplied illustration reference expands the supporting artwork with thin charcoal outlines, isometric object planes, sparse stippling and cobalt/teal/coral/mustard fills. Original editorial scenes, six named achievement illustrations and eight fictional profile portraits share this vocabulary. Financial controls and the blue PixelVault mark retain their established design. See [illustration surface](docs/surfaces/illustrations.md) and [artwork catalog](docs/brand/artwork-catalog.svg).
+
 Profile covers, an equipped badge shelf (up to three public selections) and one-time milestone feedback carry personality. Badge artwork must be original and readable at 24/48px. Criteria, earned date and source are available by focus or tap, not hover alone. Motion is normally 150–250ms; milestone feedback may last up to 600ms, once, with a static reduced-motion equivalent.
 
 No confetti when taking another loan, flashing overdue numbers, repeated celebration on refresh, leaderboard of indebted members, purchasable reputation or badges implying repayment insurance. Verification labels describe a specific check, such as “Identity checked”; never an unqualified “Trusted.”

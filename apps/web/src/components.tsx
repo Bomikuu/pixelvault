@@ -26,6 +26,8 @@ import {
   Textarea,
   Avatar,
   AvatarFallback,
+  AvatarArt,
+  AVATAR_OPTIONS,
   Badge,
   Checkbox,
 } from "@pixelvault/ui";
@@ -176,6 +178,56 @@ export function Status({ value }: { value: string | undefined | null }) {
     </Badge>
   );
 }
+export function MemberAvatar({
+  name,
+  avatarKey,
+  className = "",
+  size = 40,
+}: {
+  name: string;
+  avatarKey?: string;
+  className?: string;
+  size?: number;
+}) {
+  const hasPortrait = AVATAR_OPTIONS.some((option) => option.key === avatarKey);
+  return (
+    <Avatar
+      className={`member-avatar ${className}`}
+      style={{ width: size, height: size }}
+    >
+      {hasPortrait ? (
+        <AvatarArt
+          avatarKey={avatarKey!}
+          size={size}
+          label={`${name}’s chosen avatar`}
+        />
+      ) : (
+        <AvatarFallback>{initials(name)}</AvatarFallback>
+      )}
+    </Avatar>
+  );
+}
+export function ContextIllustration({
+  scene,
+  className = "",
+  eager = false,
+}: {
+  scene: "community-workshop" | "shared-plan";
+  className?: string;
+  eager?: boolean;
+}) {
+  return (
+    <img
+      className={`context-illustration ${className}`}
+      src={`/illustrations/${scene}.png`}
+      alt=""
+      width={1536}
+      height={1024}
+      loading={eager ? "eager" : "lazy"}
+      decoding="async"
+    />
+  );
+}
 export function PersonName({
   person,
   subtitle,
@@ -185,9 +237,7 @@ export function PersonName({
 }) {
   return (
     <div className="person">
-      <Avatar>
-        <AvatarFallback>{initials(person.display_name)}</AvatarFallback>
-      </Avatar>
+      <MemberAvatar name={person.display_name} avatarKey={person.avatar_key} />
       <div>
         <Link
           className="person-name"

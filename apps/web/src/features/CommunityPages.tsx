@@ -1,46 +1,38 @@
 import { useState } from "react";
-import {
-  Link,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
   ArrowRight,
-  BookOpen,
   Check,
   ChevronRight,
   MapPin,
   MessageSquare,
-  Plus,
   ShieldCheck,
-  Sparkles,
-  Star,
-  Users,
 } from "lucide-react";
 import {
   BadgeArt,
+  AvatarArt,
+  AVATAR_OPTIONS,
   Button,
-  Avatar,
-  AvatarFallback,
   Checkbox,
   Label,
 } from "@pixelvault/ui";
 import type {
   Award,
-  DataRecord,
+  AwardCollection,
+  AwardDefinition,
   Message,
   Profile,
   Thread,
 } from "@pixelvault/contracts";
-import { apiRequest, items, operationId, post } from "../app/api";
+import { apiRequest, post } from "../app/api";
 import { useSession } from "../app/session";
 import {
   ActionLink,
+  ContextIllustration,
+  MemberAvatar,
   ApiForm,
-  CheckField,
   Empty,
   ErrorNotice,
   Field,
@@ -50,7 +42,7 @@ import {
   SelectField,
   TextField,
 } from "../components";
-import { date, initials, label, text } from "../lib/format";
+import { date, label, text } from "../lib/format";
 export function MemberProfile() {
   const { handle } = useParams();
   const query = useQuery({
@@ -79,9 +71,11 @@ function ProfileView({
         </span>
       </div>
       <section className="profile-heading">
-        <Avatar>
-          <AvatarFallback>{initials(profile.display_name)}</AvatarFallback>
-        </Avatar>
+        <MemberAvatar
+          name={profile.display_name}
+          avatarKey={profile.avatar_key}
+          size={80}
+        />
         <div>
           <h1>{profile.display_name}</h1>
           <p>
@@ -181,7 +175,7 @@ export function BadgeShelf({ awards }: { awards: Award[] }) {
       {awards.length ? (
         awards.map((a, index) => (
           <Link key={a.id} className="badge-item" to={`/badges/${a.key}`}>
-            <BadgeArt name={a.name} index={index} size={58} />
+            <BadgeArt name={a.name} badgeKey={a.key} index={index} size={72} />
             <strong>{a.name}</strong>
             <small>
               {a.earned_at ? date(a.earned_at) : "Criteria available"}
@@ -218,86 +212,139 @@ export function OwnProfile() {
 export function EditProfile() {
   const { session, refresh } = useSession();
   const member = session!.member!;
+  const [selectedAvatar, setSelectedAvatar] = useState(
+    member.avatar_key || "sprout",
+  );
   return (
     <>
       <PageHeading
         title="Make your profile yours."
         description="Share a little about yourself. Keep financial documents and exact addresses private."
       />
-      <section className="surface narrow">
-        <ApiForm
-          onSubmit={async (data) => {
-            await apiRequest("/community/profile", {
-              method: "PATCH",
-              body: JSON.stringify({
-                display_name: text(data, "display_name"),
-                bio: text(data, "bio"),
-                area: text(data, "area"),
-              }),
-            });
-            await refresh();
-          }}
-          submitLabel="Save profile"
-          successMessage="Your profile was updated."
-        >
-          <Field
-            name="display_name"
-            label="Display name"
-            defaultValue={member.display_name}
-            required
-          />
-          <Field
-            name="area"
-            label="Approximate city or municipality"
-            defaultValue={member.area}
-          />
-          <TextField
-            name="bio"
-            label="About you"
-            defaultValue={member.bio}
-            maxLength={400}
-            help="Do not share ID numbers, account numbers or private financial details."
-          />
-        </ApiForm>
-      </section>
+      <div className="profile-edit-layout">
+        <section className="surface">
+          <ApiForm
+            onSubmit={async (data) => {
+              await apiRequest("/auth/profile", {
+                method: "PATCH",
+                body: JSON.stringify({
+                  display_name: text(data, "display_name"),
+                  bio: text(data, "bio"),
+                  area: text(data, "area"),
+                  avatar_key: selectedAvatar,
+                }),
+              });
+              await refresh();
+            }}
+            submitLabel="Save profile"
+            successMessage="Your profile was updated."
+          >
+            <fieldset className="avatar-picker">
+              <legend>Choose your profile character</legend>
+              <p id="avatar-help">
+                A little personality for your public profile. Your identity
+                checks stay private.
+              </p>
+              <div
+                className="avatar-options"
+                role="group"
+                aria-describedby="avatar-help"
+              >
+                {AVATAR_OPTIONS.map((option) => (
+                  <Button
+                    key={option.key}
+                    type="button"
+                    variant="outline"
+                    className={`avatar-choice ${selectedAvatar === option.key ? "is-selected" : ""}`}
+                    aria-pressed={selectedAvatar === option.key}
+                    aria-label={`Choose ${option.name}`}
+                    onClick={() => setSelectedAvatar(option.key)}
+                  >
+                    <AvatarArt avatarKey={option.key} size={76} />
+                    <strong>{option.name}</strong>
+                    <span>{option.description}</span>
+                    {selectedAvatar === option.key && (
+                      <Check
+                        className="avatar-selected"
+                        size={17}
+                        aria-hidden="true"
+                      />
+                    )}
+                  </Button>
+                ))}
+              </div>
+            </fieldset>
+            <Field
+              name="display_name"
+              label="Display name"
+              defaultValue={member.display_name}
+              required
+            />
+            <Field
+              name="area"
+              label="Approximate city or municipality"
+              defaultValue={member.area}
+            />
+            <TextField
+              name="bio"
+              label="About you"
+              defaultValue={member.bio}
+              maxLength={400}
+              help="Do not share ID numbers, account numbers or private financial details."
+            />
+          </ApiForm>
+        </section>
+        <aside className="profile-edit-aside">
+          <ContextIllustration scene="community-workshop" eager />
+          <h2>Every person brings something.</h2>
+          <p>
+            Your chosen character appears beside your offers, conversations and
+            profile. Pick whichever feels like you.
+          </p>
+          <div className="avatar-preview">
+            <MemberAvatar
+              name={member.display_name}
+              avatarKey={selectedAvatar}
+              size={64}
+            />
+            <div>
+              <strong>{member.display_name}</strong>
+              <span>Preview · save to update your profile</span>
+            </div>
+          </div>
+        </aside>
+      </div>
     </>
   );
 }
-const criteria = [
-  [
-    "first_chapter",
-    "First Chapter",
-    "Complete onboarding and the financial-literacy questions. No borrowing is required.",
-  ],
-  [
-    "clockwork",
-    "Clockwork",
-    "Three confirmed, on-time scheduled payments. Provider delays are considered separately.",
-  ],
-  [
-    "full_circle",
-    "Full Circle",
-    "Fully settle an eligible loan after pending reversals are resolved.",
-  ],
-  [
-    "open_book",
-    "Open Book",
-    "Three complete lending agreements with all required disclosures.",
-  ],
-  [
-    "helping_hand",
-    "Helping Hand",
-    "Five distinct, moderator-approved educational contributions.",
-  ],
-  [
-    "fresh_start",
-    "Fresh Start",
-    "Complete an agreed recovery arrangement. This milestone stays private.",
-  ],
-];
+function useAwardCatalog() {
+  return useQuery({
+    queryKey: ["achievement-catalog"],
+    queryFn: () =>
+      apiRequest<{ catalog: AwardDefinition[] }>(
+        "/community/achievement-catalog",
+      ),
+  });
+}
 export function BadgeDetail() {
   const { key } = useParams();
-  const entry = criteria.find((c) => c[0] === key) || criteria[0];
+  const query = useAwardCatalog();
+  if (query.isPending) return <Loading text="Opening this achievement…" />;
+  if (query.error) return <ErrorNotice error={query.error} />;
+  const entry = query.data.catalog.find((item) => item.key === key);
+  if (!entry)
+    return (
+      <Empty
+        title="Achievement not found"
+        action={
+          <ActionLink to="/profile/badges" variant="outline">
+            View achievements
+          </ActionLink>
+        }
+      >
+        This achievement is not in the current collection.
+      </Empty>
+    );
   return (
     <>
       <Link to="/profile/badges" className="back-link">
@@ -305,9 +352,14 @@ export function BadgeDetail() {
         Achievements
       </Link>
       <section className="badge-detail surface">
-        <BadgeArt name={entry[1]} index={criteria.indexOf(entry)} size={100} />
-        <h1>{entry[1]}</h1>
-        <p>{entry[2]}</p>
+        <BadgeArt name={entry.name} badgeKey={entry.key} size={176} />
+        <h1>{entry.name}</h1>
+        <p>{entry.criteria}</p>
+        {entry.private && (
+          <p className="achievement-private">
+            Always private · never shown on your public profile
+          </p>
+        )}
         <Notice>
           Evidence and rule versions determine eligibility. A badge cannot be
           purchased and never guarantees financial reliability.
@@ -322,76 +374,174 @@ export function BadgeDetail() {
 export function AchievementsPage() {
   const query = useQuery({
     queryKey: ["awards"],
-    queryFn: () =>
-      apiRequest<{ awards: Award[]; community_level: string }>(
-        "/community/awards",
-      ),
+    queryFn: () => apiRequest<AwardCollection>("/community/awards"),
   });
-  if (query.isPending) return <Loading />;
+  const [selectedIds, setSelectedIds] = useState<string[] | null>(null);
+  if (query.isPending)
+    return <Loading text="Opening your achievement collection…" />;
   if (query.error) return <ErrorNotice error={query.error} />;
-  const awards = query.data.awards;
+  const { awards, catalog, community_level } = query.data;
+  const eligibleAwards = awards.filter((award) => award.eligible);
+  const shareableIds = new Set(
+    awards
+      .filter(
+        (award) =>
+          award.eligible &&
+          !award.private &&
+          catalog.some(
+            (definition) => definition.key === award.key && !definition.private,
+          ),
+      )
+      .map((award) => award.id),
+  );
+  // Eligibility can change while this collection is open. Drop unavailable
+  // selections so a hidden checkbox never blocks a corrected showcase save.
+  const publicIds = (
+    selectedIds ??
+    awards.filter((award) => award.public).map((award) => award.id)
+  ).filter((id) => shareableIds.has(id));
   return (
     <>
       <PageHeading
         title="A story worth building."
-        description="Recognition for learning, clear agreements and meaningful contributions. Choose up to three public achievements."
+        description="Recognition for learning, clear agreements and meaningful contributions."
       />
-      <section className="surface">
-        <h2>Your community level: {query.data.community_level}</h2>
-        <p>
-          Community levels reflect learning and approved contributions, never
-          your loan size or outstanding debt.
-        </p>
+      <section className="achievement-intro surface">
+        <div>
+          <h2>Small steps. A bigger story.</h2>
+          <p>
+            Learn something useful. Share what you know. Mark the milestones
+            along the way.
+          </p>
+          <dl className="achievement-summary">
+            <div>
+              <dt>Community level</dt>
+              <dd>{community_level}</dd>
+            </div>
+            <div>
+              <dt>Achievements earned</dt>
+              <dd>
+                {eligibleAwards.length} of {catalog.length}
+              </dd>
+            </div>
+          </dl>
+          <p className="small-text">
+            Community levels reflect learning and approved contributions, never
+            your loan size or outstanding debt.
+          </p>
+          <Link to="/learn" className="text-link">
+            Visit the learning room <ArrowRight size={15} />
+          </Link>
+        </div>
+        <ContextIllustration scene="community-workshop" eager />
+      </section>
+      <section className="surface achievement-collection">
+        <div className="section-heading">
+          <div>
+            <h2>Your achievement collection</h2>
+            <p>
+              Choose up to three earned achievements for your public profile.
+            </p>
+          </div>
+          <span className="showcase-count" aria-live="polite">
+            {publicIds.length} / 3 selected
+          </span>
+        </div>
         <ApiForm
-          onSubmit={(data) =>
+          onSubmit={() =>
             apiRequest("/community/profile", {
               method: "PATCH",
-              body: JSON.stringify({ public_award_ids: data.getAll("awards") }),
+              body: JSON.stringify({ public_award_ids: publicIds }),
             })
           }
           submitLabel="Save public showcase"
           successMessage="Your public achievement selection was saved."
         >
           <div className="awards-grid">
-            {criteria.map(([key, name, description], index) => {
-              const earned = awards.find((a) => a.key === key);
+            {catalog.map((definition, index) => {
+              const award = awards.find((item) => item.key === definition.key);
+              const earned = !!award?.eligible;
+              const isPrivate = definition.private || !!award?.private;
+              const selected = !!award && publicIds.includes(award.id);
               return (
-                <div
-                  className={`achievement ${earned?.eligible ? "earned" : ""}`}
-                  key={key}
+                <article
+                  className={`achievement ${earned ? "earned" : "locked"}`}
+                  key={definition.key}
                 >
-                  <BadgeArt name={name} index={index} size={64} />
-                  <div>
-                    <Link to={`/badges/${key}`}>
-                      <h3>{name}</h3>
+                  <Link
+                    className="achievement-art-link"
+                    to={`/badges/${definition.key}`}
+                    aria-label={`View ${definition.name} achievement`}
+                  >
+                    <BadgeArt
+                      name={definition.name}
+                      badgeKey={definition.key}
+                      index={index}
+                      size={112}
+                      locked={!earned}
+                    />
+                  </Link>
+                  <div className="achievement-copy">
+                    <span
+                      className={`achievement-state ${earned ? "is-earned" : ""}`}
+                    >
+                      {earned ? (
+                        <>
+                          <Check size={13} />
+                          Earned
+                        </>
+                      ) : (
+                        "To discover"
+                      )}
+                      {isPrivate && " · Private"}
+                    </span>
+                    <Link to={`/badges/${definition.key}`}>
+                      <h3>{definition.name}</h3>
                     </Link>
-                    <p>{description}</p>
-                    {earned?.earned_at && (
-                      <small>Earned {date(earned.earned_at)}</small>
+                    <p>{award?.criteria || definition.criteria}</p>
+                    {earned && award.earned_at && (
+                      <small>Earned {date(award.earned_at)}</small>
+                    )}
+                    {award && !earned && (
+                      <small>
+                        Eligibility needs current evidence. Your previous
+                        milestone stays in your private history.
+                      </small>
+                    )}
+                    {earned && !isPrivate ? (
+                      <div className="check-field">
+                        <Checkbox
+                          id={definition.key}
+                          checked={selected}
+                          disabled={!selected && publicIds.length >= 3}
+                          onCheckedChange={(checked) =>
+                            setSelectedIds(
+                              checked
+                                ? [...publicIds, award.id]
+                                : publicIds.filter((id) => id !== award.id),
+                            )
+                          }
+                        />
+                        <Label htmlFor={definition.key}>Show on profile</Label>
+                      </div>
+                    ) : (
+                      <small className="achievement-hint">
+                        {isPrivate
+                          ? "Always private. Yours to keep."
+                          : "Earned through verified activity, never purchased."}
+                      </small>
                     )}
                   </div>
-                  {earned?.eligible && key !== "fresh_start" ? (
-                    <div className="check-field">
-                      <Checkbox
-                        id={key}
-                        name="awards"
-                        value={earned.id}
-                        defaultChecked={earned.public}
-                      />
-                      <Label htmlFor={key}>Show on profile</Label>
-                    </div>
-                  ) : (
-                    <small className="muted">
-                      {key === "fresh_start"
-                        ? "Always private"
-                        : "Not earned yet"}
-                    </small>
-                  )}
-                </div>
+                </article>
               );
             })}
           </div>
         </ApiForm>
+        <p className="small-text achievement-footnote">
+          Achievements describe specific milestones. They do not guarantee
+          repayment or indicate legal lending authorization. You never need to
+          take a loan just to participate.
+        </p>
       </section>
     </>
   );
@@ -437,11 +587,10 @@ export function InboxPage() {
                 className={`thread-row ${t.id === selected ? "selected" : ""}`}
                 onClick={() => setParams({ thread: t.id })}
               >
-                <Avatar>
-                  <AvatarFallback>
-                    {initials(t.other_display_name)}
-                  </AvatarFallback>
-                </Avatar>
+                <MemberAvatar
+                  name={t.other_display_name}
+                  avatarKey={t.other_avatar_key}
+                />
                 <span>
                   <strong>{t.other_display_name}</strong>
                   <small>
@@ -608,9 +757,11 @@ export function LearningPage() {
       <div className="learning-layout">
         <div>
           <article className="learning-article surface">
-            <span className="learning-article-icon">
-              <BookOpen size={30} />
-            </span>
+            <ContextIllustration
+              scene="shared-plan"
+              className="learning-scene"
+              eager
+            />
             <h2>Read the whole cost.</h2>
             <p>
               A rate is one part of the picture. Compare the principal, interest

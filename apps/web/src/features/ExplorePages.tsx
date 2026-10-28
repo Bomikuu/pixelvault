@@ -29,7 +29,6 @@ import {
   Button,
   Input,
   Badge,
-  BrandMark,
   Label,
   Select,
   SelectContent,
@@ -53,6 +52,7 @@ import { apiRequest, items, operationId, post } from "../app/api";
 import { useSession } from "../app/session";
 import {
   ActionLink,
+  ContextIllustration,
   ApiForm,
   CheckField,
   DefinitionList,
@@ -73,7 +73,7 @@ interface DiscoveryPage {
   offers: {
     id: string;
     title: string;
-    lender: { handle: string; display_name: string };
+    lender: { handle: string; display_name: string; avatar_key?: string };
     area: { name: string };
     declared_available_amount: string;
     min_amount: string;
@@ -105,6 +105,7 @@ export function useOffers() {
               id: row.lender.handle,
               handle: row.lender.handle,
               display_name: row.lender.display_name,
+              avatar_key: row.lender.avatar_key,
             },
             area: row.area.name,
             declared_amount: row.declared_available_amount,
@@ -404,9 +405,11 @@ export function ExplorePage() {
         </div>
         <aside className="community-aside">
           <div className="community-note">
-            <div className="community-mark">
-              <BrandMark compact />
-            </div>
+            <ContextIllustration
+              scene="community-workshop"
+              className="community-scene"
+              eager
+            />
             <h2>
               People first.
               <br />

@@ -47,4 +47,14 @@ Scoped graphify traces cover payments, community and frontend relationships. Fro
 
 Sanitized Jev questions were advisory only. No credentials, personal records, private messages or evidence documents were submitted. Direct source inspection and automated tests determine implementation correctness.
 
+## Illustration and avatar update
+
+The user requested supporting illustrations based on a new reference, named achievement artwork and profile-picture choices. The delivered update includes two built-in-generated product scenes, six original vector achievement illustrations and eight original vector avatar portraits. Server-owned achievement names/criteria drive the collection and detail pages; preset avatar choices persist to the current member and appear in public and private participant summaries. Existing earning rules, private recovery recognition and the three-award showcase limit are preserved.
+
+The [artwork catalog](brand/artwork-catalog.svg) displays the full vector collection. Portable files live in packages/ui/src/assets/badges and packages/ui/src/assets/avatars; `node scripts/export-artwork.mjs` regenerates these and the catalog without building the app. Exact [scene prompts](brand/illustration-prompts.md) and [surface decisions](surfaces/illustrations.md) record provenance and intent.
+
+Final verification for this update: **72 targeted PostgreSQL tests passed**, **31 frontend/artwork tests passed**, TypeScript passed, **44 TSX modules** passed the shared-control boundary, all **10 semantic contrast pairs** passed (minimum 4.82:1), scoped Ruff/Django/migration checks passed and the OpenAPI/types were refreshed. All 15 SVG exports/catalog parse with unique IDs and valid internal references. A fresh source review found and verified fixes for stale revoked-badge selections and missing avatars in shared participant summaries. No application build, browser inspection or manual/visual app test was run.
+
+Graphify traced the incumbent profile/achievement dependencies; its stale scoped graphs and legacy-ID warnings were treated as advisory, with changed relationships checked directly against source. Sanitized Jev responses informed review priorities and did not decide award eligibility.
+
 See [README](../README.md) for local startup, fictional login accounts and test commands; [operations](operations/deployment.md) for recovery/privacy procedures; and [PixelFlow evidence](PIXELFLOW-INTEGRATION.md) for the verified external contract and pagination correction.

@@ -14,7 +14,7 @@ from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
 
 from .models import Member
-from .services import register_member
+from .services import register_member, validate_avatar_key
 
 
 def member_data(member):
@@ -24,6 +24,7 @@ def member_data(member):
         "display_name": member.display_name or member.username,
         "area": member.area,
         "bio": member.bio,
+        "avatar_key": member.avatar_key,
         "suspended": member.suspended,
         "literacy_completed": member.literacy_completed,
         "staff_role": member.staff_role,
@@ -105,6 +106,14 @@ class SignOutView(MemberView):
 
 class ProfileView(MemberView):
     def patch(self, request):
+        if set(request.data) - {"display_name", "area", "bio", "avatar_key"}:
+            raise DomainError(
+                "INVALID_PROFILE",
+                "Only your display name, city, bio and avatar may be edited here.",
+            )
+        changes = {}
+        if "avatar_key" in request.data:
+            changes["avatar_key"] = validate_avatar_key(request.data["avatar_key"])
         for field, limit in [("display_name", 100), ("area", 80), ("bio", 400)]:
             if field in request.data:
                 value = request.data[field]
@@ -116,8 +125,11 @@ class ProfileView(MemberView):
                     from community.locations import coarse_area
 
                     value = coarse_area(area_code=value)["name"]
-                setattr(request.user, field, value.strip())
-        request.user.save()
+                changes[field] = value.strip()
+        for field, value in changes.items():
+            setattr(request.user, field, value)
+        if changes:
+            request.user.save(update_fields=list(changes))
         return Response(member_data(request.user))
 
 

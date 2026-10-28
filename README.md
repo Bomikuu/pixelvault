@@ -60,6 +60,6 @@ Real PixelFlow checkout needs a configured approved test routing profile and ser
 
 Private evidence uses encrypted local storage for development. A production S3-compatible storage adapter, reviewed retention schedule, secure key rotation, actual scanner/MFA, signing requirements, jurisdiction-specific rate/fee/tax rules, regulatory classification and approved per-lender money routing remain deployment work. No permissive production fallback is supplied.
 
-Current automated results: **185 backend tests and 22 frontend tests pass**, plus TypeScript, UI boundary, contrast, Ruff, Django/migration and schema checks. See [implementation status](docs/IMPLEMENTATION.md) for evidence and deviations.
+See [implementation status](docs/IMPLEMENTATION.md) for automated verification results and deployment limits. The [artwork catalog](docs/brand/artwork-catalog.svg) shows all six achievement illustrations and eight profile avatars; [scene prompts](docs/brand/illustration-prompts.md) record the built-in image-generation inputs. Open your profile editor to select and save a character. Portable SVGs live beside the UI source in packages/ui/src/assets; regenerate them with `node scripts/export-artwork.mjs`.
 
 See [product context](PRODUCT.md), [design](DESIGN.md), [design specification](docs/specs/2026-10-28-pixelvault-design.md), [phase plans](docs/plans/2026-10-28-pixelvault-implementation.md), [PixelFlow evidence](docs/PIXELFLOW-INTEGRATION.md), and [operations](docs/operations/deployment.md).

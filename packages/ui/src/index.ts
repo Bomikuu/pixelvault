@@ -15,4 +15,5 @@ export * from "./components/ui/tooltip";
 export * from "./components/ui/sonner";
 export * from "./BrandMark";
 export * from "./BadgeArt";
+export * from "./AvatarArt";
 export { cn } from "./lib/utils";

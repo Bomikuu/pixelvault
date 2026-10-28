@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    AchievementCatalogView,
     AchievementHoldResolutionView,
     AchievementHoldsView,
     AreasView,
@@ -21,6 +22,7 @@ from .views import (
 )
 
 urlpatterns = [
+    path("community/achievement-catalog", AchievementCatalogView.as_view()),
     path("community/repayment-summary/<uuid:member_id>", RepaymentSummaryView.as_view()),
     path("admin/achievement-holds", AchievementHoldsView.as_view()),
     path("admin/achievement-holds/<uuid:hold_id>/resolve", AchievementHoldResolutionView.as_view()),

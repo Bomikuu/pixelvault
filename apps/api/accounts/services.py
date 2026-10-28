@@ -6,7 +6,13 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.db import IntegrityError, transaction
 
-from .models import Member
+from .models import AVATAR_KEYS, Member
+
+
+def validate_avatar_key(value):
+    if not isinstance(value, str) or value not in AVATAR_KEYS:
+        raise DomainError("INVALID_AVATAR", "Choose one of the available profile illustrations.")
+    return value
 
 
 def register_member(*, email, password, accepted_policy_version, display_name=""):

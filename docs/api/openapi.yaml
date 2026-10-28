@@ -1364,6 +1364,27 @@ paths:
                     type: object
                     additionalProperties: true
           description: ''
+  /api/v1/community/achievement-catalog:
+    get:
+      operationId: get_api_v1_community_achievement_catalog
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+          description: ''
   /api/v1/community/areas:
     get:
       operationId: get_api_v1_community_areas
