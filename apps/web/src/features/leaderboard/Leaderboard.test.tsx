@@ -6,7 +6,7 @@ import { jsonResponse, renderApp, session } from "../../test/helpers";
 vi.mock("../../app/session", () => ({ useSession: () => ({ session }) }));
 afterEach(() => vi.unstubAllGlobals());
 
-it("uses server ties, participant totals and actual activity without invented financial or level counts", async () => {
+it("shows ordered positions while preserving tied server XP and real participant totals", async () => {
   vi.stubGlobal(
     "fetch",
     vi.fn().mockResolvedValue(
@@ -49,8 +49,19 @@ it("uses server ties, participant totals and actual activity without invented fi
     name: "Top three contributors",
   });
   expect(within(podium).getAllByRole("listitem")).toHaveLength(3);
-  expect(within(podium).getAllByLabelText("Rank 1")).toHaveLength(2);
-  expect(within(podium).getByLabelText("Rank 2")).toBeInTheDocument();
+  expect(
+    within(podium).getByLabelText("Leaderboard position 1"),
+  ).toBeInTheDocument();
+  expect(
+    within(podium).getByLabelText("Leaderboard position 2"),
+  ).toBeInTheDocument();
+  expect(
+    within(podium).getByLabelText("Leaderboard position 3"),
+  ).toBeInTheDocument();
+  expect(within(podium).getAllByLabelText("250 community XP")).toHaveLength(2);
+  expect(
+    screen.getByText(/Equal XP scores use a fixed server order/),
+  ).toBeInTheDocument();
   expect(screen.getByLabelText("Opt-in community totals")).toHaveTextContent(
     "40",
   );
@@ -66,7 +77,9 @@ it("uses server ties, participant totals and actual activity without invented fi
   expect(
     screen.getByRole("region", { name: "Community contributor comparison" }),
   ).toHaveAccessibleDescription("Scroll sideways to compare all columns.");
-  expect(within(table).getByLabelText("Rank 3")).toBeInTheDocument();
+  expect(
+    within(table).getByLabelText("Leaderboard position 4"),
+  ).toBeInTheDocument();
   expect(
     within(table).getByRole("link", { name: "Contributor 3" }),
   ).toHaveAttribute("href", "/members/member-3");

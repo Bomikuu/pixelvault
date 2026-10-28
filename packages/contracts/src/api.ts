@@ -144,6 +144,7 @@ export interface Disclosure {
   [key: string]: unknown;
 }
 export interface Offer {
+  likes?: { count: number; liked: boolean };
   id: string;
   lender: Person;
   title: string;

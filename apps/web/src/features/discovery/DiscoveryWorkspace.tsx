@@ -1,3 +1,4 @@
+import { OfferLikeButton } from "../engagement/OfferLikeButton";
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -167,6 +168,7 @@ export function DiscoveryWorkspace({
                 </strong>
                 <small>Principal → total repayment</small>
               </div>
+              <OfferLikeButton offerId={offer.id} initial={offer.likes} />
               <div className="discovery-posting-bottom">
                 {offer.created_at && (
                   <time dateTime={offer.created_at}>
@@ -201,7 +203,22 @@ export function DiscoveryWorkspace({
     </>
   );
   return (
-    <div className="discovery-surface">
+    <div
+      className={[
+        "discovery-surface",
+        "dark:[&_.offer-list]:bg-card! dark:[&_.offer-list]:border-border! dark:[&_.discovery-list-workspace]:bg-card! dark:[&_.discovery-list-workspace]:border-border! dark:[&_.discovery-sheet-toggle]:bg-card! dark:[&_.discovery-sheet-toggle]:text-foreground!",
+        "dark:[&_.discovery-posting-panel]:bg-card! dark:[&_.discovery-posting-panel]:border-border! dark:[&_.discovery-workspace]:border-border!",
+        "dark:[&_.discovery-place-input]:bg-card! dark:[&_.discovery-lender-search]:bg-card! dark:[&_.discovery-view-switch]:bg-card! dark:[&_.discovery-place-results]:bg-card!",
+        "dark:[&_.discovery-place-input]:text-muted-foreground! dark:[&_.discovery-lender-search]:text-muted-foreground! dark:[&_.discovery-place-results]:border-border!",
+        "dark:[&_.discovery-heading_p]:text-muted-foreground! dark:[&_.discovery-amount_label]:text-muted-foreground! dark:[&_.discovery-results-heading_small]:text-muted-foreground!",
+        "dark:[&_.discovery-posting]:border-border! dark:[&_.discovery-posting.is-selected]:bg-accent! dark:[&_.discovery-posting-title]:text-foreground! dark:[&_.person_small]:text-muted-foreground!",
+        "dark:[&_.discovery-posting-money_span]:text-muted-foreground! dark:[&_.discovery-posting-plan]:text-muted-foreground! dark:[&_.discovery-posting-cost]:bg-muted! dark:[&_.discovery-posting-cost_span]:text-muted-foreground! dark:[&_.discovery-posting-cost_small]:text-muted-foreground!",
+        "dark:[&_.discovery-posting-bottom]:text-muted-foreground! dark:[&_.discovery-posting-bottom>a]:text-primary! dark:[&_.discovery-live-status]:text-muted-foreground! dark:[&_.discovery-live-status.is-live]:text-[#6ee7b7]!",
+        "dark:[&_.discovery-map-state]:bg-muted! dark:[&_.discovery-map-state_p]:text-muted-foreground! dark:[&_.discovery-map-loading]:bg-muted! dark:[&_.discovery-map-privacy]:bg-card! dark:[&_.discovery-map-privacy]:text-muted-foreground!",
+        "dark:[&_.discovery-place-results_strong]:text-foreground! dark:[&_.discovery-place-results_small]:text-muted-foreground! dark:[&_.discovery-place-results_p]:text-muted-foreground! dark:[&_.discovery-place-caption]:text-muted-foreground!",
+        "dark:[&_.discovery-recent-posts_article]:border-border! dark:[&_.discovery-recent-posts_small]:text-muted-foreground! dark:[&_.discovery-recent-posts_p]:text-muted-foreground!",
+      ].join(" ")}
+    >
       <header className="discovery-heading">
         <div>
           <h1>Meet your lending community.</h1>

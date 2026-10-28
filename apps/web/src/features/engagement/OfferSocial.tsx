@@ -70,7 +70,11 @@ export function OfferSocial({ offerId }: { offerId: string }) {
         method,
         ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       });
-      await refresh();
+      await Promise.all([
+        refresh(),
+        client.invalidateQueries({ queryKey: ["offers"] }),
+        client.invalidateQueries({ queryKey: ["offer-likes", offerId] }),
+      ]);
       setPicker(false);
       if (path.endsWith("/reaction")) restoreReactionFocus.current = true;
     } catch (problem) {

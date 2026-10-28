@@ -72,6 +72,7 @@ import {
 import { cents, date, label, money, text } from "../lib/format";
 import { DiscoveryWorkspace } from "./discovery/DiscoveryWorkspace";
 import { OfferCalculator } from "./engagement/OfferCalculator";
+import { OfferLikeButton } from "./engagement/OfferLikeButton";
 import { OfferSocial } from "./engagement/OfferSocial";
 import { CoBorrowerApplicationField } from "./connections/CoBorrowerApplicationField";
 import type { CoarseArea, DiscoveryOffer } from "./discovery/types";
@@ -87,12 +88,14 @@ interface DiscoveryPage {
     max_amount: string;
     terms: Offer["terms"];
     cost_example: Offer["disclosure"];
+    likes?: Offer["likes"];
   }[];
   next_cursor: string | null;
 }
 export function useOffers() {
+  const { session } = useSession();
   const query = useInfiniteQuery({
-    queryKey: ["offers"],
+    queryKey: ["offers", session?.member?.id ?? "guest"],
     refetchOnWindowFocus: false,
     initialPageParam: "",
     queryFn: ({ pageParam }) =>
@@ -109,6 +112,7 @@ export function useOffers() {
           ({
             id: row.id,
             title: row.title,
+            likes: row.likes,
             lender: {
               id: row.lender.handle,
               handle: row.lender.handle,
@@ -137,7 +141,7 @@ export function useOffers() {
 }
 export function OfferRow({ offer }: { offer: Offer }) {
   return (
-    <article className="offer-row">
+    <article className="offer-row border-border! bg-card! text-foreground transition-colors hover:bg-muted! [&_.offer-title]:text-foreground! [&_.offer-title:hover]:text-primary! [&_.offer-terms_strong]:text-foreground! [&_.offer-terms_span]:text-muted-foreground! [&_.offer-terms_small]:text-muted-foreground! [&_.person_small]:text-muted-foreground! [&_.offer-cost-example]:border-border! [&_.offer-cost-example_span]:text-muted-foreground! [&_.offer-cost-example_small]:text-muted-foreground! [&_.offer-bottom]:border-border! [&_.offer-bottom_span]:text-muted-foreground! [&_.offer-bottom>a]:text-primary!">
       <div className="offer-person">
         <PersonName
           person={offer.lender}
@@ -177,6 +181,7 @@ export function OfferRow({ offer }: { offer: Offer }) {
         </strong>
         <small>Principal → total repayment · exact dates in full terms</small>
       </div>
+      <OfferLikeButton offerId={offer.id} initial={offer.likes} />
       <div className="offer-bottom">
         <span>
           <MapPin size={14} />

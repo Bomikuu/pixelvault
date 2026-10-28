@@ -64,6 +64,16 @@ function PrivateValue() {
   );
 }
 
+const podiumTreatments = [
+  "border-[#e4b442] bg-[#fff6d9] dark:border-[#806225] dark:bg-[#352b16]",
+  "border-[#9db5d2] bg-[#edf4fc] dark:border-[#4a6687] dark:bg-[#1b2b40]",
+  "border-[#d6a086] bg-[#fff0e7] dark:border-[#8c5b40] dark:bg-[#38261f]",
+];
+const medalTreatments = [
+  "bg-[#f4c64d] text-[#503800] shadow-[0_5px_12px_-5px_#8a6000]",
+  "bg-[#c6d9ef] text-[#243f60] shadow-[0_5px_12px_-5px_#45658a]",
+  "bg-[#e6b197] text-[#5b2e1b] shadow-[0_5px_12px_-5px_#88533b]",
+];
 function Podium({ entries }: { entries: Entry[] }) {
   return (
     <ol
@@ -74,7 +84,7 @@ function Podium({ entries }: { entries: Entry[] }) {
         <li
           key={entry.handle}
           data-podium-member={entry.handle}
-          className={`group relative min-w-0 rounded-[14px] border border-border bg-card p-5 transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-primary hover:shadow-[0_12px_28px_-16px_rgba(8,102,255,0.38)] focus-within:border-primary motion-reduce:transform-none ${index === 0 ? "lg:col-start-2 lg:row-start-1 lg:pt-7" : index === 1 ? "lg:col-start-1 lg:row-start-1" : "lg:col-start-3 lg:row-start-1"}`}
+          className={`group relative min-w-0 rounded-[14px] border p-5 ${podiumTreatments[index]} transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-primary hover:shadow-[0_12px_28px_-16px_rgba(8,102,255,0.38)] focus-within:border-primary motion-reduce:transform-none ${index === 0 ? "lg:col-start-2 lg:row-start-1 lg:pt-7" : index === 1 ? "lg:col-start-1 lg:row-start-1" : "lg:col-start-3 lg:row-start-1"}`}
         >
           <div className="flex items-start justify-between gap-3">
             <div className="flex min-w-0 items-center gap-3">
@@ -88,15 +98,15 @@ function Podium({ entries }: { entries: Entry[] }) {
               <MemberName entry={entry} />
             </div>
             <span
-              className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-bold text-muted-foreground"
-              aria-label={`Rank ${entry.rank}`}
+              className={`inline-flex size-12 shrink-0 items-center justify-center rounded-full border-2 border-white/70 text-xl font-extrabold ${medalTreatments[index]}`}
+              aria-label={`Leaderboard position ${index + 1}`}
             >
-              {entry.rank}
+              {index + 1}
             </span>
           </div>
-          {entry.rank === 1 && (
+          {index === 0 && (
             <Crown
-              className="absolute -top-4 right-5 size-7 fill-card text-primary transition-transform duration-200 group-hover:-rotate-6 motion-reduce:transform-none"
+              className="absolute -top-4 right-5 size-7 fill-[#f4c64d] text-[#8a6000] dark:text-[#f4c64d] transition-transform duration-200 group-hover:-rotate-6 motion-reduce:transform-none"
               aria-hidden="true"
             />
           )}
@@ -318,7 +328,8 @@ export function Leaderboard() {
               </span>
             </div>
             <p className="mt-4! text-xs text-muted-foreground">
-              Ranked by community reputation · Equal scores share a rank
+              Ordered by community reputation. Equal XP scores use a fixed
+              server order; positions do not imply different XP.
             </p>
             {rows.length ? (
               <>
@@ -349,7 +360,7 @@ export function Leaderboard() {
                               scope="col"
                               className="bg-muted px-3 py-3 text-[11px] text-muted-foreground"
                             >
-                              Rank
+                              Position
                             </TableHead>
                             <TableHead
                               scope="col"
@@ -390,7 +401,7 @@ export function Leaderboard() {
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {remaining.map((entry) => (
+                          {remaining.map((entry, index) => (
                             <TableRow
                               key={entry.handle}
                               className="group border-border transition-colors duration-150 hover:bg-accent/60 focus-within:bg-accent/60"
@@ -398,9 +409,9 @@ export function Leaderboard() {
                               <TableCell className="px-3 py-4">
                                 <span
                                   className="font-bold text-muted-foreground"
-                                  aria-label={`Rank ${entry.rank}`}
+                                  aria-label={`Leaderboard position ${index + 4}`}
                                 >
-                                  {entry.rank}
+                                  {index + 4}
                                 </span>
                               </TableCell>
                               <TableCell className="px-3">
@@ -441,6 +452,7 @@ export function Leaderboard() {
                               </TableCell>
                               <TableCell className="px-3">
                                 <BadgeStack
+                                  compact
                                   badges={entry.badges ?? []}
                                   handle={entry.handle}
                                   name={entry.display_name}

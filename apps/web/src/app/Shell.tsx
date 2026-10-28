@@ -7,12 +7,10 @@ import {
   useNavigate,
 } from "react-router-dom";
 import {
-  ArrowLeftRight,
   ArrowUpRight,
   Bell,
   BookOpen,
   ChartNoAxesCombined,
-  ChevronDown,
   CircleHelp,
   Compass,
   FileCheck2,
@@ -20,14 +18,13 @@ import {
   HandCoins,
   LayoutDashboard,
   LogOut,
-  Mail,
   Menu,
   MessageSquare,
   PanelLeftClose,
+  PanelLeftOpen,
   Plus,
   Settings2,
   ShieldCheck,
-  Sparkles,
   Users,
   Trophy,
   Wallet,
@@ -39,7 +36,9 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  DialogTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from "@pixelvault/ui";
 import { useSession } from "./session";
 import { ActionLink, ErrorNotice, Loading, MemberAvatar } from "../components";
@@ -72,196 +71,304 @@ const admin = [
   ["/admin/reporting", "Reporting", ChartNoAxesCombined],
   ["/admin/audit", "Audit history", BookOpen],
 ] as const;
+
 export function Shell() {
   const { session, loading, error, signOut } = useSession();
   const location = useLocation(),
     navigate = useNavigate();
   const [menu, setMenu] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem("pixelvault-sidebar-collapsed") === "true";
+    } catch {
+      return false;
+    }
+  });
   const member = session?.member;
   const isAdmin = location.pathname.startsWith("/admin");
-  const active =
-    location.pathname.startsWith("/explore") ||
-    location.pathname.startsWith("/offers") ||
-    location.pathname.startsWith("/members") ||
-    location.pathname.startsWith("/how-it-works") ||
-    location.pathname.startsWith("/leaderboard")
-      ? "community"
-      : "workspace";
-  const navigation = (
+  const active = [
+    "/explore",
+    "/offers",
+    "/members",
+    "/how-it-works",
+    "/leaderboard",
+    "/learn",
+  ].some((path) => location.pathname.startsWith(path))
+    ? "community"
+    : "workspace";
+  function toggleSidebar() {
+    setCollapsed((value) => {
+      try {
+        localStorage.setItem("pixelvault-sidebar-collapsed", String(!value));
+      } catch {
+        /* Session choice remains available. */
+      }
+      return !value;
+    });
+  }
+  const navigation = (compact: boolean, mobile = false) => (
     <>
-      <div className="sidebar-top">
-        <Link to="/explore" aria-label="PixelVault home">
-          <BrandMark className="dark:[&_.brand-word]:text-foreground!" />
-        </Link>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="mobile-only"
-          aria-label="Close navigation"
+      <div
+        className={`flex h-20 shrink-0 items-center ${compact ? "justify-center px-3" : "justify-between px-5"}`}
+      >
+        <Link
+          to="/explore"
+          aria-label="PixelVault home"
           onClick={() => setMenu(false)}
         >
-          <X />
-        </Button>
+          <BrandMark
+            compact={compact}
+            className="dark:[&_.brand-word]:text-foreground!"
+          />
+        </Link>
+        {mobile && (
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Close navigation"
+            onClick={() => setMenu(false)}
+          >
+            <X />
+          </Button>
+        )}
       </div>
-      <div className="area-switch dark:bg-muted! dark:border-border! dark:[&_a]:text-muted-foreground! dark:[&_.selected]:bg-accent! dark:[&_.selected]:text-foreground!">
-        <NavLink
-          to="/explore"
-          className={active === "community" && !isAdmin ? "selected" : ""}
-        >
-          Community
-        </NavLink>
-        <NavLink
-          to="/dashboard"
-          className={active === "workspace" && !isAdmin ? "selected" : ""}
-        >
-          My dashboard
-        </NavLink>
-      </div>
-      <nav aria-label={isAdmin ? "Administration" : "Main navigation"}>
+      <nav
+        id={mobile ? "mobile-navigation" : "desktop-navigation"}
+        className="min-h-0 flex-1 overflow-y-auto px-3 pb-4"
+        aria-label={isAdmin ? "Administration" : "Main navigation"}
+      >
         {(isAdmin
           ? [["Administration", admin]]
           : [
-              ["DISCOVER", community],
-              ["YOUR WORKSPACE", workspace],
+              ["Discover", community],
+              ["Your workspace", workspace],
             ]
         ).map(([heading, items]) => (
-          <div className="nav-group" key={String(heading)}>
-            <p className="dark:text-muted-foreground!">{String(heading)}</p>
+          <div className="mt-5 first:mt-2" key={String(heading)}>
+            <p
+              className={`mb-2! px-3 text-[10px] font-extrabold tracking-widest text-muted-foreground uppercase ${compact ? "sr-only" : ""}`}
+            >
+              {String(heading)}
+            </p>
             {(items as typeof community | typeof workspace | typeof admin).map(
-              ([path, name, Icon]) => (
-                <NavLink
-                  key={path}
-                  to={path}
-                  end={path === "/dashboard"}
-                  onClick={() => setMenu(false)}
-                  className={({ isActive }) =>
-                    `nav-item dark:text-muted-foreground! dark:hover:bg-accent! dark:hover:text-foreground! ${isActive ? "active dark:bg-accent! dark:text-primary!" : ""}`
-                  }
-                >
-                  <Icon size={18} />
-                  <span>{name}</span>
-                  {name === "Explore offers" && (
-                    <span className="nav-indicator" />
-                  )}
-                </NavLink>
-              ),
+              ([path, name, Icon]) => {
+                const item = (
+                  <NavLink
+                    key={path}
+                    to={path}
+                    end={path === "/dashboard"}
+                    aria-label={compact ? name : undefined}
+                    onClick={() => setMenu(false)}
+                    className={({ isActive }) =>
+                      `relative my-1 flex min-h-11 items-center gap-3 rounded-xl px-3 text-xs font-bold transition-colors focus-visible:outline-2 focus-visible:outline-ring ${compact ? "justify-center" : ""} ${isActive ? "bg-accent text-primary! shadow-[inset_0_0_0_1px_var(--color-border)]" : "text-muted-foreground! hover:bg-muted hover:text-foreground!"}`
+                    }
+                  >
+                    <Icon className="size-[18px] shrink-0" aria-hidden="true" />
+                    {!compact && <span>{name}</span>}
+                  </NavLink>
+                );
+                return compact ? (
+                  <Tooltip key={path}>
+                    <TooltipTrigger asChild>{item}</TooltipTrigger>
+                    <TooltipContent side="right">{name}</TooltipContent>
+                  </Tooltip>
+                ) : (
+                  item
+                );
+              },
             )}
           </div>
         ))}
       </nav>
-      <div className="sidebar-bottom">
-        <div className="learning-teaser dark:bg-muted! dark:border-border! dark:[&_p]:text-muted-foreground! dark:[&_a]:text-primary!">
-          <span className="learning-icon">
-            <BookOpen size={19} />
-          </span>
-          <strong>Build your next chapter.</strong>
-          <p>A little knowledge makes a meaningful difference.</p>
-          <Link to="/learn" onClick={() => setMenu(false)}>
-            Visit the learning room <ArrowUpRight size={14} />
+      <div className="shrink-0 border-t border-border p-3">
+        {!compact && (
+          <Link
+            to="/learn"
+            onClick={() => setMenu(false)}
+            className="mb-3 flex items-start gap-3 rounded-xl bg-accent p-3 text-foreground! transition-colors hover:bg-muted"
+          >
+            <BookOpen
+              className="mt-0.5 size-5 shrink-0 text-primary"
+              aria-hidden="true"
+            />
+            <span>
+              <strong className="block text-xs">
+                Build your next chapter.
+              </strong>
+              <span className="mt-1 block text-[11px] leading-relaxed text-muted-foreground">
+                Visit the learning room{" "}
+                <ArrowUpRight className="inline size-3" />
+              </span>
+            </span>
           </Link>
-        </div>
+        )}
         {member?.is_staff && (
-          <NavLink
-            className="nav-item"
+          <Link
+            title="Administration"
+            aria-label="Administration"
             to={isAdmin ? "/dashboard" : "/admin/queues"}
+            className="flex min-h-11 items-center justify-center gap-3 rounded-xl text-xs text-muted-foreground! hover:bg-accent"
           >
             <Settings2 size={18} />
-            {isAdmin ? "Member workspace" : "Administration"}
-            <ArrowUpRight size={14} />
-          </NavLink>
+            {!compact && (isAdmin ? "Member workspace" : "Administration")}
+          </Link>
         )}
         <Link
-          className="nav-item help-link dark:text-muted-foreground! dark:hover:bg-accent!"
           to="/help"
+          onClick={() => setMenu(false)}
+          aria-label="Help & private support"
+          title="Help & private support"
+          className={`flex min-h-11 items-center gap-3 rounded-xl px-3 text-xs font-semibold text-muted-foreground! hover:bg-accent ${compact ? "justify-center" : ""}`}
         >
           <CircleHelp size={18} />
-          Help & private support
+          {!compact && "Help & private support"}
         </Link>
         <Link
-          className="sidebar-profile dark:border-border! dark:[&_small]:text-muted-foreground!"
           to={member ? "/profile" : "/sign-in"}
           onClick={() => setMenu(false)}
+          aria-label={member ? "My profile" : "Sign in"}
+          className={`mt-2 flex items-center gap-3 rounded-xl p-2 text-foreground! hover:bg-accent ${compact ? "justify-center" : ""}`}
         >
           <MemberAvatar
             name={member?.display_name || "Guest"}
             avatarKey={member?.avatar_key}
             reputation={member?.community_reputation}
             photoUrl={member?.photo_url}
+            size={36}
           />
-          <div>
-            <strong>{member?.display_name || "Welcome to PixelVault"}</strong>
-            <small>
-              {member ? "Personal account" : "Sign in to your community"}
-            </small>
-          </div>
-          <ChevronDown size={15} />
+          {!compact && (
+            <span className="min-w-0">
+              <strong className="block truncate text-xs">
+                {member?.display_name || "Welcome to PixelVault"}
+              </strong>
+              <span className="mt-1 block text-[10px] text-muted-foreground">
+                {member ? "Personal account" : "Sign in to your community"}
+              </span>
+            </span>
+          )}
         </Link>
       </div>
     </>
   );
   return (
     <div
-      className={`app-shell bg-background text-foreground ${legacyThemeClasses} ${location.pathname === "/explore" && new URLSearchParams(location.search).get("view") !== "list" ? "is-map-workspace" : ""}`}
+      className={`min-h-dvh bg-background text-foreground ${legacyThemeClasses} ${location.pathname === "/explore" && new URLSearchParams(location.search).get("view") !== "list" ? "is-map-workspace" : ""}`}
     >
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
-      <aside className="sidebar dark:bg-card! dark:border-border!">
-        {navigation}
+      <aside
+        className={`fixed inset-y-0 left-0 z-30 hidden flex-col border-r border-border bg-card transition-[width] duration-300 ease-out motion-reduce:transition-none lg:flex ${collapsed ? "w-20" : "w-[244px]"}`}
+      >
+        {navigation(collapsed)}
       </aside>
       <Dialog open={menu} onOpenChange={setMenu}>
-        <DialogContent className="mobile-drawer" aria-describedby={undefined}>
+        <DialogContent
+          className="mobile-drawer flex! flex-col! bg-card! p-0!"
+          aria-describedby={undefined}
+          showCloseButton={false}
+        >
           <DialogTitle className="sr-only">Navigation</DialogTitle>
-          {navigation}
+          {navigation(false, true)}
         </DialogContent>
       </Dialog>
-      <div className="app-body">
-        <div className="environment-strip dark:bg-muted! dark:text-muted-foreground! dark:border-border!">
-          <span className="environment-dot" />
+      <div
+        className={`flex min-h-dvh min-w-0 flex-col pb-16 transition-[margin-left] duration-300 ease-out motion-reduce:transition-none lg:pb-0 ${collapsed ? "lg:ml-20" : "lg:ml-[244px]"}`}
+      >
+        <div className="flex min-h-7 flex-wrap items-center justify-center gap-x-2 gap-y-1 border-b border-border bg-accent px-3 py-1 text-center text-[10px] text-muted-foreground">
+          <span
+            className="size-1.5 rounded-full bg-primary"
+            aria-hidden="true"
+          />
           <strong>Test environment</strong>
           <span>Synthetic community. No real funds move.</span>
-          <Link to="/help#test-mode">
-            About test mode <ArrowUpRight size={12} />
+          <Link className="hidden text-primary! sm:inline" to="/help#test-mode">
+            About test mode <ArrowUpRight className="inline size-3" />
           </Link>
         </div>
-        <header className="topbar dark:bg-card! dark:border-border! dark:text-foreground!">
-          <div className="topbar-title">
+        <header className="flex flex-wrap items-center justify-between gap-x-3 gap-y-3 border-b border-border bg-card px-4 py-3 lg:px-6">
+          <div className="flex items-center gap-3">
             <Button
               size="icon"
               variant="ghost"
-              className="mobile-only"
+              className="hidden! lg:inline-flex!"
+              aria-label={
+                collapsed ? "Expand navigation" : "Collapse navigation"
+              }
+              aria-expanded={!collapsed}
+              aria-controls="desktop-navigation"
+              onClick={toggleSidebar}
+            >
+              {collapsed ? (
+                <PanelLeftOpen size={20} />
+              ) : (
+                <PanelLeftClose size={20} />
+              )}
+            </Button>
+            <Button
+              size="icon"
+              variant="ghost"
+              className="lg:hidden!"
               aria-label="Open navigation"
               onClick={() => setMenu(true)}
             >
               <Menu />
             </Button>
-            <span className="max-[380px]:hidden dark:text-muted-foreground!">
-              {isAdmin
-                ? "Operations"
-                : active === "community"
-                  ? "Your lending community"
-                  : "Your private workspace"}
-            </span>
+            <nav
+              aria-label="Platform area"
+              className="hidden items-center gap-1 rounded-2xl border border-border bg-muted p-1 sm:flex"
+            >
+              {[
+                {
+                  to: "/explore",
+                  label: "Community",
+                  Icon: Users,
+                  selected: active === "community" && !isAdmin,
+                },
+                {
+                  to: "/dashboard",
+                  label: "My dashboard",
+                  Icon: LayoutDashboard,
+                  selected: active === "workspace" && !isAdmin,
+                },
+              ].map(({ to, label, Icon, selected }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  aria-current={selected ? "true" : undefined}
+                  className={`flex min-h-10 items-center gap-2 rounded-xl px-4 text-xs font-extrabold transition-[background-color,color,box-shadow] ${selected ? "bg-primary text-primary-foreground! shadow-sm" : "text-muted-foreground! hover:bg-card hover:text-foreground!"}`}
+                >
+                  <Icon size={16} aria-hidden="true" />
+                  {label}
+                </Link>
+              ))}
+            </nav>
           </div>
-          <div className="topbar-actions">
+          <div className="flex items-center gap-1 sm:gap-2">
             <ThemeToggle />
-            <Link to="/verification" className="verification-link">
+            <Link
+              to="/verification"
+              className="hidden min-h-10 items-center gap-2 rounded-xl px-3 text-xs font-bold text-foreground! hover:bg-accent xl:flex"
+            >
               <ShieldCheck size={16} />
               Verification center
             </Link>
-            <Link className="icon-link" to="/inbox" aria-label="Open messages">
-              <Bell size={19} />
-            </Link>
+            <Button asChild variant="ghost" size="icon">
+              <Link to="/inbox" aria-label="Open messages">
+                <Bell size={19} />
+              </Link>
+            </Button>
             {member ? (
               <>
-                <MemberAvatar
-                  name={member.display_name}
-                  avatarKey={member.avatar_key}
-                  reputation={member.community_reputation}
-                  photoUrl={member.photo_url}
-                  className="topbar-avatar"
-                  size={34}
-                />
+                <Link to="/profile" aria-label="My profile">
+                  <MemberAvatar
+                    name={member.display_name}
+                    avatarKey={member.avatar_key}
+                    reputation={member.community_reputation}
+                    photoUrl={member.photo_url}
+                    size={34}
+                  />
+                </Link>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -280,8 +387,40 @@ export function Shell() {
               </ActionLink>
             )}
           </div>
+          <nav
+            aria-label="Platform area"
+            className="flex w-full items-center gap-1 rounded-2xl border border-border bg-muted p-1 sm:hidden"
+          >
+            {[
+              {
+                to: "/explore",
+                label: "Community",
+                Icon: Users,
+                selected: active === "community" && !isAdmin,
+              },
+              {
+                to: "/dashboard",
+                label: "My dashboard",
+                Icon: LayoutDashboard,
+                selected: active === "workspace" && !isAdmin,
+              },
+            ].map(({ to, label, Icon, selected }) => (
+              <Link
+                key={to}
+                to={to}
+                aria-current={selected ? "true" : undefined}
+                className={`flex min-h-10 flex-1 items-center justify-center gap-2 rounded-xl px-2 text-xs font-extrabold transition-colors ${selected ? "bg-primary text-primary-foreground! shadow-sm" : "text-muted-foreground! hover:bg-card"}`}
+              >
+                <Icon size={16} aria-hidden="true" />
+                {label}
+              </Link>
+            ))}
+          </nav>
         </header>
-        <main id="main-content" className="main-content">
+        <main
+          id="main-content"
+          className="main-content max-w-none! px-4! py-6! lg:px-6!"
+        >
           {error && <ErrorNotice error={error} />}
           {loading ? (
             <Loading text="Connecting to your community…" />
@@ -298,34 +437,34 @@ export function Shell() {
             </>
           )}
         </main>
-        <footer className="app-footer dark:text-muted-foreground! dark:border-border!">
-          <span>
-            PixelVault <span aria-hidden="true">·</span> Borrow today. Build
-            tomorrow.
-          </span>
+        <footer className="flex flex-wrap justify-between gap-3 border-t border-border px-4 py-5 text-[11px] text-muted-foreground lg:px-6">
+          <span>PixelVault · Borrow today. Build tomorrow.</span>
           <Link to="/help#privacy">Privacy & community guidelines</Link>
         </footer>
       </div>
       <nav
-        className="mobile-bottom dark:bg-card! dark:border-border! dark:text-muted-foreground! dark:[&_a]:text-muted-foreground! dark:[&_.active]:text-primary!"
+        className="fixed inset-x-0 bottom-0 z-30 grid h-16 grid-cols-4 border-t border-border bg-card lg:hidden"
         aria-label="Mobile navigation"
       >
-        <NavLink to="/explore">
-          <Compass size={20} />
-          <span>Explore</span>
-        </NavLink>
-        <NavLink to="/dashboard">
-          <LayoutDashboard size={20} />
-          <span>Dashboard</span>
-        </NavLink>
-        <NavLink to="/inbox">
-          <MessageSquare size={20} />
-          <span>Inbox</span>
-        </NavLink>
-        <NavLink to="/profile">
-          <Users size={20} />
-          <span>Profile</span>
-        </NavLink>
+        {(
+          [
+            ["/explore", "Explore", Compass],
+            ["/dashboard", "Dashboard", LayoutDashboard],
+            ["/inbox", "Inbox", MessageSquare],
+            ["/profile", "Profile", Users],
+          ] as const
+        ).map(([to, label, Icon]) => (
+          <NavLink
+            key={String(to)}
+            to={String(to)}
+            className={({ isActive }) =>
+              `flex flex-col items-center justify-center gap-1 text-[10px] font-bold transition-colors hover:bg-accent ${isActive ? "text-primary!" : "text-muted-foreground!"}`
+            }
+          >
+            <Icon size={20} aria-hidden="true" />
+            <span>{String(label)}</span>
+          </NavLink>
+        ))}
       </nav>
     </div>
   );

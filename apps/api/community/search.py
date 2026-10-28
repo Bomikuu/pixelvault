@@ -1,5 +1,5 @@
 from config.errors import DomainError
-from django.db.models import F
+from django.db.models import Count, F
 from django.utils import timezone
 
 from .locations import coarse_area
@@ -48,8 +48,26 @@ def search_offers(*, viewer_id=None, filters=None, cursor=None):
             offers = offers.filter(terms__installment_count=int(filters["term"]))
         except (TypeError, ValueError):
             raise DomainError("invalid_filters", "Term must be an installment count.")
+    from engagement.models import OfferLike
+
+    visible = list(offers.order_by("-created_at")[:1000])
+    active_likes = OfferLike.objects.filter(
+        offer_id__in=[offer.id for offer in visible],
+        liked=True,
+        member__is_active=True,
+        member__suspended=False,
+    )
+    like_counts = {
+        row["offer_id"]: row["count"]
+        for row in active_likes.values("offer_id").annotate(count=Count("id"))
+    }
+    liked_ids = (
+        set(active_likes.filter(member_id=viewer_id).values_list("offer_id", flat=True))
+        if viewer_id
+        else set()
+    )
     rows = []
-    for offer in offers.order_by("-created_at")[:1000]:
+    for offer in visible:
         try:
             area = coarse_area(area_code=offer.area)
         except DomainError:
@@ -58,6 +76,7 @@ def search_offers(*, viewer_id=None, filters=None, cursor=None):
             {
                 "id": str(offer.id),
                 "title": offer.title,
+                "likes": {"count": like_counts.get(offer.id, 0), "liked": offer.id in liked_ids},
                 "lender": public_identity(offer.lender),
                 "area": area,
                 "declared_available_amount": str(

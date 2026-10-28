@@ -47,12 +47,15 @@ class DiscoveryView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request):
-        return Response(
+        response = Response(
             search_offers(
                 viewer_id=request.user.pk if request.user.is_authenticated else None,
                 filters=request.query_params.dict(),
             )
         )
+
+        response["Cache-Control"] = "private, no-store"
+        return response
 
 
 class PublicProfileView(APIView):

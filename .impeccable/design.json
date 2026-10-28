@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-28T09:25:21.844313+00:00",
+  "generatedAt": "2026-10-28T10:02:42.654114+00:00",
   "title": "Design System: PixelVault",
   "extensions": {
     "colorMeta": {
@@ -31,18 +31,285 @@
       "popover-dark": {
         "role": "neutral",
         "displayName": "Raised navy popover"
+      },
+      "podium-gold-surface-light": {
+        "role": "tertiary",
+        "displayName": "Podium gold surface light",
+        "tonalRamp": [
+          "oklch(15% 0.0390 92.73)",
+          "oklch(27% 0.0390 92.73)",
+          "oklch(38% 0.0390 92.73)",
+          "oklch(49% 0.0390 92.73)",
+          "oklch(61% 0.0390 92.73)",
+          "oklch(72% 0.0390 92.73)",
+          "oklch(84% 0.0390 92.73)",
+          "oklch(95% 0.0390 92.73)"
+        ]
+      },
+      "podium-gold-border-light": {
+        "role": "tertiary",
+        "displayName": "Podium gold border light",
+        "tonalRamp": [
+          "oklch(15% 0.1387 85.28)",
+          "oklch(27% 0.1387 85.28)",
+          "oklch(38% 0.1387 85.28)",
+          "oklch(49% 0.1387 85.28)",
+          "oklch(61% 0.1387 85.28)",
+          "oklch(72% 0.1387 85.28)",
+          "oklch(84% 0.1387 85.28)",
+          "oklch(95% 0.1387 85.28)"
+        ]
+      },
+      "podium-gold-surface-dark": {
+        "role": "tertiary",
+        "displayName": "Podium gold surface dark",
+        "tonalRamp": [
+          "oklch(15% 0.0370 84.74)",
+          "oklch(27% 0.0370 84.74)",
+          "oklch(38% 0.0370 84.74)",
+          "oklch(49% 0.0370 84.74)",
+          "oklch(61% 0.0370 84.74)",
+          "oklch(72% 0.0370 84.74)",
+          "oklch(84% 0.0370 84.74)",
+          "oklch(95% 0.0370 84.74)"
+        ]
+      },
+      "podium-gold-border-dark": {
+        "role": "tertiary",
+        "displayName": "Podium gold border dark",
+        "tonalRamp": [
+          "oklch(15% 0.0868 82.18)",
+          "oklch(27% 0.0868 82.18)",
+          "oklch(38% 0.0868 82.18)",
+          "oklch(49% 0.0868 82.18)",
+          "oklch(61% 0.0868 82.18)",
+          "oklch(72% 0.0868 82.18)",
+          "oklch(84% 0.0868 82.18)",
+          "oklch(95% 0.0868 82.18)"
+        ]
+      },
+      "podium-silver-surface-light": {
+        "role": "tertiary",
+        "displayName": "Podium silver surface light",
+        "tonalRamp": [
+          "oklch(15% 0.0131 251.56)",
+          "oklch(27% 0.0131 251.56)",
+          "oklch(38% 0.0131 251.56)",
+          "oklch(49% 0.0131 251.56)",
+          "oklch(61% 0.0131 251.56)",
+          "oklch(72% 0.0131 251.56)",
+          "oklch(84% 0.0131 251.56)",
+          "oklch(95% 0.0131 251.56)"
+        ]
+      },
+      "podium-silver-border-light": {
+        "role": "tertiary",
+        "displayName": "Podium silver border light",
+        "tonalRamp": [
+          "oklch(15% 0.0495 253.30)",
+          "oklch(27% 0.0495 253.30)",
+          "oklch(38% 0.0495 253.30)",
+          "oklch(49% 0.0495 253.30)",
+          "oklch(61% 0.0495 253.30)",
+          "oklch(72% 0.0495 253.30)",
+          "oklch(84% 0.0495 253.30)",
+          "oklch(95% 0.0495 253.30)"
+        ]
+      },
+      "podium-silver-surface-dark": {
+        "role": "tertiary",
+        "displayName": "Podium silver surface dark",
+        "tonalRamp": [
+          "oklch(15% 0.0444 255.58)",
+          "oklch(27% 0.0444 255.58)",
+          "oklch(38% 0.0444 255.58)",
+          "oklch(49% 0.0444 255.58)",
+          "oklch(61% 0.0444 255.58)",
+          "oklch(72% 0.0444 255.58)",
+          "oklch(84% 0.0444 255.58)",
+          "oklch(95% 0.0444 255.58)"
+        ]
+      },
+      "podium-silver-border-dark": {
+        "role": "tertiary",
+        "displayName": "Podium silver border dark",
+        "tonalRamp": [
+          "oklch(15% 0.0625 253.05)",
+          "oklch(27% 0.0625 253.05)",
+          "oklch(38% 0.0625 253.05)",
+          "oklch(49% 0.0625 253.05)",
+          "oklch(61% 0.0625 253.05)",
+          "oklch(72% 0.0625 253.05)",
+          "oklch(84% 0.0625 253.05)",
+          "oklch(95% 0.0625 253.05)"
+        ]
+      },
+      "podium-bronze-surface-light": {
+        "role": "tertiary",
+        "displayName": "Podium bronze surface light",
+        "tonalRamp": [
+          "oklch(15% 0.0202 53.26)",
+          "oklch(27% 0.0202 53.26)",
+          "oklch(38% 0.0202 53.26)",
+          "oklch(49% 0.0202 53.26)",
+          "oklch(61% 0.0202 53.26)",
+          "oklch(72% 0.0202 53.26)",
+          "oklch(84% 0.0202 53.26)",
+          "oklch(95% 0.0202 53.26)"
+        ]
+      },
+      "podium-bronze-border-light": {
+        "role": "tertiary",
+        "displayName": "Podium bronze border light",
+        "tonalRamp": [
+          "oklch(15% 0.0741 46.83)",
+          "oklch(27% 0.0741 46.83)",
+          "oklch(38% 0.0741 46.83)",
+          "oklch(49% 0.0741 46.83)",
+          "oklch(61% 0.0741 46.83)",
+          "oklch(72% 0.0741 46.83)",
+          "oklch(84% 0.0741 46.83)",
+          "oklch(95% 0.0741 46.83)"
+        ]
+      },
+      "podium-bronze-surface-dark": {
+        "role": "tertiary",
+        "displayName": "Podium bronze surface dark",
+        "tonalRamp": [
+          "oklch(15% 0.0302 42.16)",
+          "oklch(27% 0.0302 42.16)",
+          "oklch(38% 0.0302 42.16)",
+          "oklch(49% 0.0302 42.16)",
+          "oklch(61% 0.0302 42.16)",
+          "oklch(72% 0.0302 42.16)",
+          "oklch(84% 0.0302 42.16)",
+          "oklch(95% 0.0302 42.16)"
+        ]
+      },
+      "podium-bronze-border-dark": {
+        "role": "tertiary",
+        "displayName": "Podium bronze border dark",
+        "tonalRamp": [
+          "oklch(15% 0.0760 49.33)",
+          "oklch(27% 0.0760 49.33)",
+          "oklch(38% 0.0760 49.33)",
+          "oklch(49% 0.0760 49.33)",
+          "oklch(61% 0.0760 49.33)",
+          "oklch(72% 0.0760 49.33)",
+          "oklch(84% 0.0760 49.33)",
+          "oklch(95% 0.0760 49.33)"
+        ]
+      },
+      "podium-gold-marker": {
+        "role": "tertiary",
+        "displayName": "Podium gold marker",
+        "tonalRamp": [
+          "oklch(15% 0.1446 87.71)",
+          "oklch(27% 0.1446 87.71)",
+          "oklch(38% 0.1446 87.71)",
+          "oklch(49% 0.1446 87.71)",
+          "oklch(61% 0.1446 87.71)",
+          "oklch(72% 0.1446 87.71)",
+          "oklch(84% 0.1446 87.71)",
+          "oklch(95% 0.1446 87.71)"
+        ]
+      },
+      "podium-gold-marker-ink": {
+        "role": "tertiary",
+        "displayName": "Podium gold marker ink",
+        "tonalRamp": [
+          "oklch(15% 0.0739 81.72)",
+          "oklch(27% 0.0739 81.72)",
+          "oklch(38% 0.0739 81.72)",
+          "oklch(49% 0.0739 81.72)",
+          "oklch(61% 0.0739 81.72)",
+          "oklch(72% 0.0739 81.72)",
+          "oklch(84% 0.0739 81.72)",
+          "oklch(95% 0.0739 81.72)"
+        ]
+      },
+      "podium-silver-marker": {
+        "role": "tertiary",
+        "displayName": "Podium silver marker",
+        "tonalRamp": [
+          "oklch(15% 0.0367 252.10)",
+          "oklch(27% 0.0367 252.10)",
+          "oklch(38% 0.0367 252.10)",
+          "oklch(49% 0.0367 252.10)",
+          "oklch(61% 0.0367 252.10)",
+          "oklch(72% 0.0367 252.10)",
+          "oklch(84% 0.0367 252.10)",
+          "oklch(95% 0.0367 252.10)"
+        ]
+      },
+      "podium-silver-marker-ink": {
+        "role": "tertiary",
+        "displayName": "Podium silver marker ink",
+        "tonalRamp": [
+          "oklch(15% 0.0664 254.30)",
+          "oklch(27% 0.0664 254.30)",
+          "oklch(38% 0.0664 254.30)",
+          "oklch(49% 0.0664 254.30)",
+          "oklch(61% 0.0664 254.30)",
+          "oklch(72% 0.0664 254.30)",
+          "oklch(84% 0.0664 254.30)",
+          "oklch(95% 0.0664 254.30)"
+        ]
+      },
+      "podium-bronze-marker": {
+        "role": "tertiary",
+        "displayName": "Podium bronze marker",
+        "tonalRamp": [
+          "oklch(15% 0.0717 47.35)",
+          "oklch(27% 0.0717 47.35)",
+          "oklch(38% 0.0717 47.35)",
+          "oklch(49% 0.0717 47.35)",
+          "oklch(61% 0.0717 47.35)",
+          "oklch(72% 0.0717 47.35)",
+          "oklch(84% 0.0717 47.35)",
+          "oklch(95% 0.0717 47.35)"
+        ]
+      },
+      "podium-bronze-marker-ink": {
+        "role": "tertiary",
+        "displayName": "Podium bronze marker ink",
+        "tonalRamp": [
+          "oklch(15% 0.0724 42.89)",
+          "oklch(27% 0.0724 42.89)",
+          "oklch(38% 0.0724 42.89)",
+          "oklch(49% 0.0724 42.89)",
+          "oklch(61% 0.0724 42.89)",
+          "oklch(72% 0.0724 42.89)",
+          "oklch(84% 0.0724 42.89)",
+          "oklch(95% 0.0724 42.89)"
+        ]
       }
     },
     "shadows": [
       {
         "name": "podium-hover",
         "value": "0 12px 28px -16px rgba(8,102,255,0.38)",
-        "purpose": "Blue hover elevation shared by all podium cards."
+        "purpose": "Blue hover elevation retained across gold, silver-blue and bronze podium cards."
       },
       {
         "name": "popover",
         "value": "0 12px 36px #0b142829",
         "purpose": "Canonical collection overlay."
+      },
+      {
+        "name": "podium-gold-marker",
+        "value": "0 5px 12px -5px #8a6000",
+        "purpose": "First displayed-position circle."
+      },
+      {
+        "name": "podium-silver-marker",
+        "value": "0 5px 12px -5px #45658a",
+        "purpose": "Second displayed-position circle."
+      },
+      {
+        "name": "podium-bronze-marker",
+        "value": "0 5px 12px -5px #88533b",
+        "purpose": "Third displayed-position circle."
       }
     ],
     "motion": [
@@ -60,6 +327,16 @@
         "name": "community-xp",
         "value": "560ms; 1 - (1 - progress)^3",
         "purpose": "One count-up per mounted podium member, community XP only; reduced motion and hidden documents resolve immediately. Financial amounts remain static."
+      },
+      {
+        "name": "navigation-rail",
+        "value": "300ms ease-out",
+        "purpose": "Desktop rail width and matching main margin-left; immediate with reduced motion."
+      },
+      {
+        "name": "theme-reveal",
+        "value": "500ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "One circular new-root View Transition from the theme button center to the farthest viewport corner. Reduced-motion and unsupported environments switch immediately. Source establishes intended motion; captures establish end states only."
       }
     ],
     "breakpoints": [
@@ -128,18 +405,25 @@
       "css": ".ds-field-label{display:grid;gap:8px;font:14px Manrope,sans-serif;color:var(--foreground,#0f172a)}.ds-field{border:1px solid var(--input,#8b9aaf);padding:10px 12px;border-radius:var(--radius,.625rem);color:var(--foreground,#0f172a);background:var(--card,#fff);font:inherit}.ds-field:focus-visible{outline:3px solid #cce0ff;border-color:var(--primary,#0866ff);outline-offset:1px}"
     },
     {
-      "name": "Neutral podium card",
+      "name": "Displayed podium positions",
       "kind": "card",
-      "description": "All podium positions share the same neutral card and blue hover treatment; this preview shows a private total.",
-      "html": "<article class=\"ds-podium\"><a class=\"ds-profile\" href=\"#member\">Sample member</a><span class=\"ds-caption\">Lifetime lent</span><strong class=\"ds-private\">Not shared</strong></article>",
-      "css": ".ds-podium{min-width:0;border-radius:14px;border:1px solid var(--border,#dbe3ee);background:var(--card,#fff);color:var(--foreground,#0f172a);padding:20px;font-family:Manrope,sans-serif;transition:transform 200ms,border-color 200ms,box-shadow 200ms}.ds-podium:hover{transform:translateY(-4px);border-color:var(--primary,#0866ff);box-shadow:0 12px 28px -16px rgba(8,102,255,.38)}.ds-podium:focus-within{border-color:var(--primary,#0866ff)}.ds-profile{display:block;color:var(--foreground,#0f172a);font-size:14px;font-weight:800;text-decoration:none}.ds-profile:hover,.ds-profile:focus-visible{color:var(--primary,#0866ff);text-decoration:underline}.ds-profile:focus-visible{outline:3px solid var(--ring,#0866ff);outline-offset:4px}.ds-caption{display:block;margin-top:20px;font-size:12px;color:var(--muted-foreground,#52637b)}.ds-private{display:block;margin-top:4px;font-size:12px;font-weight:500;color:var(--muted-foreground,#52637b)}@media(prefers-reduced-motion:reduce){.ds-podium:hover{transform:none}}"
+      "description": "Source-derived gold, silver-blue and bronze positional cards with stable server order and unchanged tied XP. Preview amounts remain private; these colors do not express financial quality.",
+      "html": "<article class=\"ds-podium ds-gold\"><span class=\"ds-marker\" aria-label=\"Leaderboard position 1\">1</span><a class=\"ds-profile\" href=\"#member\">Sample member</a><span class=\"ds-caption\">Lifetime lent</span><strong class=\"ds-private\">Not shared</strong></article><article class=\"ds-podium ds-silver\"><span class=\"ds-marker\" aria-label=\"Leaderboard position 2\">2</span><a class=\"ds-profile\" href=\"#member\">Sample member</a><span class=\"ds-caption\">Lifetime lent</span><strong class=\"ds-private\">Not shared</strong></article><article class=\"ds-podium ds-bronze\"><span class=\"ds-marker\" aria-label=\"Leaderboard position 3\">3</span><a class=\"ds-profile\" href=\"#member\">Sample member</a><span class=\"ds-caption\">Lifetime lent</span><strong class=\"ds-private\">Not shared</strong></article>",
+      "css": ".ds-podium{min-width:0;margin:16px 0;border-radius:14px;border:1px solid var(--ds-border);background:var(--ds-surface);color:var(--foreground,#0f172a);padding:20px;font-family:Manrope,sans-serif;transition:transform 200ms,border-color 200ms,box-shadow 200ms}.ds-podium:hover{transform:translateY(-4px);border-color:var(--primary,#0866ff);box-shadow:0 12px 28px -16px rgba(8,102,255,.38)}.ds-podium:focus-within{border-color:var(--primary,#0866ff)}.ds-gold{--ds-surface:#fff6d9;--ds-border:#e4b442;--ds-marker:#f4c64d;--ds-marker-ink:#503800;--ds-marker-shadow:#8a6000}.ds-silver{--ds-surface:#edf4fc;--ds-border:#9db5d2;--ds-marker:#c6d9ef;--ds-marker-ink:#243f60;--ds-marker-shadow:#45658a}.ds-bronze{--ds-surface:#fff0e7;--ds-border:#d6a086;--ds-marker:#e6b197;--ds-marker-ink:#5b2e1b;--ds-marker-shadow:#88533b}:host-context(.dark) .ds-gold{--ds-surface:#352b16;--ds-border:#806225}:host-context(.dark) .ds-silver{--ds-surface:#1b2b40;--ds-border:#4a6687}:host-context(.dark) .ds-bronze{--ds-surface:#38261f;--ds-border:#8c5b40}.ds-marker{float:right;display:inline-flex;width:48px;height:48px;align-items:center;justify-content:center;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:var(--ds-marker);color:var(--ds-marker-ink);box-shadow:0 5px 12px -5px var(--ds-marker-shadow);font-size:20px;font-weight:800}.ds-profile{display:block;color:var(--foreground,#0f172a);font-size:14px;font-weight:800;text-decoration:none}.ds-profile:hover,.ds-profile:focus-visible{color:var(--primary,#0866ff);text-decoration:underline}.ds-profile:focus-visible{outline:3px solid var(--ring,#0866ff);outline-offset:4px}.ds-caption{display:block;margin-top:20px;font-size:12px;color:var(--muted-foreground,#52637b)}.ds-private{display:block;margin-top:4px;font-size:12px;font-weight:500;color:var(--muted-foreground,#52637b)}@media(prefers-reduced-motion:reduce){.ds-podium:hover{transform:none}}"
     },
     {
       "name": "Badge collection surface",
       "kind": "custom",
-      "description": "Shared popover foundation with leaderboard dimensions. Actual Radix UI provides collision handling, Escape dismissal and focus return; this snippet represents its surface.",
+      "description": "Shared in-place popover foundation; collection width 384px is capped by Radix available space, while single details use 352px. Actual Radix behavior supplies collision handling, Escape dismissal and focus return. Triggers use 64px/54px artwork on podiums and 48px/40px in the table; details use 80px/68px. This snippet represents the collection surface.",
       "html": "<section class=\"ds-popover\" aria-label=\"Showcased badges\"><h3 class=\"ds-popover-title\">Showcased badges</h3><p class=\"ds-popover-copy\">Selected by the member. Current eligibility applies.</p></section>",
-      "css": ".ds-popover{width:min(320px,calc(100vw - 24px));max-height:420px;overflow-y:auto;padding:16px;background:var(--popover,#fff);color:var(--popover-foreground,#0f172a);border:1px solid var(--border,#dbe3ee);border-radius:14px;box-shadow:0 12px 36px #0b142829;font-family:Manrope,sans-serif}.ds-popover-title{margin:0;font-size:14px;font-weight:700}.ds-popover-copy{margin:4px 0 0;font-size:12px;color:var(--muted-foreground,#52637b)}"
+      "css": ".ds-popover{width:384px;max-width:var(--radix-popover-content-available-width,calc(100vw - 24px));overflow-y:auto;padding:16px;background:var(--popover,#fff);color:var(--popover-foreground,#0f172a);border:1px solid var(--border,#dbe3ee);border-radius:14px;box-shadow:0 12px 36px #0b142829;font-family:Manrope,sans-serif}.ds-popover-title{margin:0;font-size:14px;font-weight:700}.ds-popover-copy{margin:4px 0 0;font-size:12px;color:var(--muted-foreground,#52637b)}"
+    },
+    {
+      "name": "Header area switch",
+      "kind": "nav",
+      "description": "The Community/My dashboard switch lives in the header, with a full-width row below 640px. Selected segment shown; actual application links use route-aware aria-current.",
+      "html": "<nav class=\"ds-area\" aria-label=\"Platform area\"><a class=\"ds-area-link ds-selected\" href=\"#community\" aria-current=\"true\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M22 21v-2a4 4 0 0 0-3-3.87\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"/></svg>Community</a><a class=\"ds-area-link\" href=\"#dashboard\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"9\" rx=\"1\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"5\" rx=\"1\"/><rect x=\"14\" y=\"12\" width=\"7\" height=\"9\" rx=\"1\"/><rect x=\"3\" y=\"16\" width=\"7\" height=\"5\" rx=\"1\"/></svg>My dashboard</a></nav>",
+      "css": ".ds-area{display:flex;gap:4px;padding:4px;border:1px solid var(--border,#dbe3ee);border-radius:16px;background:var(--muted,#f1f5f9);font-family:Manrope,sans-serif}.ds-area-link{display:flex;min-height:40px;align-items:center;justify-content:center;gap:8px;border-radius:12px;padding:0 16px;font-size:12px;font-weight:800;color:var(--muted-foreground,#52637b);text-decoration:none;transition:background-color 150ms,color 150ms,box-shadow 150ms}.ds-area-link:hover{background:var(--card,#fff);color:var(--foreground,#0f172a)}.ds-area-link:focus-visible{outline:3px solid var(--ring,#0866ff);outline-offset:3px}.ds-selected,.ds-selected:hover{background:var(--primary,#0866ff);color:var(--primary-foreground,#fff);box-shadow:0 1px 3px 0 rgb(0 0 0 / .1),0 1px 2px -1px rgb(0 0 0 / .1)}@media(max-width:639px){.ds-area{width:100%}.ds-area-link{flex:1;padding:0 8px}}"
     }
   ],
   "narrative": {
@@ -151,9 +435,27 @@
       },
       {
         "name": "The Tailwind First Rule",
-        "body": "Express new feature layout, typography, responsive behavior, hover, focus and motion directly with Tailwind utilities in TSX. Keep semantic tokens and canonical control foundations in their existing shared stylesheets; do not add feature stylesheets when utilities express the design.",
+        "body": "Express new feature layout, typography, responsive behavior, hover, focus and motion directly with Tailwind utilities in TSX. Keep semantic tokens and canonical control foundations in their existing shared stylesheets; do not add feature stylesheets when utilities express the design. The browser root View Transition pseudo-element rules are the approved shared CSS exception for the theme reveal.",
         "section": "components"
       }
+    ],
+    "overview": "The existing blue PixelVault identity frames an information-rich community and lending workspace. Manrope, cool white or navy surfaces, and thin-ink isometric artwork remain the incumbent visual world. The connected-shell revision expands usable space and makes displayed podium positions distinct while preserving factual amounts, visible XP and member-controlled sharing.",
+    "keyCharacteristics": [
+      "Permanent blue P/keyhole identity and original derivative artwork.",
+      "Semantic light/dark working surfaces with restrained borders and interaction feedback.",
+      "Responsive navigation, in-place achievement details and factual social counts."
+    ],
+    "dos": [
+      "**Do** preserve the blue PixelVault identity and use shared semantic light/dark roles.",
+      "**Do** use the recorded shell dimensions, main padding and header area switch for connected surfaces.",
+      "**Do** keep lending aggregates consent-controlled, exact amounts static, XP ties visible and badge overflow factual.",
+      "**Do** offer badge criteria and earned dates in place through canonical controls."
+    ],
+    "donts": [
+      "**Don't** use podium colors or likes to imply trust, repayment ability or guaranteed funding.",
+      "**Don't** fabricate badge counts, activity or reputation to fill a composition.",
+      "**Don't** treat static theme captures as proof of animation behavior or historical checks as current validation.",
+      "**Don't** inherit unrelated legacy hard-coded styling or craft-floor defects as new system rules."
     ]
   }
 }
