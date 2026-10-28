@@ -236,7 +236,13 @@ Explore keeps one local/provider search field, one destination-named map/list ac
 
 Offer previews use compact divided rows with avatar/name/area, linked title, available amount, annual reducing rate and payment count. Cost examples and repeated dates/footer links are removed from map previews; complete terms and schedules remain on offer detail. The shared Like control has a compact heart/count variant in the upper-right corner, retaining saving/error/sign-in behavior. Other surfaces retain the labeled Like variant. Hover/focus still highlights grouped approximate markers without moving the camera. See [the community contract](docs/surfaces/community.md) for proximity, state and verification limits.
 
-List mode uses its own full-width toolbar and a centered scrolling column of larger offer cards, rather than a map sidebar without a map. Cards restore the principal-to-total example, labeled like action, payment plan and full-terms link. Both layouts share search, filters and feed state.
+List mode uses its own full-width toolbar, a horizontally scrollable row of suggestion pills and larger offer cards that fill the available content width. Cards restore the principal-to-total example, labeled like action, payment plan and full-terms link. Both layouts share search, filters and feed state. Suggestions apply the existing recent/rate sort, minimum available amount and actual loaded-area filters; activating one returns to the offer feed.
+
+### Overview dashboard
+
+Overview opens with a single summary card containing the borrowing/lending switch and four factual metric tiles: active principal balance excluding interest, active loans, repaid loans and distinct counterparties. The greeting and promotional link are omitted. Tiles expose hover/focus feedback and link to loan records. Metrics use the same role-scoped loan list, preserve exact centavos and show pending/unavailable states instead of false totals. Two compact tile columns support phones; four columns fit desktop.
+
+The next obligation remains the primary action. A horizontal bar chart beside it on desktop (below it on mobile) shows actual loan counts by lifecycle status, with text values and a zero baseline. Empty history explains when the chart will appear. This is a record snapshot, not a repayment trend, earned-income forecast or wallet balance. History and foundation links follow. Shared semantic colors and Tailwind utilities govern all new layout and interaction states.
 
 ### Meeting lobby and activity
 

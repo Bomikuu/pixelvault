@@ -58,3 +58,10 @@ This section supersedes the preceding right-container map-control placement and 
 The latest layout separates list and map compositions. Map mode retains the immersive compact feed, map-owned controls and heart/count previews. List mode restores broad standalone cards in a centered, independently scrolling column below a full-width toolbar. Cards show the lender avatar, available amount, annual reducing rate, payment plan, principal-to-total example, labeled like action and full-terms link. The shared search, distance filters, recent-post toggle, real live-update state and pagination persist between layouts. Clearing a place cancels pending location results in either layout.
 
 Visual-only captures at 1440px and 390px confirm the distinct list structure and responsive wrapping. No new data was manufactured, no build or automated checks were run, and no device/location permissions were granted. See `.runtime/qa/list-lobby/list-{desktop,mobile}.png` for local evidence.
+
+
+## Full-width list and suggestion pills · 2026-10-28
+
+The latest user revision removes the list-only maximum-width constraint. Its toolbar and cards use the full available content width with normal 16/24px internal padding. A canonical Button pill row offers recently listed, lower interest first, ₱10,000+ available and up to five real loaded areas. Selected states follow URL filters, amount/area choices toggle off, and choosing a suggestion returns to the offer feed. These are filter shortcuts, not underwriting recommendations. Map layout remains unchanged.
+
+On phones the suggestions scroll horizontally in a named keyboard-focusable region, preserving space for cards. Browser review confirmed full-width desktop composition, mobile scrolling geometry, combined amount/area filters, real no-match state and Clear filters recovery. Evidence: `.runtime/qa/overview-list/`. Verification remained visual only; no build or automated checks ran.

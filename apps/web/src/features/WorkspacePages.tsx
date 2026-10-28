@@ -21,14 +21,7 @@ import {
   ShieldCheck,
   Wallet,
 } from "lucide-react";
-import {
-  Button,
-  Input,
-  Label,
-  Tabs,
-  TabsList,
-  TabsTrigger,
-} from "@pixelvault/ui";
+import { Button, Input, Label } from "@pixelvault/ui";
 import type {
   Agreement,
   Application,
@@ -57,6 +50,7 @@ import {
 } from "../components";
 import { date, label, money, text } from "../lib/format";
 import { CostDisclosure, Schedule } from "./ExplorePages";
+import { DashboardSummary, LoanStatusChart } from "./DashboardSummary";
 export function useLoans() {
   return useQuery({
     queryKey: ["loans"],
@@ -113,7 +107,7 @@ export function Dashboard() {
   const { session } = useSession();
   const member = session?.member;
   const [params, setParams] = useSearchParams();
-  const role = params.get("role") || "borrowing";
+  const role = params.get("role") === "lending" ? "lending" : "borrowing";
   const loans = useLoans(),
     applications = useApplications();
   const scoped = (loans.data || []).filter((l) =>
@@ -126,39 +120,29 @@ export function Dashboard() {
     .sort((a, b) =>
       String(a.next_due_date).localeCompare(String(b.next_due_date)),
     )[0];
-  const firstName = member?.display_name.split(" ")[0] || "there";
   return (
     <>
-      <PageHeading
-        title={`A little clarity, ${firstName}.`}
-        description="Your next steps, agreements and shared loan history in one place."
-        action={
-          <ActionLink to="/explore" variant="outline">
-            Explore community
-            <ArrowRight size={16} />
-          </ActionLink>
-        }
+      <DashboardSummary
+        role={role}
+        onRoleChange={(value) => {
+          const nextParams = new URLSearchParams(params);
+          nextParams.set("role", value);
+          setParams(nextParams);
+        }}
+        loans={scoped}
+        pending={loans.isPending}
+        failed={!!loans.error}
       />
-      <Tabs
-        value={role}
-        onValueChange={(value) => setParams({ role: value })}
-        className="role-tabs"
-      >
-        <TabsList>
-          <TabsTrigger value="borrowing">I’m borrowing</TabsTrigger>
-          <TabsTrigger value="lending">I’m lending</TabsTrigger>
-        </TabsList>
-      </Tabs>
-      <div className="dashboard-layout">
+      <div className="grid min-w-0 items-start gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div>
           {loans.isPending ? (
             <Loading />
           ) : loans.error ? (
             <ErrorNotice error={loans.error} />
           ) : next ? (
-            <section className="next-action">
-              <div className="next-action-heading">
-                <span className="next-action-icon">
+            <section className="next-action border-border! bg-card! text-card-foreground!">
+              <div className="next-action-heading [&_p]:text-muted-foreground!">
+                <span className="next-action-icon bg-accent! text-primary!">
                   <CalendarDays size={24} />
                 </span>
                 <div>
@@ -171,7 +155,7 @@ export function Dashboard() {
                 </div>
                 <Status value={next.status} />
               </div>
-              <div className="next-action-body">
+              <div className="next-action-body [&_small]:text-muted-foreground! [&_strong]:tracking-tight!">
                 <div>
                   <strong>
                     {money(next.next_installment_due ?? next.total_due)}
@@ -191,7 +175,7 @@ export function Dashboard() {
                   <ArrowRight size={16} />
                 </ActionLink>
               </div>
-              <div className="next-action-footer">
+              <div className="next-action-footer border-border! bg-muted! text-muted-foreground! [&>a]:text-primary!">
                 <span>
                   With{" "}
                   {role === "borrowing"
@@ -204,7 +188,7 @@ export function Dashboard() {
               </div>
             </section>
           ) : (
-            <section className="workspace-welcome">
+            <section className="workspace-welcome border-border! bg-card! text-card-foreground! [&>p]:text-muted-foreground! [&>span]:text-primary!">
               <span>
                 <HandCoins size={28} />
               </span>
@@ -226,6 +210,16 @@ export function Dashboard() {
               </ActionLink>
             </section>
           )}
+        </div>
+        <LoanStatusChart
+          loans={scoped}
+          role={role}
+          pending={loans.isPending}
+          failed={!!loans.error}
+        />
+      </div>
+      <div className="mt-6 grid min-w-0 items-start gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+        <div>
           <div className="section-heading">
             <h2>{role === "borrowing" ? "Your borrowing" : "Your lending"}</h2>
             <Link to="/loans">
@@ -234,7 +228,7 @@ export function Dashboard() {
             </Link>
           </div>
           {scoped.length ? (
-            <div className="surface flush">
+            <div className="surface flush [&_.loan-row_small]:text-muted-foreground! [&_.loan-row]:border-border!">
               {scoped.slice(0, 4).map((l) => (
                 <LoanRow key={l.id} loan={l} />
               ))}
@@ -290,8 +284,8 @@ export function Dashboard() {
             </div>
           )}
         </div>
-        <aside>
-          <section className="surface journey-panel">
+        <aside className="min-w-0">
+          <section className="surface journey-panel [&_p]:text-muted-foreground! [&_small]:text-muted-foreground! [&>a]:border-border! [&_.journey-icon]:bg-accent! [&_.journey-icon]:text-primary!">
             <h2>Your foundation</h2>
             <p>A prepared member makes informed choices.</p>
             <Link to="/verification">
@@ -329,7 +323,7 @@ export function Dashboard() {
               <ChevronRight size={16} />
             </Link>
           </section>
-          <div className="quiet-note">
+          <div className="quiet-note [&_p]:text-muted-foreground!">
             <Clock3 size={19} />
             <p>
               Expected interest, confirmed payments and lender settlement are

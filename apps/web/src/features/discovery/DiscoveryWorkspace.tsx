@@ -12,6 +12,7 @@ import { Empty, ErrorNotice, Loading, MemberAvatar } from "../../components";
 import { date } from "../../lib/format";
 import { CommunityMap } from "./CommunityMap";
 import { DiscoveryOfferCard } from "./DiscoveryOfferCard";
+import { DiscoverySuggestions } from "./DiscoverySuggestions";
 import { DiscoveryOfferItem } from "./DiscoveryOfferItem";
 import { ExploreControls } from "./ExploreControls";
 import { DEFAULT_PLACE, distanceKm, publicAreaCenter } from "./geography";
@@ -280,7 +281,7 @@ export function DiscoveryWorkspace({
     return (
       <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
         <div className="shrink-0 border-b border-border bg-card">
-          <div className="mx-auto w-full max-w-5xl">
+          <div className="w-full">
             <ExploreControls
               layout="list"
               token={token}
@@ -306,13 +307,23 @@ export function DiscoveryWorkspace({
               }}
             />
           </div>
+          <DiscoverySuggestions
+            areas={areas}
+            area={area}
+            minimum={minimum}
+            sort={sort}
+            setFilters={(values) => {
+              setFeed("offers");
+              setFilters(values);
+            }}
+          />
         </div>
         <section
           className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
           aria-label="Lending offer list"
           tabIndex={0}
         >
-          <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6">
+          <div className="w-full px-4 py-6 sm:px-6">
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h2 className="text-xl font-extrabold">
