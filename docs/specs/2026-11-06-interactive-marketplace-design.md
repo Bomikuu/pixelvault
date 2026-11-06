@@ -1,6 +1,6 @@
 # Interactive marketplace: city rooms and walking sprites
 
-**Status:** Proposed implementation design, 2026-11-06. The user selected the sprite-on-Google-Maps visual concept and requested implementation. This document makes the new shared-room behavior concrete for review; it does not claim that the page or service exists yet.
+**Status:** Approved by the user, 2026-11-06, through the shared-room specification review. Implementation planning is in [the companion plan](../plans/2026-11-06-interactive-marketplace.md). Approval does not claim that the page or service exists yet.
 
 **Purpose:** Let PixelVault members enter a location-based community room, move a small 2D character, publish a short speech bubble and discover current lending offers through an in-place detail dialog. Keep the existing lending workflow responsible for applications, agreement review and financial actions.
 
