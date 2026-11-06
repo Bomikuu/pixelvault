@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "engagement",
     "connections",
     "negotiations",
+    "plaza.apps.PlazaConfig",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -101,6 +102,7 @@ REST_FRAMEWORK = {
         "engagement_comment": "6/min",
         "engagement_preview": "60/min",
         "co_borrower_invite": "10/hour",
+        "plaza_command": "360/min",
     },
 }
 SPECTACULAR_SETTINGS = {
@@ -121,9 +123,12 @@ AUTH_PASSWORD_VALIDATORS = [
     }
 ]
 CELERY_BROKER_URL = os.getenv("REDIS_URL", "redis://127.0.0.1:56438/0")
+PLAZA_REDIS_URL = os.getenv("PLAZA_REDIS_URL") or CELERY_BROKER_URL
+PLAZA_REDIS_PREFIX = "pixelvault:plaza:v1:"
 CELERY_TASK_ALWAYS_EAGER = os.getenv("PIXELVAULT_TASKS_EAGER", "1") == "1"
 CELERY_TASK_DEFAULT_QUEUE = "pixelvault"
 CELERY_BEAT_SCHEDULE = {
+    "plaza-expired-content": {"task": "plaza.tasks.purge_expired_bubbles", "schedule": 86400.0},
     "local-outbox": {"task": "audit.tasks.recover_local_events", "schedule": 30.0},
     "payment-inbox": {"task": "payments.tasks.retry_inbox", "schedule": 60.0},
     "configured-route-recovery": {"task": "payments.tasks.recover_routes", "schedule": 300.0},

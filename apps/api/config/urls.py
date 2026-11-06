@@ -74,4 +74,5 @@ urlpatterns = [
     path("api/v1/", include("engagement.urls")),
     path("api/v1/", include("connections.urls")),
     path("api/v1/", include("negotiations.urls")),
+    path("api/v1/", include("plaza.urls")),
 ]

@@ -6,7 +6,7 @@ from .locations import coarse_area
 from .profiles import public_identity
 
 
-def search_offers(*, viewer_id=None, filters=None, cursor=None):
+def search_offers(*, viewer_id=None, filters=None, cursor=None, lender_id=None):
     from marketplace.models import LendingOffer
 
     filters = filters or {}
@@ -25,6 +25,8 @@ def search_offers(*, viewer_id=None, filters=None, cursor=None):
     )
     if filters.get("area"):
         offers = offers.filter(area=coarse_area(area_code=filters["area"])["name"])
+    if lender_id is not None:
+        offers = offers.filter(lender_id=lender_id)
     try:
         amount = int(filters["amount"]) if filters.get("amount") else None
         if amount is not None and amount <= 0:
