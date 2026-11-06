@@ -20,6 +20,8 @@ Open [PixelVault](http://127.0.0.1:5178). API is at `http://127.0.0.1:8008`; Vit
 
 Interactive maps and place search require your own **public Mapbox token** in the repository-root `.env` as `VITE_MAPBOX_ACCESS_TOKEN`. The setting is blank in `.env.example`, and no token is currently configured. Restrict it to the intended website origins and restart the web process after changing it. Vite rejects non-public tokens before serving client code. Without the token, Explore explains that setup is needed; its offer sidebar and list remain usable.
 
+The [interactive marketplace](http://127.0.0.1:5178/marketplace) is a separate full-screen city-room experience: explicitly join, walk an original pixel character, post a short public bubble and inspect current offers. It uses the existing Redis/API services. Its optional Google Maps background needs `VITE_GOOGLE_MAPS_API_KEY`; without one it shows a labeled original plaza. See [setup](docs/marketplace/development.md) and [visual evidence and remaining release checks](docs/marketplace/release-checklist.md). The current preview has not passed automated or Google-provider verification.
+
 Synthetic demo accounts, password **`PixelVaultDemo!2026`**:
 
 | Account | Purpose |

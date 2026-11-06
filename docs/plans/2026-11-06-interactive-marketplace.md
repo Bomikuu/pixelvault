@@ -10,6 +10,16 @@
 
 **Spec:** [Approved design](../specs/2026-11-06-interactive-marketplace-design.md); [selected visual reference](../brand/interactive-marketplace-concept.png) and [provenance](../brand/interactive-marketplace-concept.md).
 
+## Execution record · 2026-11-06
+
+Implemented directly after plan approval, without subagents. Tasks 1–3 now have the Redis room engine, persistent bubbles/moderation, REST/SSE projections, migration and explicit schema declarations. Tasks 4–6 have the original pixel renderer, conditional map/fallback lifecycle, responsive shared-room page, movement/composer/directory, current offer dialog and staff queue. Task 7 adds navigation, configuration examples and operator/surface/release documentation. The local migration was applied; existing PostgreSQL/Redis/API/web services support the preview.
+
+Representative backend and frontend test files were authored **without execution**. The detailed checkboxes below retain the original acceptance scope rather than claiming every proposed case was authored or passed. Further adversarial/concurrency, lifecycle, keyboard/accessibility and provider coverage remains in the [release checklist](../marketplace/release-checklist.md). No application build, automated test, UI/type/lint/detector check or Google cloud configuration ran. Schema/type/inventory exports were authoring only, without validation: 163 typed operation declarations, zero partial/generic declarations.
+
+Bounded desktop/mobile review and one correction pass exercised the actual fallback room with an existing synthetic account, movement, bubble publication/expiry, offer inspection, same-account tab takeover, theme and sign-out. Only one browser profile was available; separate-account synchronization and actual Google delivery remain unverified. Five captured artifacts, exact observations, limitations and the original guest-session restoration are recorded in the linked checklist.
+
+Graphify remained scoped; its seven relevant older nodes were insufficient for the new room relationships, so current source governed. The sanitized implementation Jev advisory favored authoritative server state (confidence 1.0; 386 input / 31 output tokens). No secrets or member records were submitted. Impeccable review/documentation were performed in-thread under the no-subagent instruction; no detector ran.
+
 ## Global Constraints
 
 - “native execution without subagents”; preserve unrelated existing modified/untracked files and the existing Mapbox Explore/mobile work. Commit explicit task paths/hunks only; never stage the whole tree.

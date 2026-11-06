@@ -1,6 +1,6 @@
 # Interactive marketplace: city rooms and walking sprites
 
-**Status:** Approved by the user, 2026-11-06, through the shared-room specification review. Implementation planning is in [the companion plan](../plans/2026-11-06-interactive-marketplace.md). Approval does not claim that the page or service exists yet.
+**Status:** Approved and implemented for a local browser preview, 2026-11-06. Execution followed [the companion plan](../plans/2026-11-06-interactive-marketplace.md) directly without subagents. The [evidence and release checklist](../marketplace/release-checklist.md) records bounded visual review, the missing Google Maps key and unexecuted release checks; this is not a production-readiness claim.
 
 **Purpose:** Let PixelVault members enter a location-based community room, move a small 2D character, publish a short speech bubble and discover current lending offers through an in-place detail dialog. Keep the existing lending workflow responsible for applications, agreement review and financial actions.
 
