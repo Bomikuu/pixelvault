@@ -1,3 +1,27 @@
+import { lazy, Suspense, type ComponentType } from "react";
+import { Loading } from "../components";
+function deferred<M>(load: () => Promise<M>, name: keyof M) {
+  const Page = lazy(async () => ({
+    default: (await load())[name] as unknown as ComponentType<
+      Record<string, unknown>
+    >,
+  }));
+  return function DeferredPage(props: Record<string, unknown>) {
+    return (
+      <Suspense fallback={<Loading text="Opening your workspace…" />}>
+        <Page {...props} />
+      </Suspense>
+    );
+  };
+}
+const MarketplacePage = deferred(
+  () => import("../features/interactive-marketplace/MarketplacePage"),
+  "MarketplacePage",
+);
+const PlazaModeration = deferred(
+  () => import("../features/interactive-marketplace/ModerationQueue"),
+  "ModerationQueue",
+);
 import { MeetingLayout } from "../features/negotiations/MeetingLayout";
 import { MeetingList } from "../features/negotiations/MeetingList";
 import { LeaderboardDirectory } from "../features/leaderboard/LeaderboardDirectory";
@@ -67,6 +91,11 @@ const member = (element: React.ReactNode) => (
 );
 export const routes = [
   {
+    path: "/marketplace",
+    element: <MarketplacePage />,
+    errorElement: <ErrorPage />,
+  },
+  {
     path: "/meetings/:id",
     element: member(<MeetingLayout />),
     errorElement: <ErrorPage />,
@@ -84,6 +113,7 @@ export const routes = [
     children: [
       { index: true, element: <Navigate to="/explore" replace /> },
       { path: "explore", element: <ExplorePage /> },
+      { path: "admin/plaza", element: member(<PlazaModeration />) },
       { path: "offers/new", element: member(<NewOffer />) },
       { path: "offers/:id", element: <OfferDetail /> },
       { path: "applications/new", element: member(<ApplyPage />) },

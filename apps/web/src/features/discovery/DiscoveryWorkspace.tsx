@@ -7,6 +7,7 @@ import {
   Newspaper,
   Radio,
   RefreshCw,
+  Users,
 } from "lucide-react";
 import { Empty, ErrorNotice, Loading, MemberAvatar } from "../../components";
 import { date } from "../../lib/format";
@@ -338,6 +339,12 @@ export function DiscoveryWorkspace({
                   · {liveStatus}
                 </p>
               </div>
+              <Button asChild variant="outline">
+                <Link to="/marketplace">
+                  <Users size={16} />
+                  Interactive marketplace
+                </Link>
+              </Button>
               <Button
                 variant="outline"
                 aria-label={

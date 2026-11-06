@@ -41,6 +41,7 @@ import { legacyThemeClasses, ThemeToggle } from "./ThemeToggle";
 import { SignOutButton } from "./SignOutButton";
 const community = [
   ["/explore", "Explore offers", Compass],
+  ["/marketplace", "Interactive marketplace", Users],
   ["/how-it-works", "How it works", BookOpen],
   ["/leaderboard", "Leaderboard", Trophy],
   ["/offers/new", "Post an offer", Plus],
@@ -66,6 +67,7 @@ const admin = [
   ["/admin/commissions", "Commissions", ChartNoAxesCombined],
   ["/admin/templates", "Templates & policies", FileText],
   ["/admin/moderation", "Community moderation", MessageSquare],
+  ["/admin/plaza", "Marketplace reports", MessageSquare],
   ["/admin/reporting", "Reporting", ChartNoAxesCombined],
   ["/admin/audit", "Audit history", BookOpen],
 ] as const;
