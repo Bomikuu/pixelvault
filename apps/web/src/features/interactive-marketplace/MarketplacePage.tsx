@@ -1,14 +1,26 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BrandMark, Button } from "@pixelvault/ui";
+import {
+  BrandMark,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@pixelvault/ui";
 import {
   ArrowLeft,
   ChevronDown,
   Users,
   Wifi,
   WifiOff,
-  LogOut,
   Loader2,
+  MessageCircle,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  Send,
+  Megaphone,
 } from "lucide-react";
 import { ThemeToggle, legacyThemeClasses } from "../../app/ThemeToggle";
 import { useSession } from "../../app/session";
@@ -17,10 +29,11 @@ import { usePlaza } from "./usePlaza";
 import { World } from "./World";
 import { RoomChooser } from "./RoomChooser";
 import { BubbleComposer } from "./BubbleComposer";
-import { PeopleDrawer } from "./PeopleDrawer";
+import { PeopleDrawer, PeopleList } from "./PeopleDrawer";
+import { RoomChat } from "./RoomChat";
 import { MemberPopover } from "./MemberPopover";
 import { OfferDialog } from "./OfferDialog";
-import type { Room } from "./types";
+import type { Room, Participant } from "./types";
 const INITIAL_ROOM: Room = {
   slug: "manila-01",
   name: "Manila · Room 01",
@@ -42,7 +55,10 @@ export function MarketplacePage() {
     { session, loading } = useSession(),
     navigate = useNavigate();
   const [chooser, setChooser] = useState(true),
-    [drawer, setDrawer] = useState(false),
+    [overlay, setOverlay] = useState<"chat" | "people" | null>(null),
+    [chatExpanded, setChatExpanded] = useState(true),
+    [peopleExpanded, setPeopleExpanded] = useState(true),
+    [compose, setCompose] = useState(false),
     [memberId, setMemberId] = useState<string | null>(null),
     [offerId, setOfferId] = useState<string | null>(null),
     [hidden, setHidden] = useState<Set<string>>(() => new Set()),
@@ -50,8 +66,23 @@ export function MarketplacePage() {
   const stopRef = useRef(plaza.stop);
   stopRef.current = plaza.stop;
   useEffect(() => {
-    if (chooser || drawer || memberId || offerId) stopRef.current();
-  }, [chooser, drawer, memberId, offerId]);
+    if (chooser || overlay || compose || memberId || offerId) stopRef.current();
+  }, [chooser, overlay, compose, memberId, offerId]);
+  useEffect(() => {
+    const screen = window.matchMedia("(min-width: 1024px)");
+    const change = () => {
+      if (screen.matches) setOverlay(null);
+    };
+    screen.addEventListener("change", change);
+    return () => screen.removeEventListener("change", change);
+  }, []);
+  useEffect(() => {
+    setCompose(false);
+    setOverlay(null);
+    setMemberId(null);
+    setOfferId(null);
+    setHidden(new Set());
+  }, [session?.member?.id, plaza.snapshot?.room.slug]);
   useEffect(() => {
     if (plaza.snapshot?.room) setLastRoom(plaza.snapshot.room);
   }, [plaza.snapshot?.room.slug]);
@@ -88,10 +119,21 @@ export function MarketplacePage() {
               ? "Joining…"
               : "Choose a room";
   const openOffer = (id: string) => {
-    setDrawer(false);
+    setOverlay(null);
     setMemberId(null);
     setOfferId(id);
   };
+  const showPeople = () => {
+    if (window.matchMedia("(min-width: 1024px)").matches)
+      setPeopleExpanded((v) => !v);
+    else setOverlay("people");
+  };
+  const selectPerson = (p: Participant) => {
+    setOverlay(null);
+    setMemberId(p.participant_id);
+  };
+  const moreOffers = () =>
+    navigate(`/explore?area=${encodeURIComponent(room.area.name)}&view=list`);
   return (
     <div
       className={`flex h-dvh min-h-0 w-full flex-col overflow-hidden bg-background text-foreground ${legacyThemeClasses}`}
@@ -102,7 +144,7 @@ export function MarketplacePage() {
       >
         Skip to marketplace
       </a>
-      <header className="z-30 flex min-h-16 shrink-0 items-center gap-2 border-b border-border bg-card px-3 sm:gap-4 sm:px-5">
+      <header className="z-30 flex min-h-14 shrink-0 items-center gap-2 border-b border-border bg-card px-3 sm:gap-3 sm:px-4">
         <Link
           to="/explore"
           aria-label="PixelVault community"
@@ -138,7 +180,7 @@ export function MarketplacePage() {
           variant="outline"
           className="size-11! shrink-0 p-0! sm:h-11! sm:w-auto! sm:px-3!"
           aria-label="Open people and offers"
-          onClick={() => setDrawer(true)}
+          onClick={showPeople}
           disabled={!snapshot}
         >
           <Users className="size-4" />
@@ -159,7 +201,8 @@ export function MarketplacePage() {
         </Button>
       </header>
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-x-3 gap-y-1 border-b border-border bg-secondary px-3 py-2 text-[10px] text-secondary-foreground sm:px-5 sm:text-xs">
-        <span>
+        <span className="inline-flex items-center gap-2">
+          <Megaphone className="size-3.5 shrink-0" />
           {session?.environment === "live"
             ? "Community marketplace · Live origination disabled"
             : "Test community · No real funds move"}
@@ -204,23 +247,112 @@ export function MarketplacePage() {
         <World
           room={room}
           snapshot={world}
-          enabled={connected && !chooser && !drawer && !memberId && !offerId}
+          enabled={
+            connected &&
+            !chooser &&
+            !overlay &&
+            !compose &&
+            !memberId &&
+            !offerId
+          }
           onMove={plaza.move}
           onStop={plaza.stop}
-          onSelect={(p) => setMemberId(p.participant_id)}
+          onSelect={selectPerson}
           onOffer={openOffer}
         />
-      </main>
-      {snapshot && snapshot.participants.filter((p) => p.bubble).length > 8 && (
-        <Button
-          variant="ghost"
-          className="h-8! rounded-none! text-xs!"
-          onClick={() => setDrawer(true)}
+        <aside
+          id="room-chat-panel"
+          aria-label="Room chat"
+          className={`absolute top-3 left-3 z-30 hidden h-[min(32rem,calc(100%-7rem))] w-64 flex-col rounded-2xl border border-border bg-card p-3 shadow-lg shadow-foreground/5 motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-left-2 motion-safe:duration-200 xl:w-68 ${chatExpanded ? "lg:flex" : ""}`}
         >
-          More speech bubbles in People & offers
+          <div className="mb-3 flex shrink-0 items-center gap-2.5">
+            <MessageCircle className="size-5 shrink-0 text-primary" />
+            <div className="min-w-0 flex-1">
+              <h2 className="text-sm! font-extrabold!">Room chat</h2>
+              <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+                {snapshot ? room.name : "Choose a city room"}
+              </p>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-11! shrink-0 p-0!"
+              aria-label="Collapse room chat"
+              onClick={() => setChatExpanded(false)}
+            >
+              <ChevronLeft className="size-4" />
+            </Button>
+          </div>
+          <RoomChat
+            snapshot={world}
+            enabled={connected}
+            onCompose={() => setCompose(true)}
+            onPerson={selectPerson}
+            onOffer={openOffer}
+          />
+        </aside>
+        <Button
+          variant="outline"
+          className={`absolute top-3 left-3 z-30 min-h-11! bg-card! shadow-sm ${chatExpanded ? "lg:hidden!" : ""}`}
+          aria-label="Open room chat"
+          aria-controls="room-chat-panel"
+          onClick={() => {
+            if (window.matchMedia("(min-width: 1024px)").matches)
+              setChatExpanded(true);
+            else setOverlay("chat");
+          }}
+        >
+          <MessageCircle className="size-4 text-primary" />
+          <span className="text-xs">Room chat</span>
+          <ChevronRight className="size-3.5" />
         </Button>
-      )}
+        <aside
+          id="room-people-panel"
+          aria-label="People and offers"
+          className={`absolute top-3 right-3 z-30 hidden h-[min(30rem,calc(100%-7rem))] w-64 flex-col rounded-2xl border border-border bg-card p-3 shadow-lg shadow-foreground/5 motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-right-2 motion-safe:duration-200 xl:w-72 ${peopleExpanded ? "lg:flex" : ""}`}
+        >
+          <div className="mb-3 flex shrink-0 items-center justify-between gap-2">
+            <h2 className="text-sm! font-extrabold!">People & offers</h2>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-11! shrink-0 p-0!"
+              aria-label="Collapse people and offers"
+              onClick={() => setPeopleExpanded(false)}
+            >
+              <X className="size-4" />
+            </Button>
+          </div>
+          <PeopleList
+            snapshot={world}
+            onPerson={selectPerson}
+            onOffer={openOffer}
+            onMore={moreOffers}
+          />
+        </aside>
+        {!peopleExpanded && (
+          <Button
+            variant="outline"
+            className="absolute top-3 right-3 z-30 hidden! min-h-11! bg-card! shadow-sm lg:inline-flex!"
+            aria-label="Show people and offers panel"
+            onClick={() => setPeopleExpanded(true)}
+          >
+            <Users className="size-4 text-primary" />
+            <ChevronLeft className="size-3.5" />
+          </Button>
+        )}
+        <Button
+          className={`absolute bottom-10 left-3 z-30 min-h-11! gap-2! rounded-xl! shadow-lg shadow-primary/15 lg:bottom-6 lg:left-1/2 lg:-translate-x-1/2 ${chatExpanded && connected ? "lg:hidden!" : ""}`}
+          onClick={() => (connected ? setCompose(true) : setChooser(true))}
+        >
+          <Send className="size-4" />
+          {connected ? "Post bubble" : "Join the conversation"}
+        </Button>
+      </main>
       <BubbleComposer
+        key={`${session?.member?.id || "guest"}:${room.slug}`}
+        open={compose}
+        onOpenChange={setCompose}
         enabled={connected}
         offers={snapshot?.own_offers || []}
         onPost={plaza.publishBubble}
@@ -240,20 +372,39 @@ export function MarketplacePage() {
         retry={() => void plaza.rooms.refetch()}
       />
       <PeopleDrawer
-        open={drawer}
-        onOpenChange={setDrawer}
-        snapshot={snapshot}
-        onPerson={(p) => {
-          setDrawer(false);
-          setMemberId(p.participant_id);
-        }}
+        open={overlay === "people"}
+        onOpenChange={(open) => setOverlay(open ? "people" : null)}
+        snapshot={world}
+        onPerson={selectPerson}
         onOffer={openOffer}
-        onMore={() =>
-          navigate(
-            `/explore?area=${encodeURIComponent(room.area.name)}&view=list`,
-          )
-        }
+        onMore={moreOffers}
       />
+      <Dialog
+        open={overlay === "chat"}
+        onOpenChange={(open) => setOverlay(open ? "chat" : null)}
+      >
+        <DialogContent className="max-h-[calc(100dvh-2rem)]! max-w-md! grid-cols-[minmax(0,1fr)]! overflow-hidden! p-4! [&>*]:min-w-0">
+          <DialogTitle className="pr-8 text-lg!">Room chat</DialogTitle>
+          <DialogDescription className="text-xs!">
+            {room.name} · Current public bubbles
+          </DialogDescription>
+          <div
+            className="flex min-h-0 flex-col"
+            style={{ height: "min(30rem, calc(100dvh - 12rem))" }}
+          >
+            <RoomChat
+              snapshot={world}
+              enabled={connected}
+              onCompose={() => {
+                setOverlay(null);
+                setCompose(true);
+              }}
+              onPerson={selectPerson}
+              onOffer={openOffer}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
       <MemberPopover
         person={member}
         offers={snapshot?.offers || []}

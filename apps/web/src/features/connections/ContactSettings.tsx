@@ -1,3 +1,4 @@
+import { RecoveryEmailSettings } from "../memberhub/AccountRecovery";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Mail, Phone, ShieldCheck } from "lucide-react";
@@ -82,6 +83,7 @@ export function ContactSettings() {
             </ApiForm>
           </section>
           <aside className="contact-evidence">
+            <RecoveryEmailSettings />
             <ShieldCheck size={24} aria-hidden="true" />
             <h2>Evidence has a separate status.</h2>
             <p>
@@ -94,8 +96,9 @@ export function ContactSettings() {
             </p>
             {!query.data.delivery_available && (
               <p className="small-text">
-                Email and SMS delivery are not connected. Saving a number or
-                email does not verify ownership.
+                Saving a number or email does not verify ownership. Use the
+                separate recovery email check above. SMS delivery is not
+                connected.
               </p>
             )}
             <Link to="/verification">Open verification center</Link>

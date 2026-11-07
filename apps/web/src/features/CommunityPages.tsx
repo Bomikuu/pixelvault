@@ -1,6 +1,15 @@
-import { useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
+import {
+  useQuery,
+  useInfiniteQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   ArrowLeft,
   ArrowRight,
@@ -76,10 +85,12 @@ function ProfileView({
   own?: boolean;
 }) {
   return (
-    <div className="profile-page">
+    <div className="profile-page text-foreground [&_.profile-heading_p]:text-muted-foreground! [&_.prose]:text-muted-foreground! [&_.profile-aside]:text-muted-foreground! [&_.profile-aside_h2]:text-foreground! [&_.profile-aside_a]:text-primary! [&_.profile-progress-block>strong]:text-foreground! [&_.profile-progress-block>span]:text-primary! [&_.profile-recommendations]:text-muted-foreground! [&_.profile-recommendations>span:nth-child(2)]:text-muted-foreground! [&_.profile-recommendations>span:first-child]:text-primary! [&_.profile-recommendations_small]:text-muted-foreground! [&_.small-text]:text-muted-foreground! [&_.muted]:text-muted-foreground! [&_.badge-item_small]:text-muted-foreground!">
       <div className="profile-cover">
         <img
-          src="/illustrations/profile-community-cover.png"
+          src="/illustrations/profile-community-cover-1440.webp"
+          srcSet="/illustrations/profile-community-cover-480.webp 480w, /illustrations/profile-community-cover-960.webp 960w, /illustrations/profile-community-cover-1440.webp 1440w"
+          sizes="(min-width: 1024px) calc(100vw - 292px), 100vw"
           alt=""
           width={1536}
           height={640}
@@ -650,15 +661,20 @@ export function AchievementsPage() {
   );
 }
 export function InboxPage() {
+  const { session } = useSession();
+  const client = useQueryClient();
+  const readThrough = useRef("");
   const [params, setParams] = useSearchParams();
   const selected = params.get("thread");
   const roomNavigate = useNavigate();
   const threads = useQuery({
-    queryKey: ["threads"],
+    queryKey: ["threads", session?.member?.id],
     queryFn: () => apiRequest<{ threads: Thread[] }>("/community/threads"),
+    refetchInterval: 5000,
+    refetchIntervalInBackground: false,
   });
   const messages = useInfiniteQuery({
-    queryKey: ["messages", selected],
+    queryKey: ["messages", session?.member?.id, selected],
     initialPageParam: "",
     queryFn: ({ pageParam }) =>
       apiRequest<{ messages: Message[]; next_cursor: string | null }>(
@@ -666,11 +682,32 @@ export function InboxPage() {
       ),
     getNextPageParam: (last) => last.next_cursor || undefined,
     enabled: !!selected,
+    refetchInterval: 3000,
+    refetchIntervalInBackground: false,
   });
+  useEffect(() => {
+    const latest = messages.data?.pages[0]?.messages.at(-1);
+    const identity = `${session?.member?.id}:${selected}:${latest?.created_at}`;
+    if (
+      selected &&
+      latest &&
+      !document.hidden &&
+      readThrough.current !== identity
+    )
+      void apiRequest(`/hub/threads/${selected}/read`, {
+        method: "POST",
+        body: JSON.stringify({ through: latest.created_at }),
+      })
+        .then(() => {
+          readThrough.current = identity;
+          void client.invalidateQueries({ queryKey: ["threads"] });
+          void client.invalidateQueries({ queryKey: ["actions"] });
+        })
+        .catch(() => {});
+  }, [selected, messages.dataUpdatedAt]);
   const messageRows = messages.data
     ? [...messages.data.pages].reverse().flatMap((page) => page.messages)
     : [];
-  const { session } = useSession();
   return (
     <>
       <PageHeading
@@ -702,7 +739,14 @@ export function InboxPage() {
                   photoUrl={t.other_photo_url}
                 />
                 <span>
-                  <strong>{t.other_display_name}</strong>
+                  <strong>
+                    {t.other_display_name}
+                    {!!t.unread_count && (
+                      <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+                        {t.unread_count} unread
+                      </span>
+                    )}
+                  </strong>
                   <small>
                     {t.meeting_id
                       ? "Agreement room"
@@ -774,6 +818,7 @@ export function InboxPage() {
               )}
               <ApiForm
                 submitLabel="Send message"
+                resetOnSuccess
                 onSubmit={(data) =>
                   post(`/community/threads/${selected}/messages`, {
                     body: text(data, "message"),

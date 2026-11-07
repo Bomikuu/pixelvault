@@ -22,70 +22,219 @@ const PlazaModeration = deferred(
   () => import("../features/interactive-marketplace/ModerationQueue"),
   "ModerationQueue",
 );
-import { MeetingLayout } from "../features/negotiations/MeetingLayout";
-import { MeetingList } from "../features/negotiations/MeetingList";
-import { LeaderboardDirectory } from "../features/leaderboard/LeaderboardDirectory";
+const MeetingLayout = deferred(
+  () => import("../features/negotiations/MeetingLayout"),
+  "MeetingLayout",
+);
+const MeetingList = deferred(
+  () => import("../features/negotiations/MeetingList"),
+  "MeetingList",
+);
+const LeaderboardDirectory = deferred(
+  () => import("../features/leaderboard/LeaderboardDirectory"),
+  "LeaderboardDirectory",
+);
 import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 import { ErrorPage, NotFoundPage } from "./ErrorPage";
 import { Shell } from "./Shell";
 import { RequireMember } from "./RequireMember";
-import {
-  ExplorePage,
-  OfferDetail,
-  NewOffer,
-  ApplyPage,
-} from "../features/ExplorePages";
-import {
-  Dashboard,
-  LoansPage,
-  ApplicationsPage,
-  ApplicationDetail,
-  AgreementPage,
-  LoanDetail,
-  ResourcePage,
-  CommissionReview,
-} from "../features/WorkspacePages";
-import {
-  AchievementsPage,
-  BadgeDetail,
-  EditProfile,
-  InboxPage,
-  LearningPage,
-  MemberProfile,
-  OwnProfile,
-  ReviewForm,
-} from "../features/CommunityPages";
-import { AuthPage } from "../features/AuthPages";
-import {
-  VerificationPage,
-  RegistrationPage,
-} from "../features/VerificationPages";
-import { NewCase, CaseDetail } from "../features/CasesPages";
-import { AnalyticsPage } from "../features/ReportingPages";
-import {
-  AdminDecision,
-  AdminQueue,
-  AdminRecords,
-  ModerationPage,
-  WorkQueues,
-} from "../features/AdminPages";
-import {
-  AmendmentsPage,
-  NewAmendment,
-  AmendmentDetail,
-  ContributionsPage,
-  ReportContentPage,
-  OwnReviews,
-  ReviewResponsePage,
-  NotificationPreferences,
-} from "../features/AdditionalPages";
-import { HelpPage } from "../features/HelpPage";
-import { HowItWorksPage } from "../features/HowItWorksPage";
-import { Leaderboard, ReputationPage } from "../features/ReputationPages";
+const ExplorePage = deferred(
+  () => import("../features/ExplorePages"),
+  "ExplorePage",
+);
+const OfferDetail = deferred(
+  () => import("../features/ExplorePages"),
+  "OfferDetail",
+);
+const NewOffer = deferred(() => import("../features/ExplorePages"), "NewOffer");
+const ApplyPage = deferred(
+  () => import("../features/ExplorePages"),
+  "ApplyPage",
+);
+const Dashboard = deferred(
+  () => import("../features/WorkspacePages"),
+  "Dashboard",
+);
+const LoansPage = deferred(
+  () => import("../features/WorkspacePages"),
+  "LoansPage",
+);
+const ApplicationsPage = deferred(
+  () => import("../features/WorkspacePages"),
+  "ApplicationsPage",
+);
+const ApplicationDetail = deferred(
+  () => import("../features/WorkspacePages"),
+  "ApplicationDetail",
+);
+const AgreementPage = deferred(
+  () => import("../features/WorkspacePages"),
+  "AgreementPage",
+);
+const LoanDetail = deferred(
+  () => import("../features/WorkspacePages"),
+  "LoanDetail",
+);
+const ResourcePage = deferred(
+  () => import("../features/WorkspacePages"),
+  "ResourcePage",
+);
+const CommissionReview = deferred(
+  () => import("../features/WorkspacePages"),
+  "CommissionReview",
+);
+const AchievementsPage = deferred(
+  () => import("../features/CommunityPages"),
+  "AchievementsPage",
+);
+const BadgeDetail = deferred(
+  () => import("../features/CommunityPages"),
+  "BadgeDetail",
+);
+const EditProfile = deferred(
+  () => import("../features/CommunityPages"),
+  "EditProfile",
+);
+const InboxPage = deferred(
+  () => import("../features/CommunityPages"),
+  "InboxPage",
+);
+const LearningPage = deferred(
+  () => import("../features/CommunityPages"),
+  "LearningPage",
+);
+const MemberProfile = deferred(
+  () => import("../features/CommunityPages"),
+  "MemberProfile",
+);
+const OwnProfile = deferred(
+  () => import("../features/CommunityPages"),
+  "OwnProfile",
+);
+const ReviewForm = deferred(
+  () => import("../features/CommunityPages"),
+  "ReviewForm",
+);
+const AuthPage = deferred(() => import("../features/AuthPages"), "AuthPage");
+const VerificationPage = deferred(
+  () => import("../features/VerificationPages"),
+  "VerificationPage",
+);
+const RegistrationPage = deferred(
+  () => import("../features/VerificationPages"),
+  "RegistrationPage",
+);
+const NewCase = deferred(() => import("../features/CasesPages"), "NewCase");
+const CaseDetail = deferred(
+  () => import("../features/CasesPages"),
+  "CaseDetail",
+);
+const AnalyticsPage = deferred(
+  () => import("../features/ReportingPages"),
+  "AnalyticsPage",
+);
+const AdminDecision = deferred(
+  () => import("../features/AdminPages"),
+  "AdminDecision",
+);
+const AdminQueue = deferred(
+  () => import("../features/AdminPages"),
+  "AdminQueue",
+);
+const AdminRecords = deferred(
+  () => import("../features/AdminPages"),
+  "AdminRecords",
+);
+const ModerationPage = deferred(
+  () => import("../features/AdminPages"),
+  "ModerationPage",
+);
+const WorkQueues = deferred(
+  () => import("../features/AdminPages"),
+  "WorkQueues",
+);
+const AmendmentsPage = deferred(
+  () => import("../features/AdditionalPages"),
+  "AmendmentsPage",
+);
+const NewAmendment = deferred(
+  () => import("../features/AdditionalPages"),
+  "NewAmendment",
+);
+const AmendmentDetail = deferred(
+  () => import("../features/AdditionalPages"),
+  "AmendmentDetail",
+);
+const ContributionsPage = deferred(
+  () => import("../features/AdditionalPages"),
+  "ContributionsPage",
+);
+const ReportContentPage = deferred(
+  () => import("../features/AdditionalPages"),
+  "ReportContentPage",
+);
+const OwnReviews = deferred(
+  () => import("../features/AdditionalPages"),
+  "OwnReviews",
+);
+const ReviewResponsePage = deferred(
+  () => import("../features/AdditionalPages"),
+  "ReviewResponsePage",
+);
+const NotificationPreferences = deferred(
+  () => import("../features/AdditionalPages"),
+  "NotificationPreferences",
+);
+const HelpPage = deferred(() => import("../features/HelpPage"), "HelpPage");
+const HowItWorksPage = deferred(
+  () => import("../features/HowItWorksPage"),
+  "HowItWorksPage",
+);
+const Leaderboard = deferred(
+  () => import("../features/ReputationPages"),
+  "Leaderboard",
+);
+const ReputationPage = deferred(
+  () => import("../features/ReputationPages"),
+  "ReputationPage",
+);
 import { ActionLink } from "../components";
-import { ContactSettings } from "../features/connections/ContactSettings";
-import { CoBorrowersPage } from "../features/connections/CoBorrowersPage";
-import { InvitationClaimPage } from "../features/connections/InvitationReview";
+const ContactSettings = deferred(
+  () => import("../features/connections/ContactSettings"),
+  "ContactSettings",
+);
+const CoBorrowersPage = deferred(
+  () => import("../features/connections/CoBorrowersPage"),
+  "CoBorrowersPage",
+);
+const InvitationClaimPage = deferred(
+  () => import("../features/connections/InvitationReview"),
+  "InvitationClaimPage",
+);
+const ActionCenter = deferred(
+  () => import("../features/memberhub/ActionCenter"),
+  "ActionCenter",
+);
+const SavedOffers = deferred(
+  () => import("../features/memberhub/SavedOffers"),
+  "SavedOffers",
+);
+const RepaymentCalendar = deferred(
+  () => import("../features/memberhub/RepaymentCalendar"),
+  "RepaymentCalendar",
+);
+const LenderDesk = deferred(
+  () => import("../features/memberhub/LenderDesk"),
+  "LenderDesk",
+);
+const AccountRecovery = deferred(
+  () => import("../features/memberhub/AccountRecovery"),
+  "AccountRecovery",
+);
+const InvestmentsPage = deferred(
+  () => import("../features/investments/InvestmentsPage"),
+  "InvestmentsPage",
+);
 const member = (element: React.ReactNode) => (
   <RequireMember>{element}</RequireMember>
 );
@@ -93,6 +242,21 @@ export const routes = [
   {
     path: "/marketplace",
     element: <MarketplacePage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/forgot-password",
+    element: <AccountRecovery />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/reset-password/:id",
+    element: <AccountRecovery mode="reset" />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/verify-email/:id",
+    element: <AccountRecovery mode="verify" />,
     errorElement: <ErrorPage />,
   },
   {
@@ -121,7 +285,11 @@ export const routes = [
       { path: "applications/:id", element: member(<ApplicationDetail />) },
       { path: "agreements/:id", element: member(<AgreementPage />) },
       { path: "meetings", element: member(<MeetingList />) },
-      { path: "investments", element: member(<MeetingList investments />) },
+      { path: "investments", element: member(<InvestmentsPage />) },
+      {
+        path: "investment-discussions",
+        element: member(<MeetingList investments />),
+      },
       { path: "dashboard", element: member(<Dashboard />) },
       { path: "loans", element: member(<LoansPage />) },
       { path: "loans/:id", element: member(<LoanDetail />) },
@@ -167,6 +335,10 @@ export const routes = [
         ),
       },
       { path: "analytics", element: member(<AnalyticsPage />) },
+      { path: "activity", element: member(<ActionCenter />) },
+      { path: "saved-offers", element: member(<SavedOffers />) },
+      { path: "calendar", element: member(<RepaymentCalendar />) },
+      { path: "lender-desk", element: member(<LenderDesk />) },
       { path: "inbox", element: member(<InboxPage />) },
       { path: "members/:handle", element: <MemberProfile /> },
       { path: "profile", element: member(<OwnProfile />) },

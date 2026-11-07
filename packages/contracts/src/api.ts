@@ -274,6 +274,7 @@ export interface Profile {
   reviews: Review[];
 }
 export interface Thread {
+  unread_count?: number;
   meeting_id?: string | null;
   id: string;
   loan_id?: string;
@@ -311,3 +312,8 @@ export interface Verification {
   [key: string]: unknown;
 }
 export type DataRecord = Record<string, unknown>;
+
+export type {Meeting, MeetingSummary} from "./meetings";
+export type {InvestmentPosition, InvestmentFund, InvestmentAgreement} from "./investments";
+
+export type {components as ApiSchemas, operations as ApiOperations} from "./generated";

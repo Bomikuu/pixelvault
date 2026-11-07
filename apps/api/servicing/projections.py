@@ -14,6 +14,7 @@ def member_summary(member):
 
     return {
         "id": str(member.id),
+        "handle": member.username,
         "display_name": member.display_name,
         "area": member.area,
         "avatar_key": member.avatar_key if member.avatar_key in AVATAR_KEYS else "",

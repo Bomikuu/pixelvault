@@ -204,6 +204,10 @@ def create_room(*, actor_id, data):
         }
     else:
         raise DomainError("invalid_kind", "Choose a borrowing or investment room.")
+    if kind == "investment":
+        from investments.services import proposal_terms
+
+        proposal = proposal_terms(proposal)
     active(offer.lender_id)
     room = Room.objects.create(
         kind=kind,
@@ -362,7 +366,7 @@ def command(*, actor_id, room_id, data):
             raise DomainError("invalid_agenda", "Choose one of the three meeting agendas.")
         room.agenda = data["agenda"]
     elif action == "propose":
-        if room.agreement_id:
+        if room.agreement_id or hasattr(room, "investment_agreement"):
             raise DomainError(
                 "agreement_prepared",
                 "This room already has a frozen agreement. Changes need a separate amendment.",
@@ -373,7 +377,9 @@ def command(*, actor_id, room_id, data):
             share = integer(data.get("share_bps"), "interest share")
             if share > 10000:
                 raise DomainError("invalid_share", "Choose a share from 0% to 100%.")
-            room.proposal = {**room.proposal, "amount": amount, "share_bps": share}
+            from investments.services import proposal_terms
+
+            room.proposal = proposal_terms({**room.proposal, "amount": amount, "share_bps": share})
         else:
             if room.application.status not in {"submitted", "reviewing"}:
                 raise DomainError(
@@ -433,61 +439,87 @@ def command(*, actor_id, room_id, data):
                 "approvals_required", "Both people must agree to the current proposal first.", 409
             )
         if room.kind == "investment":
-            raise DomainError(
-                "investment_policy_pending",
-                "Investment contracts and funding are blocked until capital-return and platform-fee policies are approved. No capital has been transferred.",
-                409,
-            )
-        from marketplace.reservations import select_application
-        from agreements.acceptance import prepare_agreement
+            from investments.services import prepare
 
-        # Preserve the reservation worker's offer-before-application lock order.
-        LendingOffer.objects.select_for_update().get(pk=room.offer_id)
-        application = LoanApplication.objects.select_for_update().get(pk=room.application_id)
-        if application.status in {"submitted", "reviewing"}:
-            application.terms = room.proposal["terms"]
-            application.disclosure = room.proposal["disclosure"]
-            application.save(update_fields=["terms", "disclosure", "updated_at"])
-            reservation = select_application(
-                lender_id=room.lender_id,
-                application_id=application.id,
-                expected_offer_version=room.offer.version,
-                operation_id=operation_id,
-            )
-        elif application.status == "selected" and hasattr(application, "reservation"):
-            reservation = application.reservation
-            if application.terms != room.proposal["terms"]:
-                raise DomainError(
-                    "application_changed",
-                    "The selected application's terms changed. Reopen review.",
-                    409,
-                )
+            prepare(room)
         else:
-            raise DomainError(
-                "application_unavailable", "This application is no longer available.", 409
-            )
-        room.agreement = prepare_agreement(reservation_id=reservation.id, actor_id=actor_id)
+            from marketplace.reservations import select_application
+            from agreements.acceptance import prepare_agreement
+
+            # Preserve the reservation worker's offer-before-application lock order.
+            LendingOffer.objects.select_for_update().get(pk=room.offer_id)
+            application = LoanApplication.objects.select_for_update().get(pk=room.application_id)
+            if application.status in {"submitted", "reviewing"}:
+                application.terms = room.proposal["terms"]
+                application.disclosure = room.proposal["disclosure"]
+                application.save(update_fields=["terms", "disclosure", "updated_at"])
+                reservation = select_application(
+                    lender_id=room.lender_id,
+                    application_id=application.id,
+                    expected_offer_version=room.offer.version,
+                    operation_id=operation_id,
+                )
+            elif application.status == "selected" and hasattr(application, "reservation"):
+                reservation = application.reservation
+                if application.terms != room.proposal["terms"]:
+                    raise DomainError(
+                        "application_changed",
+                        "The selected application's terms changed. Reopen review.",
+                        409,
+                    )
+            else:
+                raise DomainError(
+                    "application_unavailable", "This application is no longer available.", 409
+                )
+            room.agreement = prepare_agreement(reservation_id=reservation.id, actor_id=actor_id)
     elif action == "accept_contract":
         require_both(room)
-        if not room.agreement_id or data.get("expected_hash") != room.agreement.hash:
+        if room.kind == "investment":
+            if data.get("accepted") is not True:
+                raise DomainError(
+                    "acceptance_required", "Confirm this exact test investment agreement."
+                )
+            from investments.services import accept
+
+            accept(room, actor_id, data.get("expected_hash"))
+        elif not room.agreement_id or data.get("expected_hash") != room.agreement.hash:
             raise DomainError(
                 "contract_changed", "Open the current agreement before accepting.", 409
             )
-        if data.get("accepted") is not True:
-            raise DomainError(
-                "acceptance_required", "Confirm your acceptance of this exact test agreement."
-            )
-        from agreements.acceptance import accept_agreement
+        if room.kind == "borrowing":
+            if data.get("accepted") is not True:
+                raise DomainError(
+                    "acceptance_required", "Confirm your acceptance of this exact test agreement."
+                )
+            from agreements.acceptance import accept_agreement
 
-        result = accept_agreement(
-            member_id=actor_id,
-            agreement_id=room.agreement_id,
-            expected_hash=data["expected_hash"],
-            operation_id=operation_id,
-        )
-        if result.state == "accepted":
-            room.state = "agreed"
-        record_audit(actor_id=actor_id, action="room.contract_accepted", subject_id=room.id)
+            result = accept_agreement(
+                member_id=actor_id,
+                agreement_id=room.agreement_id,
+                expected_hash=data["expected_hash"],
+                operation_id=operation_id,
+            )
+            if result.state == "accepted":
+                room.state = "agreed"
+            record_audit(actor_id=actor_id, action="room.contract_accepted", subject_id=room.id)
+    elif action == "confirm_test_funding":
+        require_both(room)
+        if room.kind != "investment" or data.get("confirmed_simulation") is not True:
+            raise DomainError(
+                "simulation_required", "Explicitly confirm a synthetic investment funding event."
+            )
+        from investments.services import confirm_funding
+
+        confirm_funding(room, actor_id, data.get("expected_hash"))
+    elif action in {"prepare_payout", "confirm_payout", "cancel_payout"}:
+        require_both(room)
+        if room.kind != "investment" or data.get("confirmed_simulation") is not True:
+            raise DomainError(
+                "simulation_required", "Explicitly confirm a synthetic investment payout event."
+            )
+        from investments.services import payout
+
+        payout(room, actor_id, data, operation_id)
     elif action == "visibility":
         if (
             room.kind != "investment"
@@ -500,6 +532,30 @@ def command(*, actor_id, room_id, data):
         room.visibility = data["visibility"]
         # Public appearance is separate from commercial proposal acceptance.
     elif action == "close":
+        if room.kind == "investment":
+            from investments.models import InvestmentFund
+            from investments.services import position
+
+            fund = InvestmentFund.objects.filter(agreement__room=room).first()
+            if fund:
+                balances = position(fund)
+                if (
+                    any(
+                        int(balances[key]) != 0
+                        for key in (
+                            "unallocated",
+                            "capital_exposure",
+                            "principal_due",
+                            "earnings_due",
+                        )
+                    )
+                    or fund.payouts.filter(status="awaiting_investor").exists()
+                ):
+                    raise DomainError(
+                        "investment_open",
+                        "Resolve allocated capital, unused returns and payout proposals before closing this room.",
+                        409,
+                    )
         room.state = "closed"
     else:
         raise DomainError("unsupported_action", "Choose a supported meeting action.")

@@ -107,3 +107,25 @@ class Evidence(Record):
     document = models.ForeignKey("documents.Document", on_delete=models.PROTECT)
     category = models.CharField(max_length=20)
     revoked = models.BooleanField(default=False)
+
+
+class RoomCall(Record):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="calls")
+    caller = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="started_room_calls"
+    )
+    state = models.CharField(max_length=16, default="ringing")
+    caller_seen_at = models.DateTimeField()
+    callee_seen_at = models.DateTimeField(null=True)
+    offer = models.JSONField(null=True)
+    answer = models.JSONField(null=True)
+    ended_at = models.DateTimeField(null=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["room"],
+                condition=Q(state__in=["ringing", "active"]),
+                name="one_open_call_per_room",
+            )
+        ]

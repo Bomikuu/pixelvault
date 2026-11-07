@@ -280,7 +280,7 @@ export function World({
       />
       <div
         data-no-walk
-        className="absolute top-3 left-3 z-20 flex max-w-[calc(100%-1.5rem)] items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-[11px] shadow-sm"
+        className="absolute bottom-12 left-3 z-20 hidden max-w-[calc(100%-1.5rem)] items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-[11px] shadow-sm md:flex"
       >
         <Layers className="size-4 text-primary" />
         <span>{mapReady ? "Google Maps" : "Plaza view · Map unavailable"}</span>
@@ -407,7 +407,12 @@ export function World({
       </div>
       <span className="pointer-events-none absolute bottom-3 left-3 z-20 inline-flex items-center gap-1 rounded-lg bg-card px-2 py-1 text-[10px] text-muted-foreground">
         <MapPin className="size-3" />
-        Virtual room positions
+        <span className="hidden md:inline">Virtual room positions</span>
+        <span className="md:hidden">
+          {mapReady
+            ? "Google Maps · Virtual positions"
+            : "Plaza view · Map unavailable"}
+        </span>
       </span>
       <span className="pointer-events-none absolute right-3 bottom-3 z-20 hidden rounded-lg bg-card px-2 py-1 text-[10px] text-muted-foreground md:inline">
         Click to walk · WASD / arrow keys

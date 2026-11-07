@@ -1,0 +1,9 @@
+## Events, pagination and private files
+
+Room SSE is participant-only, lasts about 45 seconds and advertises `retry: 3000`. `room.changed` provides sequence/revision; `room.expired` ends an expired session. Refetch the authorized room snapshot after a change. Do not assume replay of every missed event. Public activity SSE sends `ready` and `offers.changed` revisions, never borrower/payment/document activity. Foreground REST polling is the native baseline until cookie/event transport is proven. Pause requests and stop local media in the background.
+
+Use each endpoint's returned cursor; there is no global pagination format. Discovery uses a bounded offset cursor (30 rows per page, from the latest 1000 supported offers). Leaderboard uses signed snapshot cursors that can conflict or expire, requiring a fresh first page. Threads/social comments use their own bounded offset cursors. Keep loaded counts distinct from global totals. New messages should preserve the reader's scroll and focus.
+
+Evidence upload uses multipart form data and leaves the browser to set the boundary. Private documents accept nonempty PDF/PNG/JPEG, up to 10 MiB, inspect magic bytes and start quarantined. Room evidence additionally requires `consent: "share_with_counterparty"` and a supported category. Profile photos are a separate sanitized, nonanimated JPEG/PNG/WebP upload of at most 3 MiB, not identity evidence.
+
+`GET /documents/{id}/download` issues an actor-bound link lasting 60 seconds. Content rechecks the actor, clean state and permission; a token alone is insufficient. PDF agreements, text investment contracts, JPEG profile photos and dates-only calendar ICS use distinct MIME types and filenames. Respect Content-Disposition (including filename*=UTF-8), private/no-store and revocation. Never cache private files, grants, API responses or authenticated HTML in the PWA service worker. An image of a transfer is not a settled payment.

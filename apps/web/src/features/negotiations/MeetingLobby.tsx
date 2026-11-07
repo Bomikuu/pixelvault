@@ -9,6 +9,7 @@ import {
   Clock3,
   Headphones,
   LockKeyhole,
+  FileText,
 } from "lucide-react";
 import { Button } from "@pixelvault/ui";
 import {
@@ -30,10 +31,12 @@ export function MeetingLobby({
   query,
   memberId,
   enter,
+  viewRecord,
 }: {
   query: ReturnType<typeof useMeeting>;
   memberId: string;
   enter: () => Promise<void>;
+  viewRecord: () => void;
 }) {
   const room = query.data!;
   const [error, setError] = useState<unknown>();
@@ -59,7 +62,9 @@ export function MeetingLobby({
     ? new Date(room.scheduled_at).getTime()
     : null;
   const inWindow = scheduled !== null && Math.abs(now - scheduled) <= 3600000;
-  const history = room.state !== "negotiating";
+  const history =
+    room.state === "closed" ||
+    (room.state === "agreed" && room.kind === "borrowing");
   const canEnter = history || (accepted && inWindow);
   const cooldown = Math.max(
     0,
@@ -99,7 +104,7 @@ export function MeetingLobby({
         </div>
       </div>
       <div className="grid min-w-0 gap-7 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-10">
-        <div className="min-w-0 space-y-6">
+        <div className="contents lg:block lg:min-w-0 lg:space-y-6">
           <header>
             <h1 className="text-3xl! font-extrabold leading-tight tracking-tight">
               Your meeting starts here.
@@ -209,8 +214,8 @@ export function MeetingLobby({
             act={act}
           />
           <section
+            className="order-3 overflow-hidden rounded-2xl bg-accent p-5 text-accent-foreground lg:order-none"
             aria-labelledby="meeting-guide"
-            className="overflow-hidden rounded-2xl bg-accent p-5 text-accent-foreground"
           >
             <div className="flex items-center justify-between gap-4">
               <div>
@@ -258,7 +263,7 @@ export function MeetingLobby({
             </ol>
           </section>
         </div>
-        <aside className="min-w-0 space-y-5 lg:sticky lg:top-0 lg:self-start">
+        <aside className="order-2 min-w-0 space-y-5 lg:order-none lg:sticky lg:top-0 lg:self-start">
           <div className="rounded-2xl border border-border bg-card p-4 sm:p-5">
             <DevicePreview person={self} />
             <div className="mt-5 border-t border-border pt-4">
@@ -277,6 +282,14 @@ export function MeetingLobby({
                   : history
                     ? "View meeting record"
                     : "Enter room"}
+              </Button>
+              <Button
+                className="mt-2 w-full whitespace-normal"
+                variant="outline"
+                onClick={viewRecord}
+              >
+                <FileText size={17} />
+                View conversation & records
               </Button>
               {(error || query.actionError) && (
                 <div className="mt-3">
@@ -317,8 +330,9 @@ export function MeetingLobby({
               </li>
             </ol>
             <p className="mt-3 text-xs text-muted-foreground">
-              Camera and microphone previews are local. A private live call
-              provider is still required for shared audio/video.
+              Camera and microphone previews are local. Both people can choose
+              to join a private call inside the meeting; reliable connections
+              across networks need a configured relay.
             </p>
           </IllustratedInfoDialog>
         </aside>

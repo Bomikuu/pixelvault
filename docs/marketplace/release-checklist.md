@@ -48,3 +48,7 @@ No application builds, automated tests, type/UI checks, lints or detector script
 ## Commit boundary
 
 The new room backend, marketplace interface and owned navigation/configuration hunks are saved in focused local commits. The pre-existing private API-reference catalog and generated schema/types also contain this feature's registrations and contracts; those mixed artifacts remain in the working tree with the earlier mobile/API work. The preview therefore depends on that pending stack and cannot be reproduced from the marketplace commits alone. No push or clean-tree claim is made. Documentation records this boundary rather than committing unrelated work wholesale.
+
+## Subsequent compact-panel UI revision
+
+The same-day reference revision adds collapsible desktop chat/activity and people/offers panels, responsive dialog access and modal-only bubble composition. Room chat remains the current 60-second bubble projection. See [the surface revision](../surfaces/interactive-marketplace.md#compact-panels-revision--2026-11-06) for exact visual observations, saved previews, theme/guest restoration and the unexecuted-check boundary. This UI revision does not clear any pending backend, provider, concurrency or accessibility release gate above.

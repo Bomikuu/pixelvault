@@ -399,6 +399,7 @@ export function DiscoveryWorkspace({
             locating={locating}
             onLocate={locate}
             onReadyChange={setMapReady}
+            onList={() => setFilter("view", "list")}
           />
         </div>
       )}

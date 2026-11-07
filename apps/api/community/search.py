@@ -94,11 +94,17 @@ def search_offers(*, viewer_id=None, filters=None, cursor=None, lender_id=None):
                 "created_at": offer.created_at.isoformat(),
             }
         )
+    from marketplace.serializers import available_cost_example
+
+    page = rows[offset : offset + 30]
+    by_id = {str(offer.id): offer for offer in visible}
+    for row in page:
+        row["cost_example"] = available_cost_example(by_id[row["id"]])
     # Disclosed examples can have different dates, fees and principal. Never rank unlike scenarios as equal-cost quotes.
     if filters.get("sort") not in (None, "recent", "cost"):
         raise DomainError("invalid_sort", "Choose recent or cost.")
     return {
-        "offers": rows[offset : offset + 30],
+        "offers": page,
         "next_cursor": str(offset + 30) if len(rows) > offset + 30 else None,
         "cost_sort_available": False,
         "cost_comparison_note": "Costs are per-offer examples. A common principal, term and dates are required before cost ranking.",

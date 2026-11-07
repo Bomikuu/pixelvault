@@ -4,7 +4,11 @@ import { ApiError, apiRequest, operationId } from "../../app/api";
 import { useSession } from "../../app/session";
 import type { Meeting } from "./types";
 
-export function useMeeting(id: string | undefined, entered = true) {
+export function useMeeting(
+  id: string | undefined,
+  entered = true,
+  viewingRecord = false,
+) {
   const client = useQueryClient();
   const { session } = useSession();
   const [connection, setConnection] = useState<
@@ -73,6 +77,26 @@ export function useMeeting(id: string | undefined, entered = true) {
   const self = query.data?.participants.find(
     (p) => p.id === session?.member?.id,
   );
+  const latestMessage = query.data?.messages.at(-1)?.created_at;
+  const threadId = query.data?.thread_id;
+  useEffect(() => {
+    if (
+      (!entered && !viewingRecord) ||
+      !threadId ||
+      !latestMessage ||
+      document.hidden
+    )
+      return;
+    void apiRequest(`/hub/threads/${threadId}/read`, {
+      method: "POST",
+      body: JSON.stringify({ through: latestMessage }),
+    })
+      .then(() => {
+        void client.invalidateQueries({ queryKey: ["actions"] });
+        void client.invalidateQueries({ queryKey: ["threads"] });
+      })
+      .catch(() => {});
+  }, [entered, viewingRecord, threadId, latestMessage, client]);
   useEffect(() => {
     if (!id) return;
     const renew = () => {

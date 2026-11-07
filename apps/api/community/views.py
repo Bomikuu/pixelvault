@@ -157,6 +157,10 @@ class ThreadView(MemberView):
             .prefetch_related("participants")
             .order_by("-created_at")
         )
+        threads = list(threads)
+        from memberhub.projections import thread_counts
+
+        unread = thread_counts(request.user.id, threads)
         rows = []
         for thread in threads:
             other = next(
@@ -176,6 +180,7 @@ class ThreadView(MemberView):
                     "other_photo_url": identity.get("photo_url") if other else None,
                     "other_reputation": identity.get("reputation") if other else None,
                     "latest_at": thread.latest_at.isoformat() if thread.latest_at else None,
+                    "unread_count": unread.get(thread.id, 0),
                 }
             )
         return Response({"threads": rows})

@@ -6,6 +6,8 @@ it("retains public text after an uncertain response", async () => {
   const post = vi.fn().mockRejectedValue(new Error("Temporarily unavailable"));
   renderApp(
     <BubbleComposer
+      open
+      onOpenChange={vi.fn()}
       enabled
       offers={[]}
       hasBubble={false}
@@ -28,6 +30,8 @@ it("retains public text after an uncertain response", async () => {
 it("counts Unicode points rather than surrogate halves", () => {
   renderApp(
     <BubbleComposer
+      open
+      onOpenChange={vi.fn()}
       enabled
       offers={[]}
       hasBubble={false}

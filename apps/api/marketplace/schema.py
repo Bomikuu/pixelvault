@@ -1,0 +1,18 @@
+from config.schema_types import BOOL, CENTS, INT, TEXT, TIME, UUID, array, nullable, obj, op, ref
+
+SCHEMAS = {
+    "Offer": obj({"id": UUID, "title": TEXT, "area": TEXT, "lender": ref("Person"), "declared_amount": CENTS, "available_amount": CENTS, "reserved_amount": CENTS, "committed_amount": CENTS, "min_amount": CENTS, "max_amount": CENTS, "status": TEXT, "version": INT, "annual_rate_bps": INT, "frequency": TEXT, "installment_count": INT, "terms": ref("Terms"), "disclosure": ref("Disclosure"), "expires_at": TIME, "test_mode": BOOL, "capacity_label": TEXT, "applications": array(ref("Application")), "my_application": nullable(ref("Application"))}, ["id", "title", "area", "lender", "declared_amount", "available_amount", "min_amount", "max_amount", "status", "version", "terms", "disclosure", "expires_at", "test_mode"]),
+    "Application": obj({"id": UUID, "offer_id": UUID, "meeting_id": nullable(UUID), "principal": CENTS, "created_at": TIME, "agreement_id": nullable(UUID), "borrower": ref("Person"), "lender": ref("Person"), "offer": obj({"id": UUID, "version": INT, "title": TEXT}), "terms": ref("Terms"), "disclosure": ref("Disclosure"), "purpose": TEXT, "summary": obj({key:{**TEXT,"maxLength":200} for key in ("employment_type","income_band","repayment_experience")},[]), "status": TEXT, "co_borrower": nullable(obj({"member": ref("PublicIdentity"), "status": TEXT, "joint_liability": BOOL})), "test_mode": BOOL}),
+}
+OPERATIONS = {
+    ("OffersView", "GET"): op(array(ref("Offer")), summary="List currently published offers"),
+    ("OffersView", "POST"): op(ref("Offer"), obj({"title":{**TEXT,"maxLength":140},"area":{**TEXT,"maxLength":80},"declared_amount":CENTS,"principal":CENTS,"annual_rate_bps":{**INT,"minimum":0,"maximum":100000},"frequency":{"type":"string","enum":["weekly","twice_monthly","monthly","maturity"]},"installment_count":{**INT,"minimum":1,"maximum":120},"effective_date":{"type":"string","format":"date"},"min_amount":CENTS,"max_amount":CENTS,"policy_version":TEXT,"operation_id":UUID},["title","area","declared_amount","principal","annual_rate_bps","frequency","installment_count","effective_date","operation_id"]), status=201, summary="Create a lending offer"),
+    ("OfferDetailView", "GET"): op(ref("Offer"), summary="Read an offer and permitted applications", description="Requires member sign-in. Use public discovery for anonymous browsing. Only the lender receives private applications."),
+    ("OfferPublishView", "POST"): op(ref("Offer"), obj({}), summary="Publish a reviewed offer"),
+    ("ApplyView", "POST"): op(ref("Application"), obj({"principal": CENTS, "purpose": TEXT, "summary": obj({key:{**TEXT,"maxLength":200} for key in ("employment_type","income_band","repayment_experience")},[]), "operation_id": UUID, "co_borrower_invitation_id": UUID}, ["principal", "purpose", "operation_id"]), status=201, summary="Submit a private application", description="Original lender terms apply. Calculator variants never change these terms. Co-borrower sharing requires a separately accepted invitation."),
+    ("ApplicationsView", "GET"): op(array(ref("Application")), summary="List your applications as borrower or lender"),
+    ("ApplicationDetailView", "GET"): op(ref("Application"), summary="Read your application's current state"),
+    ("SelectView", "POST"): op(obj({"id": UUID, "status": TEXT, "expires_at": TIME, "agreement_id": UUID}), obj({"operation_id": UUID, "expected_offer_version": INT}), summary="Select a borrower and reserve capacity"),
+    ("WithdrawView", "POST"): op(ref("Application"), obj({}), summary="Withdraw your application"),
+    ("DeclineView", "POST"): op(ref("Application"), obj({}), summary="Decline a private application"),
+}

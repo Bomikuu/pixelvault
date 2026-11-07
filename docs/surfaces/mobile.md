@@ -1,0 +1,13 @@
+# PixelVault phone interface
+
+Audience: Philippine individual borrowers, lenders and test investors using the existing accounts. Primary job: understand the next obligation or shared decision, inspect its evidence and act deliberately. Tone: neighborly, precise and practical.
+
+Hallmark app scope: **Operate** for Home, forms, messages and rooms; **Read** for agreements and public profiles. Preserve the root `DESIGN.md` blue/navy palette, Manrope, keyhole glyph, thin-ink community scenes and canonical Shadcn controls. No theme deal, rebrand, stock image, invented financial total or testimonial was introduced. The separate phone composition has five bottom destinations, large people imagery, compact disclosure rows and immersive map/conversation/meeting routes. It imports shared tokens/controls rather than the desktop stylesheet.
+
+Material: current server-projected records, exact centavos, authored eligibility explanations and existing original art. XP alone may count up; balances and signed amounts remain exact. Presence dots represent actual room attendance; public profile activity stays coarse and optional. Badge presses explain their criteria. Frames, worn flair and public shelf use the current server eligibility checks, separately from affordability or authority to lend.
+
+States: guest sign-in entry; loading; denied/missing; validation with retained input and focus; unavailable capacity; empty/no results; offline with private content hidden; reconnecting; stale revision/hash; uncertain financial response requiring refresh; record-only room; permission-denied media; native functionality pending validation. Financial actions require separate confirmation and a synchronous lock, without automatic retries or an offline queue. Exact retries retain the endpoint-specific operation UUID and unchanged payload.
+
+Craft exceptions inherited from the established system: canonical illustrated SVG avatars/badges and instructional scenes remain approved brand assets; Scalar uses its renderer theme variables rather than Tailwind internals. No Hallmark/Together image call, hook or scaffold was executed. The in-thread review replaces delegation because the user prohibited subagents. Hallmark sloplint and Impeccable detectors were not run under the user’s visual-only verification instruction.
+
+Browser findings and unverified cases are recorded in [release checklist](../mobile/release-checklist.md). A source implementation and browser preview are not evidence of native-cookie compatibility, provider settlement, successful signing, media cleanup on a real device or a tested PWA package.

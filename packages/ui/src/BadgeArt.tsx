@@ -76,6 +76,7 @@ export function BadgeArt({
       viewBox="0 0 160 160"
       width={size}
       height={size}
+      style={{ width: size, height: size }}
       role="img"
       aria-label={name}
       className={`award-art award-illustration ${locked ? "is-locked" : ""} ${className}`.trim()}

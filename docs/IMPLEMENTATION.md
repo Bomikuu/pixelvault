@@ -1,5 +1,21 @@
 # PixelVault implementation record
 
+## Audit extension · 2026-10-30
+
+Implemented natively on `codex/audit-improvements`, with no subagents. This section supersedes earlier statements that recovery, shared calls, investment contracts or contributor circles are absent; earlier verification counts remain historical.
+
+The ten audit findings are addressed: Messages navigation now loads; foreground incoming polling and private read receipts update inbox counts; profile text uses semantic dark roles; offer cost examples cannot exceed current unreserved capacity; Overview applications follow the selected role; shared forms preserve input and expose associated field errors/focus; financial labels and definitions are readable; a failed map offers direct list recovery; mobile meeting entry precedes the guide; and seven scene families use responsive WebP delivery with lazy route groups.
+
+Five member tools are connected to scoped records: an action center with private read state, saved offers/comparison through the existing exact calculator, Manila contractual payment dates plus dates-only ICS, a lender decision desk, and separately verified recovery-email/password-reset flows. Unknown/unverified/cooldown recovery requests use the same public response and queued worker path. Tokens are hashed at rest, single-use, thirty-minute limited, bound to current email/password, and cleared from the visible URL fragment after capture. Test mail is local; live SMTP needs explicit configuration. No passwords were changed for inspection.
+
+Meeting rooms now include native WebRTC invitation/acceptance, microphone/camera controls, no recording, ephemeral participant-only SDP, short-lived optional coturn credentials and presence/expiry cleanup. Camera starts off; hiding/leaving ends capture. There is no configured default external relay. Actual cross-network media and browser permission cleanup require device testing.
+
+The investment extension has frozen hash-bound test documents, each party's contract/funding acknowledgments, full-contribution pool credit after mutual simulation confirmation and a separate lender-paid **2% demonstration fee**. Confirmed capital is allocated FIFO to subsequent new loans under that offer, without automatic reinvestment. Immutable cumulative collection attribution handles principal, collected-interest share and compensating reversals. Private positions distinguish principal, earnings, losses, unpaid amounts and unused capital; lender proposals and investor confirmations simulate payouts and unused returns. Public circles count distinct confirmed contributors, with anonymous appearance honored and no individual amounts. Live investment origination, real transfer proof, payout routing and approved templates remain unavailable.
+
+Additive migrations accounts 0005, negotiations 0003, memberhub 0001 and investments 0001 were applied locally. Existing data was preserved without reseeding or manufacturing financial events. The [surface record](surfaces/member-tools.md) documents behavior and limits. **Verification is visual/browser only for this revision:** no builds, automated tests, type/UI checks or detector scripts. Financial concurrency/reversal, recovery security and actual native call behavior are not certified by this review and need regression coverage before launch.
+
+## Initial implementation · 2026-10-28
+
 Implemented on 2026-10-28 in the standalone repository `/home/micxsz/projects/pixelvault`, branch `codex/implementation`, after the user instructed implementation. The original planning package remains in PixelCore commit `32a20f7`. Existing PixelCore, PixelFlow, Medframe and DineEase source was preserved.
 
 ## Viewport Explore and compact offer feed
@@ -227,6 +243,19 @@ Analytics now follows the supplied composition with compact inclusive-Manila dat
 An additive permission-scoped reporting projection aggregates immutable ledger entries into bounded day/month buckets, preserving signed reversals and decimal centavo strings. Client grouping uses BigInt. No growth percentages, sample wave, effective-rate claim or artificial miniature history is supplied. Flows, cutoff balances, current statuses and future contractual interest retain separate meanings. Reporting GETs are private/no-store; operations requests no longer send an unsupported member role parameter. Existing scalar definitions and export content remain unchanged. No migration or financial write was needed; the local API was restarted for the new read projection.
 
 Visual-only observations cover 1440px light/dark, 390px and 320px, actual borrower data, lending empty state, category and Cards/Chart selection, expanded exact trend rows and invalid URL date-range gating. Corrections addressed mobile date compression, tile density, theme surface overrides, plot label sizing and compact selectors. Current data has ₱10,000 principal borrowed and ₱3,000 net repaid; the chart shows its actual single repayment spike. Captures: ignored `.runtime/qa/analytics-reference/`. Light theme and default report controls were restored, and temporary viewport sizing was reset. No export or new fixture was created. Native date-picker commit behavior, negative-reversal/long-period fixtures, operations access, concurrent reads and download completion remain runtime limits. No subagents, builds, automated tests, typecheck, UI/contrast checks or detector scripts ran. Jev's sanitized advisory used 413 input / 39 output tokens; graphify's existing 205-node map was stale/truncated. See [the surface contract](surfaces/analytics.md).
+
+
+## Phone companion and private API reference · 2026-10-30
+
+Implemented directly using Jev advisory judgment, graphify relationship tracing, Hallmark app scope and Impeccable within the existing PixelVault identity. No subagents were used. `apps/mobile` has an independent five-destination phone composition, with shared UI/art/transport/contracts and the same Django accounts. It covers public discovery and map fallback, offers/calculator/social activity, applications, shared loans/history/files, member tools, messages, scheduled mutual rooms, private investments, profiles/achievements/settings/verification/invitations/support. Exact money remains server-owned and financial decisions are explicit; no live origination is enabled.
+
+The protected local Scalar renderer, raw schema and allowlisted assets require active unsuspended developer/admin staff. A domain catalog declares all 155 registered operations, including binary/SSE/command variants. Six fixed lifecycle guides and generated TypeScript accompany the source inventory. Unknown new declarations fail export rather than receiving a generic JSON success root. Schema/type generation and asset sync ran as authoring, not validation.
+
+PWA source precaches public bundled shell assets only, prompts before reload and has no offline mutation queue. Native configuration/deep-link/lifecycle preparation is fail-closed; session/file/device proof, generated Android project/build and publication remain pending. See [release checklist](mobile/release-checklist.md) and [development](mobile/development.md).
+
+Bounded browser review covered light/dark phone surfaces at 390px/320px, the illustrated map fallback, podium and badge dialogs, waiting-room date/time, the immersive read-only step tray, logout/account restoration and desktop/mobile staff reference. Corrections addressed spacing, illustration sizing, narrow controls, loading and browser-correct documentation examples. Screenshots and precise limits are recorded in the release checklist. The original synthetic borrower, light theme and default viewport were restored.
+
+No builds, automated tests, TypeScript/UI checks, lint/detector scripts or native device validation ran for this task. Historical results elsewhere do not validate these changes. Existing uncommitted audit work was preserved and no push was performed.
 
 ## Shared city marketplace · 2026-11-06
 

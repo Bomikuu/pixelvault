@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>PixelVault developer reference</title>
+    <link rel="icon" href="/api/docs/assets/logo.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    {% if available %}
+    <div id="reference" data-environment="{{ environment }}"></div>
+    <script src="/api/docs/assets/reference.js" defer></script>
+    <script src="/api/docs/assets/bootstrap.js" defer></script>
+    <noscript><h1>PixelVault developer reference</h1><p>Enable JavaScript to search and explore the reference, or <a href="/api/schema?format=json">download the OpenAPI document</a>.</p></noscript>
+    {% else %}
+    <main><h1>The reference assets need setup</h1><p>Run the documented local asset sync during deployment, then refresh this page.</p><p><a href="/api/schema?format=json">Download the protected OpenAPI document</a></p></main>
+    {% endif %}
+  </body>
+</html>

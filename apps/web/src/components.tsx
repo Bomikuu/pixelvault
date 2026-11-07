@@ -1,4 +1,12 @@
-import { useState, useRef, type ReactNode, type FormEvent } from "react";
+import {
+  createContext,
+  useContext,
+  useId,
+  useState,
+  useRef,
+  type ReactNode,
+  type FormEvent,
+} from "react";
 import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -45,6 +53,30 @@ import type {
 } from "@pixelvault/contracts";
 import { operationId, ApiError } from "./app/api";
 import { date, initials, label, money } from "./lib/format";
+const FormFeedback = createContext<{
+  prefix: string;
+  errors: Record<string, string>;
+}>({ prefix: "", errors: {} });
+function useFieldFeedback(name: string, help?: string) {
+  const context = useContext(FormFeedback);
+  const id = context.prefix ? `${context.prefix}-${name}` : name;
+  const error = context.errors[name];
+  return {
+    id,
+    error,
+    describedBy:
+      [help && `${id}-help`, error && `${id}-error`]
+        .filter(Boolean)
+        .join(" ") || undefined,
+  };
+}
+function FieldError({ id, error }: { id: string; error?: string }) {
+  return error ? (
+    <p id={`${id}-error`} className="mt-2 text-sm text-destructive">
+      {error}
+    </p>
+  ) : null;
+}
 export function ActionLink({
   to,
   children,
@@ -336,7 +368,9 @@ export function ContextIllustration({
   return (
     <img
       className={`context-illustration ${className}`}
-      src={`/illustrations/${scene}.png`}
+      src={`/illustrations/${scene}-960.webp`}
+      srcSet={`/illustrations/${scene}-480.webp 480w, /illustrations/${scene}-960.webp 960w, /illustrations/${scene}-1440.webp 1440w`}
+      sizes="(max-width: 640px) 100vw, 50vw"
       alt=""
       width={1536}
       height={1024}
@@ -367,7 +401,9 @@ export function PersonName({
         >
           {person.display_name}
         </Link>
-        {subtitle && <small>{subtitle}</small>}
+        {subtitle && (
+          <small className="text-muted-foreground!">{subtitle}</small>
+        )}
       </div>
     </div>
   );
@@ -401,14 +437,15 @@ export function Field({
   autoComplete?: string;
   disabled?: boolean;
 }) {
+  const feedback = useFieldFeedback(name, help);
   return (
     <div className="field">
-      <Label htmlFor={name}>
+      <Label htmlFor={feedback.id}>
         {caption}
         {required && <span aria-hidden="true"> *</span>}
       </Label>
       <Input
-        id={name}
+        id={feedback.id}
         name={name}
         type={type}
         required={required}
@@ -420,9 +457,12 @@ export function Field({
         accept={accept}
         autoComplete={autoComplete}
         disabled={disabled}
-        aria-describedby={help ? `${name}-help` : undefined}
+        className="text-base! sm:text-sm!"
+        aria-invalid={!!feedback.error}
+        aria-describedby={feedback.describedBy}
       />
-      {help && <small id={`${name}-help`}>{help}</small>}
+      {help && <small id={`${feedback.id}-help`}>{help}</small>}
+      <FieldError {...feedback} />
     </div>
   );
 }
@@ -443,20 +483,24 @@ export function TextField({
   placeholder?: string;
   maxLength?: number;
 }) {
+  const feedback = useFieldFeedback(name, help);
   return (
     <div className="field">
-      <Label htmlFor={name}>{caption}</Label>
+      <Label htmlFor={feedback.id}>{caption}</Label>
       <Textarea
-        id={name}
+        id={feedback.id}
         name={name}
         required={required}
         defaultValue={defaultValue}
         placeholder={placeholder}
         maxLength={maxLength}
         rows={4}
-        aria-describedby={help ? `${name}-help` : undefined}
+        className="text-base! sm:text-sm!"
+        aria-invalid={!!feedback.error}
+        aria-describedby={feedback.describedBy}
       />
-      {help && <small id={`${name}-help`}>{help}</small>}
+      {help && <small id={`${feedback.id}-help`}>{help}</small>}
+      <FieldError {...feedback} />
     </div>
   );
 }
@@ -475,15 +519,20 @@ export function SelectField({
   help?: string;
   onValueChange?: (value: string) => void;
 }) {
+  const feedback = useFieldFeedback(name, help);
   return (
     <div className="field">
-      <Label htmlFor={name}>{caption}</Label>
+      <Label htmlFor={feedback.id}>{caption}</Label>
       <Select
         name={name}
         defaultValue={defaultValue || options[0]?.value}
         onValueChange={onValueChange}
       >
-        <SelectTrigger id={name}>
+        <SelectTrigger
+          id={feedback.id}
+          aria-invalid={!!feedback.error}
+          aria-describedby={feedback.describedBy}
+        >
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -494,7 +543,8 @@ export function SelectField({
           ))}
         </SelectContent>
       </Select>
-      {help && <small>{help}</small>}
+      {help && <small id={`${feedback.id}-help`}>{help}</small>}
+      <FieldError {...feedback} />
     </div>
   );
 }
@@ -509,15 +559,21 @@ export function CheckField({
   required?: boolean;
   defaultChecked?: boolean;
 }) {
+  const feedback = useFieldFeedback(name);
   return (
-    <div className="check-field">
-      <Checkbox
-        id={name}
-        name={name}
-        required={required}
-        defaultChecked={defaultChecked}
-      />
-      <Label htmlFor={name}>{children}</Label>
+    <div>
+      <div className="check-field">
+        <Checkbox
+          id={feedback.id}
+          name={name}
+          required={required}
+          defaultChecked={defaultChecked}
+          aria-invalid={!!feedback.error}
+          aria-describedby={feedback.describedBy}
+        />
+        <Label htmlFor={feedback.id}>{children}</Label>
+      </div>
+      <FieldError {...feedback} />
     </div>
   );
 }
@@ -528,6 +584,7 @@ export function ApiForm({
   successMessage,
   onSuccess,
   confirm,
+  resetOnSuccess = false,
 }: {
   children: ReactNode;
   onSubmit: (data: FormData) => Promise<unknown>;
@@ -535,7 +592,12 @@ export function ApiForm({
   successMessage?: string;
   onSuccess?: (data: unknown) => void;
   confirm?: string;
+  resetOnSuccess?: boolean;
 }) {
+  const prefix = useId();
+  const form = useRef<HTMLFormElement>(null);
+  const submitting = useRef(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const operation = useRef(operationId());
   const [pending, setPending] = useState(false),
     [error, setError] = useState<unknown>(null),
@@ -543,7 +605,10 @@ export function ApiForm({
   const query = useQueryClient();
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submitting.current) return;
+    submitting.current = true;
     setError(null);
+    setFieldErrors({});
     setSuccess(false);
     setPending(true);
     try {
@@ -552,28 +617,61 @@ export function ApiForm({
       const result = await onSubmit(payload);
       operation.current = operationId();
       setSuccess(true);
+      if (resetOnSuccess) form.current?.reset();
       await query.invalidateQueries();
       onSuccess?.(result);
     } catch (e) {
       setError(e);
+      const raw = e instanceof ApiError ? e.fields : {};
+      const source =
+        raw.fields && typeof raw.fields === "object"
+          ? (raw.fields as Record<string, unknown>)
+          : raw;
+      const errors = Object.fromEntries(
+        Object.entries(source)
+          .filter(([key]) => !!form.current?.elements.namedItem(key))
+          .map(([key, value]) => [
+            key,
+            Array.isArray(value) ? value.map(String).join(" ") : String(value),
+          ]),
+      );
+      setFieldErrors(errors);
+      requestAnimationFrame(() => {
+        const first = Object.keys(errors)[0];
+        const target = first
+          ? document.getElementById(`${prefix}-${first}`)
+          : form.current?.querySelector<HTMLElement>("[data-form-error]");
+        target?.focus();
+      });
     } finally {
+      submitting.current = false;
       setPending(false);
     }
   }
   return (
-    <form className="api-form" onSubmit={submit}>
-      {children}
-      {confirm && <p className="form-confirm">{confirm}</p>}
-      {error !== null && <ErrorNotice error={error} />}
-      {success && successMessage && (
-        <Notice tone="success">{successMessage}</Notice>
-      )}
-      <Button type="submit" disabled={pending}>
-        {pending ? <Loader2 size={16} className="spin" /> : null}
-        {pending ? "Submitting…" : submitLabel}
-        {!pending && <ArrowRight size={16} />}
-      </Button>
-    </form>
+    <FormFeedback value={{ prefix, errors: fieldErrors }}>
+      <form ref={form} className="api-form" onSubmit={submit}>
+        {children}
+        {confirm && <p className="form-confirm">{confirm}</p>}
+        {error !== null && (
+          <div
+            data-form-error
+            tabIndex={-1}
+            className="rounded-xl focus-visible:outline-2 focus-visible:outline-ring"
+          >
+            <ErrorNotice error={error} />
+          </div>
+        )}
+        {success && successMessage && (
+          <Notice tone="success">{successMessage}</Notice>
+        )}
+        <Button type="submit" disabled={pending}>
+          {pending ? <Loader2 size={16} className="spin" /> : null}
+          {pending ? "Submitting…" : submitLabel}
+          {!pending && <ArrowRight size={16} />}
+        </Button>
+      </form>
+    </FormFeedback>
   );
 }
 export function DefinitionList({ rows }: { rows: [string, ReactNode][] }) {

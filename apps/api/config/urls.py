@@ -1,3 +1,9 @@
+from accounts.recovery import (
+    RecoveryEmailView,
+    VerifyRecoveryEmailView,
+    RecoveryRequestView,
+    RecoveryConfirmView,
+)
 from accounts.admin_views import AuditView, PoliciesView, RegistrationQueueView, TemplatesView
 from accounts.views import (
     ContactView,
@@ -16,7 +22,7 @@ from community.activity import ActivityStreamView, ActivityView
 from django.http import JsonResponse
 from django.urls import include, path
 from documents.views import ContentView, DocumentsView, DownloadView, ScanView, UploadView
-from drf_spectacular.views import SpectacularAPIView
+from config.api_docs import ApiDocsSchemaView, api_reference, reference_asset
 from verification.views import (
     RegistrationReviewView,
     RegistrationView,
@@ -32,10 +38,16 @@ urlpatterns = [
             {"service": "pixelvault", "status": "ok", "live_origination": False}
         ),
     ),
-    path("api/schema", SpectacularAPIView.as_view()),
+    path("api/schema", ApiDocsSchemaView.as_view(), name="api-schema"),
+    path("api/docs/", api_reference, name="api-reference"),
+    path("api/docs/assets/<str:name>", reference_asset, name="api-reference-asset"),
     path("api/v1/community/activity", ActivityView.as_view()),
     path("api/v1/community/activity/stream", ActivityStreamView.as_view()),
     path("api/v1/auth/session", SessionView.as_view()),
+    path("api/v1/auth/recovery-email", RecoveryEmailView.as_view()),
+    path("api/v1/auth/recovery-email/<uuid:member_id>/verify", VerifyRecoveryEmailView.as_view()),
+    path("api/v1/auth/recovery", RecoveryRequestView.as_view()),
+    path("api/v1/auth/recovery/<uuid:recovery_id>", RecoveryConfirmView.as_view()),
     path("api/v1/auth/presence", PresenceView.as_view()),
     path("api/v1/auth/register", RegisterView.as_view()),
     path("api/v1/auth/sign-in", SignInView.as_view()),
@@ -74,5 +86,7 @@ urlpatterns = [
     path("api/v1/", include("engagement.urls")),
     path("api/v1/", include("connections.urls")),
     path("api/v1/", include("negotiations.urls")),
+    path("api/v1/", include("memberhub.urls")),
+    path("api/v1/", include("investments.urls")),
     path("api/v1/", include("plaza.urls")),
 ]

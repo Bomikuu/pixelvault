@@ -270,6 +270,14 @@ List offers and the map sidebar expose the same pill-shaped canonical Like contr
 
 ## Do's and Don'ts
 
+### Private member tools
+
+The action center, saved comparisons, payment calendar, lender desk and recovery surfaces retain the existing semantic card/control system. Use at least 12px for financial labels and 14px for expanded definitions; keep exact values and basis text together. Invalid controls retain values and have per-form error associations. Comparisons use the same amount/frequency/count with visible proposed start dates, and remain within a named horizontal region on narrow screens. Calendar amounts describe scheduled remaining obligations, never a settlement or wallet balance.
+
+Room calls require separate mutual participation and device choices; camera starts off. Test investment confirmations separate agreement, funding, capital attribution and payouts, with explicit simulation labels. Public contributor circles are distinct people, anonymity is honored, and no amount is attached to an individual circle. Recovery verification does not reuse contact evidence as ownership. See [the surface record](docs/surfaces/member-tools.md).
+
+Serve responsive WebP delivery assets while preserving original PNG artwork and provenance. Lazy route loading must expose a useful pending state and the shared error boundary.
+
 ### Do:
 
 - **Do** preserve the blue PixelVault identity and use shared semantic light/dark roles.

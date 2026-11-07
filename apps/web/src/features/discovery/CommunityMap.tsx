@@ -62,6 +62,7 @@ export function CommunityMap({
   onReadyChange,
   onSelect,
   place,
+  onList,
 }: {
   token: string;
   offers: DiscoveryOffer[];
@@ -73,6 +74,7 @@ export function CommunityMap({
   onReadyChange?: (ready: boolean) => void;
   onSelect: (id: string) => void;
   place: MapPlace | null;
+  onList?: () => void;
 }) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MapboxMap | null>(null);
@@ -341,6 +343,11 @@ export function CommunityMap({
           <WifiOff size={28} />
           <h2>The map is unavailable.</h2>
           <p>{error}</p>
+          {onList && (
+            <Button className="mt-4" onClick={onList}>
+              Continue with the offer list
+            </Button>
+          )}
           <p className="mt-3 hidden lg:block">
             Retry using the map controls, or switch to the list.
           </p>

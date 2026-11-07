@@ -74,6 +74,9 @@ def finalize(transfer_id, outcome):
         loan.save()
         if transfer.status == "confirmed":
             accrue_commission(loan_id=loan.id, disbursement_id=transfer.id)
+            from investments.services import allocate_capital
+
+            allocate_capital(loan)
         return TransferResult(str(transfer.id), str(loan.id), transfer.status)
 
 

@@ -1,3 +1,5 @@
+import { InvestorCircles } from "../investments/InvestorCircles";
+import { SaveOfferButton } from "../memberhub/shared";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -71,6 +73,9 @@ export function OfferDetailContent({
       <div className="grid min-w-0 items-start gap-5 xl:grid-cols-[minmax(0,1fr)_300px]">
         <div className="min-w-0 space-y-4">
           <header className="px-1 pb-2">
+            <div className="mb-3 flex justify-end">
+              <SaveOfferButton offerId={offer.id} />
+            </div>
             <h1 className="text-2xl! font-extrabold! leading-tight! tracking-tight md:text-[28px]!">
               {offer.title}
             </h1>
@@ -97,6 +102,7 @@ export function OfferDetailContent({
                 </p>
               </div>
             </div>
+            <InvestorCircles offerId={offer.id} />
           </header>
           <OfferCalculator
             key={`${offer.id}:${offer.version ?? 0}`}

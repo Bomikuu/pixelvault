@@ -1,8 +1,11 @@
+import { ActionBell } from "../features/memberhub/shared";
 import { useState } from "react";
 import { NavLink, Outlet, Link, useLocation } from "react-router-dom";
 import {
   ArrowUpRight,
   Bell,
+  Bookmark,
+  CalendarDays,
   BookOpen,
   CalendarClock,
   ChartNoAxesCombined,
@@ -47,10 +50,13 @@ const community = [
   ["/offers/new", "Post an offer", Plus],
   ["/meetings", "Meeting rooms", CalendarClock],
   ["/inbox", "Messages", MessageSquare],
+  ["/saved-offers", "Saved offers", Bookmark],
 ] as const;
 const workspace = [
   ["/dashboard", "Overview", LayoutDashboard],
   ["/applications", "Applications", FileCheck2],
+  ["/lender-desk", "Lender desk", FileCheck2],
+  ["/calendar", "Payment calendar", CalendarDays],
   ["/loans", "My loans", HandCoins],
   ["/payments", "Payments", Wallet],
   ["/people", "My connections", Users],
@@ -89,7 +95,10 @@ export function Shell() {
   const visibleCommunity = member
     ? community
     : community.filter(
-        ([path]) => !["/offers/new", "/meetings", "/inbox"].includes(path),
+        ([path]) =>
+          !["/offers/new", "/meetings", "/inbox", "/saved-offers"].includes(
+            path,
+          ),
       );
   const active = [
     "/explore",
@@ -384,11 +393,7 @@ export function Shell() {
                       <ShieldCheck size={16} />
                       Verification center
                     </Link>
-                    <Button asChild variant="ghost" size="icon">
-                      <Link to="/inbox" aria-label="Open messages">
-                        <Bell size={19} />
-                      </Link>
-                    </Button>
+                    <ActionBell />
 
                     <Link to="/profile" aria-label="My profile">
                       <MemberAvatar

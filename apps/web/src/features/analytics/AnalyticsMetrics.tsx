@@ -76,14 +76,14 @@ export function SummaryTiles({
               >
                 <meta.Icon size={18} />
               </span>
-              <span className="min-w-0 text-[11px] font-medium leading-relaxed text-muted-foreground">
+              <span className="min-w-0 text-xs font-medium leading-relaxed text-muted-foreground">
                 {names[key] || meta.name}
               </span>
             </span>
             <strong className="block break-words text-lg font-extrabold tracking-tight tabular-nums text-foreground sm:pl-[52px] sm:text-[22px]">
               {metricValue(key, report.metrics[key])}
             </strong>
-            <span className="text-[10px] font-medium leading-relaxed text-muted-foreground">
+            <span className="text-xs font-medium leading-relaxed text-muted-foreground">
               {key === "commission_collected"
                 ? "Loan-linked fees · payer per agreement"
                 : meta.basis ||
@@ -150,7 +150,7 @@ function MetricBars({ keys, report }: { keys: string[]; report: Report }) {
           </div>
         );
       })}
-      <p className="text-[11px] leading-relaxed text-muted-foreground">
+      <p className="text-xs leading-relaxed text-muted-foreground">
         Bars share a zero at the center. These are individual measures, not
         parts of one total. Period flows, cutoff balances and current-status
         counts must not be added together.
@@ -238,7 +238,7 @@ export function DetailedMetrics({
                     <strong className="mt-2 block break-words text-lg font-extrabold tabular-nums">
                       {metricValue(key, report.metrics[key])}
                     </strong>
-                    <span className="mt-1 block text-[10px] text-muted-foreground">
+                    <span className="mt-1 block text-xs text-muted-foreground">
                       {meta.basis ||
                         (key.endsWith("_count")
                           ? "Period count"
@@ -246,9 +246,15 @@ export function DetailedMetrics({
                     </span>
                   </div>
                 </div>
-                <p className="mt-4 text-[10px] leading-relaxed text-muted-foreground">
-                  {report.definitions[key] || "Reported value for this period."}
-                </p>
+                <details className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  <summary className="cursor-pointer py-2 text-xs font-semibold text-primary focus-visible:outline-2 focus-visible:outline-ring">
+                    What this means
+                  </summary>
+                  <p>
+                    {report.definitions[key] ||
+                      "Reported value for this period."}
+                  </p>
+                </details>
               </article>
             );
           })}

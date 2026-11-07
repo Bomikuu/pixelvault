@@ -21,10 +21,12 @@ export function RoomDocuments({
   room,
   memberId,
   onReview,
+  readOnly = false,
 }: {
   room: Meeting;
   memberId?: string;
   onReview: () => void;
+  readOnly?: boolean;
 }) {
   const client = useQueryClient();
   const [file, setFile] = useState<File | null>(null),
@@ -76,6 +78,7 @@ export function RoomDocuments({
         <Button
           variant="outline"
           disabled={
+            readOnly ||
             busy ||
             room.state === "closed" ||
             room.evidence_reviewed_by.includes(memberId || "")
@@ -123,7 +126,7 @@ export function RoomDocuments({
                   )}
                 </div>
               </div>
-              {e.owner_id === memberId && (
+              {!readOnly && e.owner_id === memberId && (
                 <Button
                   variant="ghost"
                   size="icon"
@@ -158,84 +161,88 @@ export function RoomDocuments({
           No files shared. Your private verification documents remain private.
         </div>
       )}
-      <form
-        noValidate
-        className="grid gap-3 rounded-xl bg-muted p-4"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          const form = e.currentTarget;
-          setError(null);
-          if (!file || !consent) {
-            setError(new Error("Choose a file and confirm who can see it."));
-            return;
-          }
-          const body = new FormData();
-          body.append("file", file);
-          body.append("category", category);
-          body.append("consent", "share_with_counterparty");
-          setBusy(true);
-          try {
-            await apiRequest(`/meetings/${room.id}/evidence`, {
-              method: "POST",
-              body,
-            });
-            setFile(null);
-            setConsent(false);
-            form.reset();
-            await client.invalidateQueries({ queryKey: ["meeting", room.id] });
-          } catch (problem) {
-            setError(problem);
-          } finally {
-            setBusy(false);
-          }
-        }}
-      >
-        <Label htmlFor="room-file">
-          Share a redacted document or transfer receipt
-        </Label>
-        <Input
-          id="room-file"
-          type="file"
-          accept=".pdf,.png,.jpg,.jpeg"
-          onChange={(e) => setFile(e.target.files?.[0] || null)}
-        />
-        <p className="text-xs text-muted-foreground">
-          PDF, PNG or JPEG · up to 10 MiB · synthetic documents only
-        </p>
-        <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger aria-label="Evidence category">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="redacted_evidence">
-              Redacted supporting evidence
-            </SelectItem>
-            <SelectItem value="transfer_proof">
-              Transfer receipt for review
-            </SelectItem>
-          </SelectContent>
-        </Select>
-        <Label
-          className="flex items-start gap-2 text-xs leading-relaxed!"
-          htmlFor="room-share-consent"
+      {!readOnly && (
+        <form
+          noValidate
+          className="grid gap-3 rounded-xl bg-muted p-4"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const form = e.currentTarget;
+            setError(null);
+            if (!file || !consent) {
+              setError(new Error("Choose a file and confirm who can see it."));
+              return;
+            }
+            const body = new FormData();
+            body.append("file", file);
+            body.append("category", category);
+            body.append("consent", "share_with_counterparty");
+            setBusy(true);
+            try {
+              await apiRequest(`/meetings/${room.id}/evidence`, {
+                method: "POST",
+                body,
+              });
+              setFile(null);
+              setConsent(false);
+              form.reset();
+              await client.invalidateQueries({
+                queryKey: ["meeting", room.id],
+              });
+            } catch (problem) {
+              setError(problem);
+            } finally {
+              setBusy(false);
+            }
+          }}
         >
-          <Checkbox
-            id="room-share-consent"
-            checked={consent}
-            onCheckedChange={(v) => setConsent(v === true)}
+          <Label htmlFor="room-file">
+            Share a redacted document or transfer receipt
+          </Label>
+          <Input
+            id="room-file"
+            type="file"
+            accept=".pdf,.png,.jpg,.jpeg"
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
           />
-          I agree to share this copy with the other room participant. A receipt
-          does not confirm settlement.
-        </Label>
-        <Button
-          type="submit"
-          variant="outline"
-          disabled={busy || room.state === "closed"}
-        >
-          <Upload size={16} />
-          {busy ? "Sharing…" : "Share for review"}
-        </Button>
-      </form>
+          <p className="text-xs text-muted-foreground">
+            PDF, PNG or JPEG · up to 10 MiB · synthetic documents only
+          </p>
+          <Select value={category} onValueChange={setCategory}>
+            <SelectTrigger aria-label="Evidence category">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="redacted_evidence">
+                Redacted supporting evidence
+              </SelectItem>
+              <SelectItem value="transfer_proof">
+                Transfer receipt for review
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          <Label
+            className="flex items-start gap-2 text-xs leading-relaxed!"
+            htmlFor="room-share-consent"
+          >
+            <Checkbox
+              id="room-share-consent"
+              checked={consent}
+              onCheckedChange={(v) => setConsent(v === true)}
+            />
+            I agree to share this copy with the other room participant. A
+            receipt does not confirm settlement.
+          </Label>
+          <Button
+            type="submit"
+            variant="outline"
+            disabled={busy || room.state === "closed"}
+          >
+            <Upload size={16} />
+            {busy ? "Sharing…" : "Share for review"}
+          </Button>
+        </form>
+      )}
       {error && <ErrorNotice error={error} />}
     </section>
   );

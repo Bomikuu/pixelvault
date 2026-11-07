@@ -56,7 +56,7 @@ def record_collection(*, loan_id, amount, effective_at, source_key):
                 "updated_at",
             ]
         )
-        LedgerEntry.objects.create(
+        entry = LedgerEntry.objects.create(
             loan=loan,
             kind="collection",
             principal_delta=-principal,
@@ -65,6 +65,9 @@ def record_collection(*, loan_id, amount, effective_at, source_key):
             source_key=source_key,
             effective_at=effective_at,
         )
+        from investments.services import attribute_collection
+
+        attribute_collection(entry)
         if resume_through:
             accrue_locked(loan, resume_through)
         return AllocationResult(
@@ -118,7 +121,7 @@ def reverse_collection(*, source_key, refund_key, amount, effective_at):
                 "updated_at",
             ]
         )
-        LedgerEntry.objects.create(
+        entry = LedgerEntry.objects.create(
             loan=loan,
             kind="collection_reversed",
             principal_delta=principal,
@@ -128,6 +131,9 @@ def reverse_collection(*, source_key, refund_key, amount, effective_at):
             effective_at=effective_at,
             metadata={"original_source": source_key},
         )
+        from investments.services import attribute_collection
+
+        attribute_collection(entry)
         if resume_through:
             accrue_locked(loan, resume_through)
         return AllocationResult(

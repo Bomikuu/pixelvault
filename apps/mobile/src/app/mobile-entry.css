@@ -1,0 +1,38 @@
+/* Hallmark v2: app screen; PixelVault's locked blue/navy system; Operate; phone composition. */
+/* Critique: exact obligations and people lead; no marketing hero, invented totals or decorative metrics. */
+@import "../../../../packages/ui/src/styles/tokens.css";
+@import "../../../../packages/ui/src/styles/controls.css";
+@layer base {
+  html,
+  body {
+    overflow-x: clip;
+  }
+  body {
+    margin: 0;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-tap-highlight-color: transparent;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  h1,
+  h2,
+  h3 {
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
+  input,
+  textarea {
+    caret-color: var(--primary);
+  }
+}

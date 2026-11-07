@@ -43,7 +43,7 @@ def contact_data(member):
             "expires_at": check.expires_at.isoformat() if check and check.expires_at else None,
         },
         "delivery_available": False,
-        "notice": "Email and mobile are self-reported contact details. SMS and email verification delivery are not configured; a contact-evidence review does not verify ownership of either channel.",
+        "notice": "Email and mobile are self-reported contact details. A contact-evidence review does not verify ownership of either channel. Recovery email ownership is checked separately; SMS delivery is not configured.",
     }
 
 

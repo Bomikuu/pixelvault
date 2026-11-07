@@ -11,6 +11,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read administrator-only achievement review holds
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_admin_achievement_holds"];
         put?: never;
         post?: never;
@@ -29,6 +33,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Resolve an achievement hold independently
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_admin_achievement_holds_hold_id_resolve"];
         delete?: never;
         options?: never;
@@ -43,6 +51,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read finance-only audit records
+         * @description Latest 100 entries. Documentation access does not grant finance access.
+         */
         get: operations["get_api_v1_admin_audit"];
         put?: never;
         post?: never;
@@ -59,6 +71,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read support assignment queues
+         * @description Support/admin. Unassigned items omit body, identity and loan IDs; maximum 100 in each list.
+         */
         get: operations["get_api_v1_admin_cases"];
         put?: never;
         post?: never;
@@ -75,6 +91,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read assigned case or redacted assignment preview
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_admin_cases_case_id"];
         put?: never;
         post?: never;
@@ -93,6 +113,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Assign a support case to yourself
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_admin_cases_case_id_assign"];
         delete?: never;
         options?: never;
@@ -109,6 +133,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Record an assigned support decision
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_admin_cases_case_id_decision"];
         delete?: never;
         options?: never;
@@ -125,6 +153,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Record a human legal-remedy eligibility review
+         * @description No barangay/government filing, social post or automatic enforcement is made.
+         */
         post: operations["post_api_v1_admin_cases_case_id_legal_remedy_review"];
         delete?: never;
         options?: never;
@@ -139,6 +171,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read finance-only origination commissions
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_admin_commissions"];
         put?: never;
         post?: never;
@@ -157,6 +193,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Review a quarantined file with the sandbox scanner
+         * @description Reviewer/admin with recent step-up. Test-only scanner; production returns scanner unavailable. A clean scan is not proof of authenticity.
+         */
         post: operations["post_api_v1_admin_documents_document_id_scan"];
         delete?: never;
         options?: never;
@@ -171,6 +211,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read moderator-only review and contribution queue
+         * @description At most 100 per list. Own content is excluded from independent review.
+         */
         get: operations["get_api_v1_admin_moderation"];
         put?: never;
         post?: never;
@@ -189,6 +233,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Record independent moderation of a current content version
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_admin_moderation_content_id"];
         delete?: never;
         options?: never;
@@ -203,6 +251,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read the independent offer-comment moderation queue
+         * @description Moderator/admin with sensitive step-up; at most 100 comments.
+         */
         get: operations["get_api_v1_admin_offer_comments"];
         put?: never;
         post?: never;
@@ -221,7 +273,51 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Review an offer comment's current version
+         * @description Independent moderator with step-up. Author and offer owner cannot review their own content.
+         */
         post: operations["post_api_v1_admin_offer_comments_comment_id_review"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/plaza/bubbles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read reported marketplace bubbles
+         * @description Moderator/admin staff only; maximum100 current open reports. General developer-reference access grants no moderation permission.
+         */
+        get: operations["get_api_v1_admin_plaza_bubbles"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/plaza/bubbles/{bubble_id}/decision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Record an audited bubble moderation decision
+         * @description Moderator/admin, current version and reason required; self-moderation is refused. Keeping expired content never republishes it.
+         */
+        post: operations["post_api_v1_admin_plaza_bubbles_bubble_id_decision"];
         delete?: never;
         options?: never;
         head?: never;
@@ -235,8 +331,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read immutable product policies
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_admin_policies"];
         put?: never;
+        /**
+         * Create a new test policy version
+         * @description Admin-only sensitive step-up. Test environment only. Existing versions are immutable; no live-policy activation is provided.
+         */
         post: operations["post_api_v1_admin_policies"];
         delete?: never;
         options?: never;
@@ -251,6 +355,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read finance-only unresolved payment records
+         * @description At most 100 operations and 100 inbox events. This is a read-only queue; unknown settlement remains unresolved.
+         */
         get: operations["get_api_v1_admin_reconciliation"];
         put?: never;
         post?: never;
@@ -267,6 +375,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read reviewer-only lender registrations
+         * @description At most 100. Registration evidence review is not legal authorization.
+         */
         get: operations["get_api_v1_admin_registrations"];
         put?: never;
         post?: never;
@@ -283,8 +395,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read a lender registration as reviewer
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_admin_registrations_registration_id"];
         put?: never;
+        /**
+         * Decide a lender evidence review
+         * @description Reviewer/admin, recent sensitive step-up and current version required. This does not authorize lending under law.
+         */
         post: operations["post_api_v1_admin_registrations_registration_id"];
         delete?: never;
         options?: never;
@@ -299,8 +419,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read a lender registration as reviewer
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_admin_registrations_registration_id_review"];
         put?: never;
+        /**
+         * Decide a lender evidence review
+         * @description Reviewer/admin, recent sensitive step-up and current version required. This does not authorize lending under law.
+         */
         post: operations["post_api_v1_admin_registrations_registration_id_review"];
         delete?: never;
         options?: never;
@@ -315,6 +443,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read finance-only operational metrics
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_admin_reporting"];
         put?: never;
         post?: never;
@@ -331,6 +463,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read sandbox agreement-template inventory
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_admin_templates"];
         put?: never;
         post?: never;
@@ -347,6 +483,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * List assigned verification cases
+         * @description Reviewer sees assigned cases; admin sees all. Maximum 100.
+         */
         get: operations["get_api_v1_admin_verifications"];
         put?: never;
         post?: never;
@@ -363,8 +503,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read an assigned private verification case
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_admin_verifications_case_id"];
         put?: never;
+        /**
+         * Review a verification check
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_admin_verifications_case_id"];
         delete?: never;
         options?: never;
@@ -379,8 +527,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read an assigned private verification case
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_admin_verifications_case_id_review"];
         put?: never;
+        /**
+         * Review a verification check
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_admin_verifications_case_id_review"];
         delete?: never;
         options?: never;
@@ -395,6 +551,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * List agreements where you are a counterparty
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_agreements"];
         put?: never;
         post?: never;
@@ -411,6 +571,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Review frozen agreement terms and acceptances
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_agreements_agreement_id"];
         put?: never;
         post?: never;
@@ -429,6 +593,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Accept the exact current agreement hash
+         * @description Both parties must independently accept. This does not confirm disbursement. A changed hash requires fresh review.
+         */
         post: operations["post_api_v1_agreements_agreement_id_accept"];
         delete?: never;
         options?: never;
@@ -443,6 +611,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Download your agreement PDF
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_agreements_agreement_id_document"];
         put?: never;
         post?: never;
@@ -459,6 +631,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * List your applications as borrower or lender
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_applications"];
         put?: never;
         post?: never;
@@ -475,6 +651,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read your application's current state
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_applications_application_id"];
         put?: never;
         post?: never;
@@ -493,6 +673,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Decline a private application
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_applications_application_id_decline"];
         delete?: never;
         options?: never;
@@ -509,6 +693,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Select a borrower and reserve capacity
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_applications_application_id_select"];
         delete?: never;
         options?: never;
@@ -525,6 +713,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Withdraw your application
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_applications_application_id_withdraw"];
         delete?: never;
         options?: never;
@@ -539,13 +731,41 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read your private self-reported contacts and separate evidence state
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_auth_contacts"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
+        /**
+         * Update contacts and invalidate prior contact evidence
+         * @description At least one field required. Does not verify channel ownership or recovery email.
+         */
         patch: operations["patch_api_v1_auth_contacts"];
+        trace?: never;
+    };
+    "/api/v1/auth/presence": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Record coarse activity privately
+         * @description Authorization and domain policy are checked on every request.
+         */
+        post: operations["post_api_v1_auth_presence"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/auth/profile": {
@@ -561,6 +781,10 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
+        /**
+         * Update your display identity
+         * @description Authorization and domain policy are checked on every request.
+         */
         patch: operations["patch_api_v1_auth_profile"];
         trace?: never;
     };
@@ -573,8 +797,100 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Upload your profile photo
+         * @description Nonanimated JPEG, PNG or WebP, at most 3 MiB; at least 128 pixels per side, at most 4096 per side and 12 million total pixels. Sanitized to a metadata-free JPEG no larger than 768 per side. This is not an identity-document upload.
+         */
         post: operations["post_api_v1_auth_profile_photo"];
+        /**
+         * Remove your profile photo
+         * @description Authorization and domain policy are checked on every request.
+         */
         delete: operations["delete_api_v1_auth_profile_photo"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/recovery": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Request a private recovery email
+         * @description Same public response for existing and unknown accounts. Delivery is asynchronous; test messages are captured locally.
+         */
+        post: operations["post_api_v1_auth_recovery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/recovery-email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read your separately verified recovery email
+         * @description Authorization and domain policy are checked on every request.
+         */
+        get: operations["get_api_v1_auth_recovery_email"];
+        put?: never;
+        /**
+         * Request an email ownership challenge
+         * @description One-minute cooldown. Link expires in 30 minutes. Test email is captured locally, not sent externally.
+         */
+        post: operations["post_api_v1_auth_recovery_email"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/recovery-email/{member_id}/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Consume a single-use email ownership challenge
+         * @description Public with CSRF protection; link token is provided in URL fragment and submitted explicitly. Does not verify identity or loan eligibility.
+         */
+        post: operations["post_api_v1_auth_recovery_email_member_id_verify"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/recovery/{recovery_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Consume a single-use recovery link
+         * @description Authorization and domain policy are checked on every request.
+         */
+        post: operations["post_api_v1_auth_recovery_recovery_id"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -589,6 +905,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Register an individual member
+         * @description Contact details are self-reported until their separate checks complete. This endpoint never grants staff status.
+         */
         post: operations["post_api_v1_auth_register"];
         delete?: never;
         options?: never;
@@ -603,6 +923,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Bootstrap the current session and CSRF token
+         * @description Public. Member is null for guests. Keep the CSRF value in memory; send X-CSRFToken for protected writes. Session IDs remain in an HttpOnly cookie.
+         */
         get: operations["get_api_v1_auth_session"];
         put?: never;
         post?: never;
@@ -621,6 +945,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Sign in and rotate the browser session
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_auth_sign_in"];
         delete?: never;
         options?: never;
@@ -637,6 +965,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * End the browser session
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_auth_sign_out"];
         delete?: never;
         options?: never;
@@ -653,6 +985,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Confirm a staff-only sensitive action window
+         * @description Current staff password in test mode; five-minute window. Production requires configured MFA and currently refuses this operation.
+         */
         post: operations["post_api_v1_auth_step_up"];
         delete?: never;
         options?: never;
@@ -667,8 +1003,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read your private support cases
+         * @description Participant/assigned-staff scope; maximum 100. No public debt publication.
+         */
         get: operations["get_api_v1_cases"];
         put?: never;
+        /**
+         * Open a private support case
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_cases"];
         delete?: never;
         options?: never;
@@ -683,6 +1027,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read an authorized support case
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_cases_case_id"];
         put?: never;
         post?: never;
@@ -701,6 +1049,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Respond privately to a case
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_cases_case_id_responses"];
         delete?: never;
         options?: never;
@@ -715,8 +1067,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * List amendments for your shared loans
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_cases_amendments"];
         put?: never;
+        /**
+         * Propose a versioned loan amendment
+         * @description The server preserves accrued obligations, recalculates disclosures and requires both parties' acceptance. This is not an edit of a signed row.
+         */
         post: operations["post_api_v1_cases_amendments"];
         delete?: never;
         options?: never;
@@ -733,6 +1093,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Accept the exact amendment version
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_cases_amendments_proposal_id_accept"];
         delete?: never;
         options?: never;
@@ -749,6 +1113,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Withdraw a pending amendment
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_cases_amendments_proposal_id_withdraw"];
         delete?: never;
         options?: never;
@@ -765,6 +1133,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Request the lender's origination-fee checkout
+         * @description Lender-only. Server determines fee amount and routing. Fee is separate from borrower repayments.
+         */
         post: operations["post_api_v1_commissions_accrual_id_checkout"];
         delete?: never;
         options?: never;
@@ -779,6 +1151,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read achievement names and criteria
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_community_achievement_catalog"];
         put?: never;
         post?: never;
@@ -795,6 +1171,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read recent public available-offer posts
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_community_activity"];
         put?: never;
         post?: never;
@@ -811,6 +1191,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Watch public offer revision changes
+         * @description 45-second bounded stream with retry:3000. ready/offers.changed send revision, stream.unavailable sends code; comments are heartbeats. No private borrower, location, document or payment events are exposed.
+         */
         get: operations["get_api_v1_community_activity_stream"];
         put?: never;
         post?: never;
@@ -827,6 +1211,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * List supported approximate city centers
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_community_areas"];
         put?: never;
         post?: never;
@@ -843,8 +1231,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read your earned achievements
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_community_awards"];
         put?: never;
+        /**
+         * Re-evaluate achievements from current recorded facts
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_community_awards"];
         delete?: never;
         options?: never;
@@ -859,8 +1255,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read your educational contributions
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_community_contributions"];
         put?: never;
+        /**
+         * Submit an educational contribution for review
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_community_contributions"];
         delete?: never;
         options?: never;
@@ -875,6 +1279,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Explore public lending offers
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_community_discovery"];
         put?: never;
         post?: never;
@@ -891,7 +1299,31 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read the opt-in community leaderboard
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_community_leaderboard"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/community/offers/{offer_id}/investors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read public contributor circles on an available offer
+         * @description Up to five unique people; any anonymous contribution keeps that person's circle anonymous. Individual amounts and private positions never appear.
+         */
+        get: operations["get_api_v1_community_offers_offer_id_investors"];
         put?: never;
         post?: never;
         delete?: never;
@@ -907,6 +1339,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read an approved profile photo
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_community_photos_photo_id"];
         put?: never;
         post?: never;
@@ -923,12 +1359,20 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read your display identity and private setup progress
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_community_profile"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
+        /**
+         * Edit your profile and public sharing preferences
+         * @description Authorization and domain policy are checked on every request.
+         */
         patch: operations["patch_api_v1_community_profile"];
         trace?: never;
     };
@@ -939,6 +1383,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read a member's public profile
+         * @description Private contacts, verification evidence and borrowing records are never part of this projection. Optional activity is coarse.
+         */
         get: operations["get_api_v1_community_profiles_handle"];
         put?: never;
         post?: never;
@@ -955,6 +1403,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read permitted private shared loan facts
+         * @description Another person's summary includes only transactions shared with you. This is not a credit-bureau score or public repayment profile.
+         */
         get: operations["get_api_v1_community_repayment_summary_member_id"];
         put?: never;
         post?: never;
@@ -973,6 +1425,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Report review or message content privately
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_community_reports"];
         delete?: never;
         options?: never;
@@ -987,6 +1443,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read your XP rules, eligible frames and sharing preferences
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_community_reputation"];
         put?: never;
         post?: never;
@@ -1003,8 +1463,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read reviews you authored
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_community_reviews"];
         put?: never;
+        /**
+         * Submit an eligible transaction-based review
+         * @description Both parties' eligible shared repaid loan history and moderation rules apply. Submission is not publication.
+         */
         post: operations["post_api_v1_community_reviews"];
         delete?: never;
         options?: never;
@@ -1021,6 +1489,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Appeal a review privately
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_community_reviews_review_id_appeal"];
         delete?: never;
         options?: never;
@@ -1037,6 +1509,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Respond to a review through moderation
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_community_reviews_review_id_response"];
         delete?: never;
         options?: never;
@@ -1051,8 +1527,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read your private conversations
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_community_threads"];
         put?: never;
+        /**
+         * Open a permitted loan or application conversation
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_community_threads"];
         delete?: never;
         options?: never;
@@ -1067,8 +1551,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read a page of private messages
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_community_threads_thread_id_messages"];
         put?: never;
+        /**
+         * Send a private message
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_community_threads_thread_id_messages"];
         delete?: never;
         options?: never;
@@ -1083,8 +1575,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * List your private co-borrower invitations
+         * @description Maximum 100. Incoming unclaimed contacts are redacted. Acceptance and current identity/contact checks are distinct; this does not create joint liability.
+         */
         get: operations["get_api_v1_connections_co_borrowers"];
         put?: never;
+        /**
+         * Create a consenting person's private invitation
+         * @description The same operation ID and payload replay the invitation. No SMS or Facebook message is sent. Facebook must be an HTTPS profile URL without query/fragment.
+         */
         post: operations["post_api_v1_connections_co_borrowers"];
         delete?: never;
         options?: never;
@@ -1101,6 +1601,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Accept, decline or revoke an invitation
+         * @description Acceptance requires consent=true and current identity/contact checks. Revoke is inviter-only. No operation ID is accepted; refresh after uncertain outcomes.
+         */
         post: operations["post_api_v1_connections_co_borrowers_invitation_id_action"];
         delete?: never;
         options?: never;
@@ -1115,6 +1619,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read a private signed invitation
+         * @description A signed link is not acceptance. The account email must match the invitation; expires after seven days.
+         */
         get: operations["get_api_v1_connections_co_borrowers_invite_token"];
         put?: never;
         post?: never;
@@ -1131,6 +1639,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * List only your private documents
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_documents"];
         put?: never;
         post?: never;
@@ -1147,6 +1659,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Download an authorized clean document
+         * @description Actual Content-Type is application/pdf, image/png or image/jpeg from the stored magic-checked file. Content-Disposition uses filename*=UTF-8; Cache-Control private,no-store. Signed token alone does not grant access.
+         */
         get: operations["get_api_v1_documents_document_id_content"];
         put?: never;
         post?: never;
@@ -1163,6 +1679,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Request a short-lived private document link
+         * @description Rechecks actor, document purpose and clean scan state. Link expires in 60 seconds and remains bound to this actor; do not log or cache it.
+         */
         get: operations["get_api_v1_documents_document_id_download"];
         put?: never;
         post?: never;
@@ -1181,6 +1701,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Upload private evidence into quarantine
+         * @description Nonempty PDF, PNG or JPEG, at most 10 MiB. The server inspects file magic. Uploading is not a verification approval.
+         */
         post: operations["post_api_v1_documents_upload"];
         delete?: never;
         options?: never;
@@ -1198,6 +1722,10 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
+        /**
+         * Remove your offer comment
+         * @description Authorization and domain policy are checked on every request.
+         */
         delete: operations["delete_api_v1_engagement_comments_comment_id"];
         options?: never;
         head?: never;
@@ -1213,6 +1741,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Report a public offer comment privately
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_engagement_comments_comment_id_report"];
         delete?: never;
         options?: never;
@@ -1227,6 +1759,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read offer likes, achievements and comments
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_engagement_offers_offer_id"];
         put?: never;
         post?: never;
@@ -1243,6 +1779,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Preview an offer's exact estimated payment schedule
+         * @description Read-only. Variant frequency/count is a simulation, not an amendment to the lender's original application terms. Capacity and policy are rechecked.
+         */
         get: operations["get_api_v1_engagement_offers_offer_id_calculator"];
         put?: never;
         post?: never;
@@ -1261,6 +1801,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Comment on a public offer
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_engagement_offers_offer_id_comments"];
         delete?: never;
         options?: never;
@@ -1276,6 +1820,10 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
+        /**
+         * Set your like on an offer
+         * @description Authorization and domain policy are checked on every request.
+         */
         put: operations["put_api_v1_engagement_offers_offer_id_like"];
         post?: never;
         delete?: never;
@@ -1292,8 +1840,156 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
+        /**
+         * Leave an eligible achievement reaction
+         * @description Authorization and domain policy are checked on every request.
+         */
         put: operations["put_api_v1_engagement_offers_offer_id_reaction"];
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/hub/actions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read your private action center
+         * @description Authorization and domain policy are checked on every request.
+         */
+        get: operations["get_api_v1_hub_actions"];
+        put?: never;
+        /**
+         * Mark displayed action updates as read
+         * @description Authorization and domain policy are checked on every request.
+         */
+        post: operations["post_api_v1_hub_actions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/hub/calendar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read contractual payment dates
+         * @description Authorization and domain policy are checked on every request.
+         */
+        get: operations["get_api_v1_hub_calendar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/hub/calendar/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Download a dates-only private calendar
+         * @description Attachment excludes people, amounts and credentials. Re-export after schedule changes. Covered dates are omitted.
+         */
+        get: operations["get_api_v1_hub_calendar_export"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/hub/decisions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read your lender decisions queue
+         * @description Authorization and domain policy are checked on every request.
+         */
+        get: operations["get_api_v1_hub_decisions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/hub/saved-offers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read your saved offers
+         * @description Authorization and domain policy are checked on every request.
+         */
+        get: operations["get_api_v1_hub_saved_offers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/hub/saved-offers/{offer_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Save or remove an offer
+         * @description Up to 50 current saved offers. PUT sets a desired state; it is not a toggle.
+         */
+        put: operations["put_api_v1_hub_saved_offers_offer_id"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/hub/threads/{thread_id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Record your private message read timestamp
+         * @description Timestamp must be no later than server time. This does not change the other participant's read state.
+         */
+        post: operations["post_api_v1_hub_threads_thread_id_read"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1309,7 +2005,31 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Receive an authenticated PixelFlow event
+         * @description Raw-body HMAC-SHA256 signature uses Pixelflow-Signature t=timestamp,v1=digest and matching Pixelflow-Event-ID; five-minute tolerance. Server-owned route requires approved test scope, project/tenant/version/amount matching. payment.succeeded requires authoritative paid_at; refund.succeeded/payment.refunded require immutable refund identity/amount and a valid effective timestamp. Other event types may be recorded as evidence_only. Duplicate identity with changed payload returns 409. No browser CSRF or secret belongs in this request.
+         */
         post: operations["post_api_v1_integrations_pixelflow_routing_id_events"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/investments/portfolio": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read your private test investment positions
+         * @description At most 100 funds; payouts at most 20 and allocations at most 100 per fund. Exact centavo strings; collections do not prove lender settlement. No withdrawable wallet balance.
+         */
+        get: operations["get_api_v1_investments_portfolio"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1323,8 +2043,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read your lender evidence registration
+         * @description May initialize an empty record. Evidence review never establishes legal authorization.
+         */
         get: operations["get_api_v1_lender_registration"];
         put?: never;
+        /**
+         * Submit lender registration evidence
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_lender_registration"];
         delete?: never;
         options?: never;
@@ -1339,8 +2067,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read financial literacy progress
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_literacy_complete"];
         put?: never;
+        /**
+         * Complete the literacy step
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_literacy_complete"];
         delete?: never;
         options?: never;
@@ -1355,6 +2091,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read authorized agreements and collection acknowledgments
+         * @description Agreement hashes are included; receipt rows have no hash. URLs require fresh counterparty authorization; no private verification files are exposed.
+         */
         get: operations["get_api_v1_loan_documents"];
         put?: never;
         post?: never;
@@ -1371,6 +2111,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * List your borrowing and lending records
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_loans"];
         put?: never;
         post?: never;
@@ -1387,6 +2131,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read current obligations and separate future projections
+         * @description Contractual future interest is not earned income. Confirmed collection does not establish settlement to the lender.
+         */
         get: operations["get_api_v1_loans_loan_id"];
         put?: never;
         post?: never;
@@ -1405,6 +2153,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Request server-routed borrower checkout
+         * @description Never supply payer, payment version, route or arbitrary amount. Only partial mode accepts requested_amount. A checkout redirect is not confirmation of collection or settlement.
+         */
         post: operations["post_api_v1_loans_loan_id_checkout"];
         delete?: never;
         options?: never;
@@ -1419,6 +2171,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read the lender's separate origination fee
+         * @description No commission is charged on repayments. An absent accrual has id=null and omits policy_version/checkout_path.
+         */
         get: operations["get_api_v1_loans_loan_id_commission"];
         put?: never;
         post?: never;
@@ -1437,6 +2193,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Request test-mode disbursement
+         * @description Simulation only; no real payout provider is approved or enabled.
+         */
         post: operations["post_api_v1_loans_loan_id_disburse"];
         delete?: never;
         options?: never;
@@ -1451,6 +2211,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read authorized agreements and collection acknowledgments
+         * @description Agreement hashes are included; receipt rows have no hash. URLs require fresh counterparty authorization; no private verification files are exposed.
+         */
         get: operations["get_api_v1_loans_loan_id_documents"];
         put?: never;
         post?: never;
@@ -1467,6 +2231,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Review the borrower's current payable amount
+         * @description Read-only, borrower-only. Accrued payoff excludes future interest. The checkout endpoint rechecks payable state.
+         */
         get: operations["get_api_v1_loans_loan_id_payment_preview"];
         put?: never;
         post?: never;
@@ -1483,6 +2251,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read this loan's payment records
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_loans_loan_id_payments"];
         put?: never;
         post?: never;
@@ -1499,6 +2271,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Download a confirmed collection receipt
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_loans_loan_id_receipts_entry_id"];
         put?: never;
         post?: never;
@@ -1517,6 +2293,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Create a replacement agreement with a new effective date
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_loans_loan_id_renew_effective_date"];
         delete?: never;
         options?: never;
@@ -1531,7 +2311,167 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read the authorized loan timeline
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_loans_loan_id_timeline"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/meetings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read your private meetings
+         * @description Authorization and domain policy are checked on every request.
+         */
+        get: operations["get_api_v1_meetings"];
+        put?: never;
+        /**
+         * Propose a private agreement meeting
+         * @description Authorization and domain policy are checked on every request.
+         */
+        post: operations["post_api_v1_meetings"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/meetings/{room_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read a participant-only room snapshot
+         * @description Authorization and domain policy are checked on every request.
+         */
+        get: operations["get_api_v1_meetings_room_id"];
+        put?: never;
+        /**
+         * Submit a room command
+         * @description Every action needs operation_id. Except heartbeat/lobby_heartbeat/leave/ping/message/counter, commands require expected_revision. Exact uncertain retries must reuse the same body and operation ID. Approval, contract acceptance, funding and payout are separate. Schedule, agenda, propose and prepare are lender-only. Confirmation requires current mutual attendance. Consult the guide for action-specific hashes and state rules.
+         */
+        post: operations["post_api_v1_meetings_room_id"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/meetings/{room_id}/call": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read participant-only ephemeral call state
+         * @description Authorization and domain policy are checked on every request.
+         */
+        get: operations["get_api_v1_meetings_room_id_call"];
+        put?: never;
+        /**
+         * Request or respond to an optional private browser call
+         * @description Both people must be checked in and present. Callee accepts a ringing invitation; caller sends offer, callee sends answer. Calls expire on stale attendance/heartbeat or closed room. No recording; no operation ID/revision is used for this ephemeral protocol.
+         */
+        post: operations["post_api_v1_meetings_room_id_call"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/meetings/{room_id}/evidence": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Share consented redacted meeting evidence
+         * @description Test mode only. PDF, PNG or JPEG. An upload is not proof of authenticity or settlement.
+         */
+        post: operations["post_api_v1_meetings_room_id_evidence"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/meetings/{room_id}/evidence/{evidence_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Download clean participant-shared evidence
+         * @description Actual Content-Type is the validated PDF, PNG or JPEG type. Quarantined or revoked files cannot be downloaded.
+         */
+        get: operations["get_api_v1_meetings_room_id_evidence_evidence_id"];
+        put?: never;
+        post?: never;
+        /**
+         * Revoke your shared evidence
+         * @description Authorization and domain policy are checked on every request.
+         */
+        delete: operations["delete_api_v1_meetings_room_id_evidence_evidence_id"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/meetings/{room_id}/investment-agreement": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Download the frozen test investment agreement
+         * @description Participant-only, private/no-store. Contains full contract body, SHA-256 and recorded acknowledgments. Downloading does not accept.
+         */
+        get: operations["get_api_v1_meetings_room_id_investment_agreement"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/meetings/{room_id}/stream": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Watch participant-only room changes
+         * @description 45-second stream; reconnect after retry:3000. room.changed supplies sequence/revision, room.expired ends an expired session; comments are heartbeats. Fetch a fresh snapshot after a change. No full event replay is promised.
+         */
+        get: operations["get_api_v1_meetings_room_id_stream"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1547,12 +2487,20 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read private notices and reminder preferences
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_notices"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
+        /**
+         * Update private notice preferences
+         * @description Current delivery adapter is local capture; choosing email/SMS does not configure external delivery. Quiet hours apply.
+         */
         patch: operations["patch_api_v1_notices"];
         trace?: never;
     };
@@ -1563,8 +2511,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * List currently published offers
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_offers"];
         put?: never;
+        /**
+         * Create a lending offer
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_offers"];
         delete?: never;
         options?: never;
@@ -1579,6 +2535,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read an offer and permitted applications
+         * @description Requires member sign-in. Use public discovery for anonymous browsing. Only the lender receives private applications.
+         */
         get: operations["get_api_v1_offers_offer_id"];
         put?: never;
         post?: never;
@@ -1597,6 +2557,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Submit a private application
+         * @description Original lender terms apply. Calculator variants never change these terms. Co-borrower sharing requires a separately accepted invitation.
+         */
         post: operations["post_api_v1_offers_offer_id_applications"];
         delete?: never;
         options?: never;
@@ -1613,6 +2577,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Publish a reviewed offer
+         * @description Authorization and domain policy are checked on every request.
+         */
         post: operations["post_api_v1_offers_offer_id_publish"];
         delete?: never;
         options?: never;
@@ -1627,6 +2595,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read your payment operations and unresolved settlement state
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_payments"];
         put?: never;
         post?: never;
@@ -1643,7 +2615,131 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read people associated with your loans
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_people"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/plaza/bubbles/{bubble_id}/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Report a room bubble
+         * @description Requires active membership in the bubble's room. Evidence may remain after public expiry. Reporting does not itself suspend or remove a member.
+         */
+        post: operations["post_api_v1_plaza_bubbles_bubble_id_reports"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/plaza/rooms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List city rooms and current joined counts
+         * @description Authorization and domain policy are checked on every request.
+         */
+        get: operations["get_api_v1_plaza_rooms"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/plaza/rooms/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read joined room state
+         * @description Authenticated current-room members only. X-Plaza-Instance is a nonsecret browser UUID used to report ownership, never authorization. Locations are virtual positions, not GPS.
+         */
+        get: operations["get_api_v1_plaza_rooms_slug"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/plaza/rooms/{slug}/commands": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Control your character or speech bubble
+         * @description Requires the owner session, instance and opaque lease. Four move commands/sec, stops remain possible, heartbeats every15s; presence expires after60s. Plain Unicode text up to120 code points, one60s bubble, six posts/min. Bubble operation UUIDs must retain exact text/offer on explicit retries. No offline replay or financial decision.
+         */
+        post: operations["post_api_v1_plaza_rooms_slug_commands"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/plaza/rooms/{slug}/join": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Explicitly join or switch a shared city room
+         * @description Publishes public identity and virtual room presence. One owner lease per account; exact join retries cannot reclaim a replacement lease. Keep the lease in memory, never URLs or persisted storage.
+         */
+        post: operations["post_api_v1_plaza_rooms_slug_join"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/plaza/rooms/{slug}/stream": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Watch joined room changes
+         * @description Bounded45s; retry:3000. plaza.changed contains revision only; fetch an authorized snapshot. plaza.expired ends unavailable membership. No lease/query credential or full replay. Rechecks session/member/room while connected.
+         */
+        get: operations["get_api_v1_plaza_rooms_slug_stream"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1661,6 +2757,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Prepare a purpose-limited statement export
+         * @description Operations summary is finance/admin-only. The actor-bound snapshot expires after ten minutes.
+         */
         post: operations["post_api_v1_reporting_exports"];
         delete?: never;
         options?: never;
@@ -1675,6 +2775,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Download your unexpired statement CSV
+         * @description Actor/role checked again. CSV formula-leading cells are neutralized. 410 when expired; private,no-store.
+         */
         get: operations["get_api_v1_reporting_exports_job_id_download"];
         put?: never;
         post?: never;
@@ -1691,6 +2795,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read your scoped financial activity
+         * @description Exact signed decimal strings; future interest is projection, collections are not settlement, count metrics are counts. No prior-period comparison is currently provided.
+         */
         get: operations["get_api_v1_reporting_member"];
         put?: never;
         post?: never;
@@ -1707,8 +2815,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Read your private verification checks
+         * @description Authorization and domain policy are checked on every request.
+         */
         get: operations["get_api_v1_verification"];
         put?: never;
+        /**
+         * Submit a verification check
+         * @description Identity, income and funding-account checks require an owned private document. A submitted case is not approved. Duplicate pending checks return 409.
+         */
         post: operations["post_api_v1_verification"];
         delete?: never;
         options?: never;
@@ -1719,7 +2835,1845 @@ export interface paths {
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: never;
+    schemas: {
+        /**
+         * @example {
+         *       "code": "stale_revision",
+         *       "message": "Refresh this record before continuing."
+         *     }
+         */
+        DomainError: {
+            code: string;
+            message: string;
+        };
+        DetailError: {
+            detail: string;
+        };
+        /** @description DRF field errors. This deliberately retains the existing error format. */
+        FieldErrors: {
+            [key: string]: string | string[] | {
+                [key: string]: unknown;
+            };
+        };
+        Recorded: {
+            recorded: boolean;
+        };
+        Person: {
+            /** Format: uuid */
+            id: string;
+            handle: string;
+            display_name: string;
+            area: string;
+            avatar_key: string;
+            photo_url: string | null;
+            reputation: components["schemas"]["Reputation"];
+        };
+        PublicIdentity: {
+            handle: string;
+            display_name: string;
+            avatar_key: string;
+            photo_url: string | null;
+            reputation: components["schemas"]["Reputation"];
+        };
+        Award: {
+            /** Format: uuid */
+            id: string;
+            key: string;
+            name: string;
+            criteria: string;
+            /** Format: date-time */
+            earned_at: string;
+            rule_version: string;
+            eligible?: boolean;
+            private?: boolean;
+            public?: boolean;
+        };
+        PublicAward: {
+            /** Format: uuid */
+            id: string;
+            key: string;
+            name: string;
+            criteria: string;
+            /** Format: date-time */
+            earned_at: string;
+            rule_version: string;
+        };
+        AwardDefinition: {
+            key: string;
+            name: string;
+            criteria: string;
+            private: boolean;
+        };
+        /**
+         * @example {
+         *       "points": 0,
+         *       "level": "Newcomer",
+         *       "frame": "plain",
+         *       "flair": null,
+         *       "show_points": true
+         *     }
+         */
+        Reputation: {
+            points: number;
+            level: string;
+            frame: string;
+            flair: components["schemas"]["PublicAward"] | null;
+            show_points: boolean;
+        };
+        XpProgress: {
+            current_level: string;
+            current_level_points: number | null;
+            next_level: string | null;
+            next_level_points: number | null;
+            points_in_level: number | null;
+            points_to_next: number | null;
+            progress_percent: number | null;
+        };
+        Area: {
+            code: string;
+            name: string;
+            latitude: number;
+            longitude: number;
+            approximate: boolean;
+            source: string;
+        };
+        Fee: {
+            code: string;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            amount: number;
+            timing: string;
+        };
+        Installment: {
+            sequence?: number;
+            /** Format: date */
+            due_date: string;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            principal: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            interest: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            charges?: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            total: number;
+        };
+        /**
+         * @example {
+         *       "principal": 800000,
+         *       "currency": "PHP",
+         *       "annual_rate_bps": 900,
+         *       "frequency": "monthly",
+         *       "installment_count": 3,
+         *       "effective_date": "2026-10-30",
+         *       "due_dates": [
+         *         "2026-11-30",
+         *         "2026-12-30",
+         *         "2027-01-30"
+         *       ],
+         *       "policy_version": "demo-v1",
+         *       "borrower_fees": [],
+         *       "lender_fees": []
+         *     }
+         */
+        Terms: {
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            principal: number;
+            /** @enum {string} */
+            currency?: "PHP";
+            annual_rate_bps: number;
+            /** @enum {string} */
+            frequency: "weekly" | "twice_monthly" | "monthly" | "maturity";
+            installment_count: number;
+            /** Format: date */
+            effective_date: string;
+            due_dates: string[];
+            borrower_fees?: components["schemas"]["Fee"][];
+            lender_fees?: components["schemas"]["Fee"][];
+            policy_version?: string;
+        };
+        /**
+         * @example {
+         *       "principal": 800000,
+         *       "currency": "PHP",
+         *       "net_proceeds": 800000,
+         *       "total_repayment": 812098,
+         *       "total_interest": 12098,
+         *       "annual_rate_bps": 900,
+         *       "rate_basis": "Equal principal; simple reducing balance; ACT/365 fixed; half-up centavo rounding",
+         *       "effective_annual_rate": "0.09379861704655922949314117431640625",
+         *       "effective_annual_percentage": "9.38",
+         *       "borrower_fees": [],
+         *       "lender_fees": [],
+         *       "schedule": [
+         *         {
+         *           "due_date": "2026-11-30",
+         *           "principal": 266666,
+         *           "interest": 6115,
+         *           "charges": 0,
+         *           "total": 272781
+         *         },
+         *         {
+         *           "due_date": "2026-12-30",
+         *           "principal": 266666,
+         *           "interest": 3945,
+         *           "charges": 0,
+         *           "total": 270611
+         *         },
+         *         {
+         *           "due_date": "2027-01-30",
+         *           "principal": 266668,
+         *           "interest": 2038,
+         *           "charges": 0,
+         *           "total": 268706
+         *         }
+         *       ],
+         *       "grace_days": 3,
+         *       "late_fee": 0,
+         *       "post_maturity_interest": false,
+         *       "test_mode": true
+         *     }
+         */
+        Disclosure: {
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            principal: number;
+            /** @enum {string} */
+            currency: "PHP";
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            net_proceeds: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            total_repayment: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            total_interest: number;
+            annual_rate_bps: number;
+            rate_basis: string;
+            effective_annual_rate: string;
+            effective_annual_percentage: string;
+            borrower_fees: components["schemas"]["Fee"][];
+            lender_fees: components["schemas"]["Fee"][];
+            schedule: components["schemas"]["Installment"][];
+            grace_days: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            late_fee: number;
+            post_maturity_interest: boolean;
+            test_mode: boolean;
+        };
+        SetupCompleteness: {
+            completed: number;
+            total: number;
+            percent: number;
+            steps: {
+                key: string;
+                label: string;
+                complete: boolean;
+                href: string;
+            }[];
+        };
+        Member: {
+            /** Format: uuid */
+            id: string;
+            /** Format: email */
+            email: string;
+            display_name: string;
+            area: string;
+            bio: string;
+            avatar_key: string;
+            photo_url: string | null;
+            photo_mode?: string;
+            has_photo?: boolean;
+            stored_photo_url?: string | null;
+            mobile_number?: string;
+            suspended: boolean;
+            literacy_completed: boolean;
+            staff_role: string;
+            is_staff: boolean;
+            community_reputation: components["schemas"]["Reputation"];
+            setup_completeness?: components["schemas"]["SetupCompleteness"];
+        };
+        /**
+         * @example {
+         *       "member": null,
+         *       "environment": "test",
+         *       "csrf_token": "CURRENT_CSRF_TOKEN"
+         *     }
+         */
+        Session: {
+            member: components["schemas"]["Member"] | null;
+            /** @enum {string} */
+            environment: "test" | "live";
+            csrf_token: string;
+        };
+        ProductRules: {
+            min_principal: number;
+            max_principal: number;
+            max_annual_rate_bps: number;
+            max_installments: number;
+            allowed_frequencies: ("weekly" | "twice_monthly" | "monthly" | "maturity")[];
+            commission_bps: number;
+        };
+        Offer: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            area: string;
+            lender: components["schemas"]["Person"];
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            declared_amount: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            available_amount: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            reserved_amount?: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            committed_amount?: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            min_amount: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            max_amount: number;
+            status: string;
+            version: number;
+            annual_rate_bps?: number;
+            frequency?: string;
+            installment_count?: number;
+            terms: components["schemas"]["Terms"];
+            disclosure: components["schemas"]["Disclosure"];
+            /** Format: date-time */
+            expires_at: string;
+            test_mode: boolean;
+            capacity_label?: string;
+            applications?: components["schemas"]["Application"][];
+            my_application?: components["schemas"]["Application"] | null;
+        };
+        Application: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            offer_id: string;
+            /** Format: uuid */
+            meeting_id: string | null;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            principal: number;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: uuid */
+            agreement_id: string | null;
+            borrower: components["schemas"]["Person"];
+            lender: components["schemas"]["Person"];
+            offer: {
+                /** Format: uuid */
+                id: string;
+                version: number;
+                title: string;
+            };
+            terms: components["schemas"]["Terms"];
+            disclosure: components["schemas"]["Disclosure"];
+            purpose: string;
+            summary: {
+                employment_type?: string;
+                income_band?: string;
+                repayment_experience?: string;
+            };
+            status: string;
+            co_borrower: {
+                member: components["schemas"]["PublicIdentity"];
+                status: string;
+                joint_liability: boolean;
+            } | null;
+            test_mode: boolean;
+        };
+        DiscoveryOffer: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            likes: {
+                count: number;
+                liked: boolean;
+            };
+            lender: components["schemas"]["PublicIdentity"];
+            area: components["schemas"]["Area"];
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            declared_available_amount: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            min_amount: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            max_amount: string;
+            terms: components["schemas"]["Terms"];
+            /** @description Empty if usable capacity is below the minimum; otherwise a dated disclosure. */
+            cost_example: Record<string, never> | components["schemas"]["Disclosure"];
+            comparison: string;
+            capacity_label: string;
+            /** Format: date-time */
+            expires_at: string;
+            /** Format: date-time */
+            created_at: string;
+        };
+        Discovery: {
+            offers: components["schemas"]["DiscoveryOffer"][];
+            next_cursor: string | null;
+            cost_sort_available: boolean;
+            cost_comparison_note: string;
+            map_source: string;
+            approximate: boolean;
+        };
+        Profile: {
+            /** Format: uuid */
+            id: string;
+            handle: string;
+            display_name: string;
+            avatar_key: string;
+            photo_url: string | null;
+            reputation: components["schemas"]["Reputation"];
+            activity: {
+                state: string;
+                label: string;
+            } | null;
+            activity_shared: boolean;
+            bio: string;
+            area: string;
+            community_level: string;
+            xp_progress: components["schemas"]["XpProgress"];
+            recommendation_summary: {
+                up: number;
+                down: number;
+                total: number;
+            };
+            badges: components["schemas"]["PublicAward"][];
+            reviews: components["schemas"]["Review"][];
+        };
+        Review: {
+            /** Format: uuid */
+            id: string;
+            author_display_name: string;
+            author?: components["schemas"]["PublicIdentity"];
+            /** @enum {string|null} */
+            recommendation?: "up" | "down" | null;
+            ratings: {
+                [key: string]: number;
+            };
+            body: string;
+            /** Format: date-time */
+            published_at: string;
+            response?: string;
+            author_handle?: string;
+            author_avatar_key?: string;
+            author_photo_url?: string | null;
+        };
+        Thread: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            meeting_id: string | null;
+            /** Format: uuid */
+            loan_id: string | null;
+            /** Format: uuid */
+            application_id: string | null;
+            other_display_name: string;
+            other_handle: string;
+            other_avatar_key: string;
+            other_photo_url: string | null;
+            other_reputation: components["schemas"]["Reputation"] | null;
+            /** Format: date-time */
+            latest_at: string | null;
+            unread_count: number;
+        };
+        Message: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            sender_id: string;
+            body: string;
+            /** Format: date-time */
+            created_at: string;
+        };
+        LeaderboardEntry: {
+            rank: number;
+            position?: number;
+            handle: string;
+            display_name: string;
+            avatar_key?: string;
+            photo_url?: string | null;
+            reputation: components["schemas"]["Reputation"];
+            badges?: components["schemas"]["PublicAward"][];
+            lending?: {
+                /** @description Exact PHP centavos serialized as a decimal integer string. */
+                total_lent: string;
+                loans_funded: number;
+                people_helped: number;
+            } | null;
+            activity?: {
+                learning_completed: boolean;
+                approved_contributions: number;
+            };
+        };
+        OwnProfile: components["schemas"]["Profile"] & {
+            photo_mode: string;
+            has_photo: boolean;
+            stored_photo_url: string | null;
+            setup_completeness: components["schemas"]["SetupCompleteness"];
+        };
+        PrivateReview: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            loan_id: string;
+            ratings: {
+                [key: string]: number;
+            };
+            body: string;
+            /** @enum {string|null} */
+            recommendation: "up" | "down" | null;
+            status: string;
+            version: number;
+            /** Format: date-time */
+            published_at: string | null;
+            response: string;
+            response_status: string;
+        };
+        Contribution: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            body: string;
+            status: string;
+            version: number;
+        };
+        ReputationWorkspace: {
+            reputation: components["schemas"]["Reputation"];
+            frames: {
+                key: string;
+                name: string;
+                required_points: number;
+                unlocked: boolean;
+            }[];
+            settings: {
+                avatar_frame: string;
+                /** Format: uuid */
+                avatar_flair_id: string | null;
+                show_reputation: boolean;
+                leaderboard_opt_in: boolean;
+                show_lending_totals: boolean;
+                show_activity: boolean;
+            };
+            rules: {
+                literacy_points: number;
+                contribution_points: number;
+                contribution_cap: number;
+            };
+            progress: {
+                next_level: string | null;
+                points_to_next: number;
+            };
+            breakdown: {
+                literacy_points: number;
+                contribution_points: number;
+                approved_contributions: number;
+            };
+        };
+        OfferComment: {
+            /** Format: uuid */
+            id: string;
+            body: string;
+            author: components["schemas"]["PublicIdentity"];
+            /** Format: date-time */
+            created_at: string;
+            status?: string;
+            can_delete?: boolean;
+        };
+        /**
+         * @example {
+         *       "offer_id": "00000000-0000-4000-8000-000000000001",
+         *       "likes": {
+         *         "count": 0,
+         *         "liked": false
+         *       },
+         *       "reactions": [],
+         *       "my_reaction": null,
+         *       "reaction_choices": [],
+         *       "comments": [],
+         *       "comments_next_cursor": null
+         *     }
+         */
+        OfferSocial: {
+            /** Format: uuid */
+            offer_id: string;
+            likes: {
+                count: number;
+                liked: boolean;
+            };
+            reactions: {
+                key: string;
+                name: string;
+                count: number;
+            }[];
+            my_reaction: components["schemas"]["PublicAward"] | null;
+            reaction_choices: components["schemas"]["PublicAward"][];
+            comments: components["schemas"]["OfferComment"][];
+            comments_next_cursor: string | null;
+        };
+        /**
+         * @example {
+         *       "terms": {
+         *         "principal": 800000,
+         *         "currency": "PHP",
+         *         "annual_rate_bps": 900,
+         *         "frequency": "monthly",
+         *         "installment_count": 3,
+         *         "effective_date": "2026-10-30",
+         *         "due_dates": [
+         *           "2026-11-30",
+         *           "2026-12-30",
+         *           "2027-01-30"
+         *         ],
+         *         "policy_version": "demo-v1",
+         *         "borrower_fees": [],
+         *         "lender_fees": []
+         *       },
+         *       "disclosure": {
+         *         "principal": 800000,
+         *         "currency": "PHP",
+         *         "net_proceeds": 800000,
+         *         "total_repayment": 812098,
+         *         "total_interest": 12098,
+         *         "annual_rate_bps": 900,
+         *         "rate_basis": "Equal principal; simple reducing balance; ACT/365 fixed; half-up centavo rounding",
+         *         "effective_annual_rate": "0.09379861704655922949314117431640625",
+         *         "effective_annual_percentage": "9.38",
+         *         "borrower_fees": [],
+         *         "lender_fees": [],
+         *         "schedule": [
+         *           {
+         *             "due_date": "2026-11-30",
+         *             "principal": 266666,
+         *             "interest": 6115,
+         *             "charges": 0,
+         *             "total": 272781
+         *           },
+         *           {
+         *             "due_date": "2026-12-30",
+         *             "principal": 266666,
+         *             "interest": 3945,
+         *             "charges": 0,
+         *             "total": 270611
+         *           },
+         *           {
+         *             "due_date": "2027-01-30",
+         *             "principal": 266668,
+         *             "interest": 2038,
+         *             "charges": 0,
+         *             "total": 268706
+         *           }
+         *         ],
+         *         "grace_days": 3,
+         *         "late_fee": 0,
+         *         "post_maturity_interest": false,
+         *         "test_mode": true
+         *       },
+         *       "simulation_only": false,
+         *       "application_uses_original_terms": true,
+         *       "original_terms": {
+         *         "frequency": "monthly",
+         *         "installment_count": 3
+         *       },
+         *       "limits": {
+         *         "min_amount": 10000,
+         *         "max_amount": 800000,
+         *         "max_installments": 24,
+         *         "frequencies": [
+         *           "weekly",
+         *           "twice_monthly",
+         *           "monthly",
+         *           "maturity"
+         *         ]
+         *       },
+         *       "notice": "Synthetic documentation example. Request a fresh dated calculation; this is not an available offer or promised rate."
+         *     }
+         */
+        CalculatorPreview: {
+            terms: components["schemas"]["Terms"];
+            disclosure: components["schemas"]["Disclosure"];
+            simulation_only: boolean;
+            application_uses_original_terms: boolean;
+            original_terms: {
+                frequency: string;
+                installment_count: number;
+            };
+            limits: {
+                /**
+                 * Format: int64
+                 * @description Exact PHP centavos. Never a floating-point peso amount.
+                 */
+                min_amount: number;
+                /**
+                 * Format: int64
+                 * @description Exact PHP centavos. Never a floating-point peso amount.
+                 */
+                max_amount: number;
+                max_installments: number;
+                frequencies: string[];
+            };
+            notice: string;
+        };
+        ActionUpdate: {
+            key: string;
+            kind: string;
+            title: string;
+            detail: string;
+            href: string;
+            /** Format: date-time */
+            at: string;
+            urgent: boolean;
+            read: boolean;
+        };
+        CalendarEvent: {
+            id: string;
+            /** Format: uuid */
+            loan_id: string;
+            sequence: number;
+            /** Format: date */
+            due_date: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            amount: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            covered: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            remaining: string;
+            /** @enum {string} */
+            status: "covered" | "overdue" | "partial" | "scheduled";
+            person: components["schemas"]["Person"];
+            href: string;
+            /** Format: date-time */
+            updated_at: string;
+        };
+        SavedOffer: {
+            /** Format: uuid */
+            id: string;
+            /** Format: date-time */
+            saved_at: string;
+            available: boolean;
+            offer: components["schemas"]["Offer"] | null;
+        };
+        Agreement: {
+            /** Format: uuid */
+            id: string;
+            state: string;
+            hash: string;
+            version: number;
+            terms: components["schemas"]["Terms"];
+            disclosure: components["schemas"]["Disclosure"];
+            lender: components["schemas"]["Person"];
+            borrower: components["schemas"]["Person"];
+            acceptances: {
+                /** Format: uuid */
+                member_id: string;
+                /** Format: date-time */
+                accepted_at: string;
+                hash: string;
+                provenance: string;
+            }[];
+            test_mode: boolean;
+            template_version: string;
+            /** Format: date-time */
+            expires_at: string;
+            /** Format: uuid */
+            loan_id: string | null;
+        };
+        Loan: {
+            /** Format: uuid */
+            id: string;
+            status: string;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            principal_balance: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            accrued_interest: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            projected_interest: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            total_due: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            payoff_amount: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            next_installment_due: number;
+            /** Format: date */
+            next_due_date: string | null;
+            settlement_status: string;
+            disbursement_status: string;
+            schedule: components["schemas"]["Installment"][];
+            revised_projection: components["schemas"]["Installment"][];
+            projection_label: string;
+            terms: components["schemas"]["Terms"];
+            disclosure: components["schemas"]["Disclosure"];
+            /** Format: uuid */
+            agreement_id: string;
+            lender: components["schemas"]["Person"];
+            borrower: components["schemas"]["Person"];
+            test_mode: boolean;
+            activation_exception: string;
+            /** Format: uuid */
+            active_amendment_id: string | null;
+            original_terms: components["schemas"]["Terms"];
+        };
+        LedgerEvent: {
+            /** Format: uuid */
+            id: string;
+            kind: string;
+            /** Format: int64 */
+            amount: number;
+            /** Format: int64 */
+            principal_delta: number;
+            /** Format: int64 */
+            interest_delta: number;
+            /** Format: date-time */
+            effective_at: string;
+            /** Format: date-time */
+            recorded_at: string;
+        };
+        LoanDocument: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            kind: string;
+            state: string;
+            hash?: string;
+            url: string;
+            /** Format: date-time */
+            created_at: string;
+            test_mode: boolean;
+        };
+        MeetingSummary: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            kind: "investment" | "borrowing";
+            state: string;
+            revision: number;
+            event_sequence: number;
+            offer: {
+                /** Format: uuid */
+                id: string;
+                title: string;
+            };
+            lender: components["schemas"]["Person"];
+            participant: components["schemas"]["Person"];
+            /** Format: date-time */
+            scheduled_at: string | null;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            amount: number;
+            /** Format: date-time */
+            created_at: string;
+        };
+        Meeting: components["schemas"]["MeetingSummary"] & {
+            /** @enum {string} */
+            agenda: "funding" | "earnings" | "documents";
+            proposal: {
+                /**
+                 * Format: int64
+                 * @description Exact PHP centavos. Never a floating-point peso amount.
+                 */
+                amount: number;
+                share_bps?: number;
+                basis?: string;
+                risk_model?: string;
+                fee_policy?: {
+                    bps: number;
+                    version: string;
+                    payer: string;
+                    timing: string;
+                };
+                terms?: components["schemas"]["Terms"];
+                disclosure?: components["schemas"]["Disclosure"];
+                allocation_policy?: string;
+                capital_return?: string;
+            };
+            proposal_version: number;
+            proposal_hash: string;
+            schedule_version: number;
+            participants: (components["schemas"]["Person"] & {
+                role: string;
+                schedule_accepted: boolean;
+                checked_in: boolean;
+                here: boolean;
+                in_lobby: boolean;
+                last_seen_label: string;
+            })[];
+            both_here: boolean;
+            both_approved: boolean;
+            approved_by: string[];
+            evidence_hash: string;
+            evidence_reviewed: boolean;
+            evidence_reviewed_by: string[];
+            /** @enum {string} */
+            visibility: "named" | "anonymous";
+            test_mode: boolean;
+            /** Format: uuid */
+            application_id: string | null;
+            agreement: components["schemas"]["Agreement"] | null;
+            /** Format: uuid */
+            loan_id: string | null;
+            /** Format: uuid */
+            thread_id: string;
+            messages: {
+                /** Format: uuid */
+                id: string;
+                body: string;
+                sender: components["schemas"]["Person"];
+                /** Format: date-time */
+                created_at: string;
+            }[];
+            earlier_messages_available: boolean;
+            events: {
+                /** Format: uuid */
+                id: string;
+                sequence: number;
+                kind: string;
+                actor: string;
+                /** Format: date-time */
+                created_at: string;
+            }[];
+            evidence: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                owner_id: string;
+                owner_name: string;
+                name: string;
+                category: string;
+                file_status: string;
+                authenticity: string;
+                /** Format: date-time */
+                created_at: string;
+            }[];
+            funding: {
+                status: string;
+                /**
+                 * Format: int64
+                 * @description Exact PHP centavos. Never a floating-point peso amount.
+                 */
+                confirmed_amount: number;
+                blockers: string[];
+            };
+            calls: {
+                available: boolean;
+                reason: string;
+            };
+            eligibility: {
+                lender_identity: string;
+                participant_identity: string;
+                note: string;
+            };
+            investment: components["schemas"]["InvestmentAgreement"] | null;
+            pings: {
+                /** Format: date-time */
+                last_sent_at: string | null;
+                /** Format: date-time */
+                next_allowed_at: string | null;
+                /** Format: date-time */
+                last_received_at: string | null;
+                from_name: string | null;
+            };
+            /** Format: date-time */
+            server_time: string;
+        };
+        RoomCommandHeartbeat: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandHeartbeat";
+            /** Format: uuid */
+            operation_id: string;
+        };
+        RoomCommandLobbyHeartbeat: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandLobbyHeartbeat";
+            /** Format: uuid */
+            operation_id: string;
+        };
+        RoomCommandLeave: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandLeave";
+            /** Format: uuid */
+            operation_id: string;
+        };
+        RoomCommandPing: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandPing";
+            /** Format: uuid */
+            operation_id: string;
+        };
+        RoomCommandMessage: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandMessage";
+            /** Format: uuid */
+            operation_id: string;
+            body: string;
+        };
+        RoomCommandCounter: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandCounter";
+            /** Format: uuid */
+            operation_id: string;
+            body: string;
+        };
+        RoomCommandSchedule: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandSchedule";
+            /** Format: uuid */
+            operation_id: string;
+            /** Format: date-time */
+            scheduled_at: string;
+            expected_revision: number;
+        };
+        RoomCommandAcceptSchedule: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandAcceptSchedule";
+            /** Format: uuid */
+            operation_id: string;
+            expected_revision: number;
+        };
+        RoomCommandCheckIn: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandCheckIn";
+            /** Format: uuid */
+            operation_id: string;
+            expected_revision: number;
+        };
+        RoomCommandPrepare: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandPrepare";
+            /** Format: uuid */
+            operation_id: string;
+            expected_revision: number;
+        };
+        RoomCommandClose: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandClose";
+            /** Format: uuid */
+            operation_id: string;
+            expected_revision: number;
+        };
+        RoomCommandAgenda: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandAgenda";
+            /** Format: uuid */
+            operation_id: string;
+            /** @enum {string} */
+            agenda: "funding" | "earnings" | "documents";
+            expected_revision: number;
+        };
+        RoomCommandPropose: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandPropose";
+            /** Format: uuid */
+            operation_id: string;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            amount: number;
+            share_bps?: number;
+            expected_revision: number;
+        };
+        RoomCommandApprove: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandApprove";
+            /** Format: uuid */
+            operation_id: string;
+            expected_hash: string;
+            expected_revision: number;
+        };
+        RoomCommandReviewEvidence: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandReviewEvidence";
+            /** Format: uuid */
+            operation_id: string;
+            expected_hash: string;
+            expected_revision: number;
+        };
+        RoomCommandAcceptContract: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandAcceptContract";
+            /** Format: uuid */
+            operation_id: string;
+            accepted: boolean;
+            expected_hash: string;
+            expected_revision: number;
+        };
+        RoomCommandConfirmTestFunding: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandConfirmTestFunding";
+            /** Format: uuid */
+            operation_id: string;
+            confirmed_simulation: boolean;
+            expected_hash: string;
+            expected_revision: number;
+        };
+        RoomCommandPreparePayout: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandPreparePayout";
+            /** Format: uuid */
+            operation_id: string;
+            confirmed_simulation: boolean;
+            return_unallocated: boolean;
+            expected_revision: number;
+        };
+        RoomCommandConfirmPayout: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandConfirmPayout";
+            /** Format: uuid */
+            operation_id: string;
+            confirmed_simulation: boolean;
+            /** Format: uuid */
+            payout_id: string;
+            expected_revision: number;
+        };
+        RoomCommandCancelPayout: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandCancelPayout";
+            /** Format: uuid */
+            operation_id: string;
+            confirmed_simulation: boolean;
+            /** Format: uuid */
+            payout_id: string;
+            expected_revision: number;
+        };
+        RoomCommandVisibility: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            action: "RoomCommandVisibility";
+            /** Format: uuid */
+            operation_id: string;
+            /** @enum {string} */
+            visibility: "named" | "anonymous";
+            expected_revision: number;
+        };
+        CallDescription: {
+            /** @enum {string} */
+            type: "offer" | "answer";
+            /** @description Ephemeral negotiated SDP; never log or persist in client storage. */
+            sdp: string;
+        };
+        RoomCall: {
+            available: boolean;
+            relay_configured: boolean;
+            ice_servers: {
+                urls: string[];
+                username: string;
+                /** @description Short-lived participant-bound relay credential. Do not log or persist. */
+                credential: string;
+            }[];
+            call: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                caller_id: string;
+                /** @enum {string} */
+                state: "ringing" | "active" | "ended";
+                offer: components["schemas"]["CallDescription"] | null;
+                answer: components["schemas"]["CallDescription"] | null;
+            } | null;
+            note: string;
+        };
+        CoBorrowerInvitation: {
+            /** Format: uuid */
+            id: string;
+            display_name: string;
+            /** Format: email */
+            email: string;
+            mobile_number: string;
+            facebook_url: string;
+            /** @enum {string} */
+            relationship: "family" | "friend" | "colleague" | "other";
+            status: string;
+            version: number;
+            /** @enum {string} */
+            direction: "incoming" | "outgoing";
+            inviter: components["schemas"]["PublicIdentity"];
+            member: components["schemas"]["PublicIdentity"] | null;
+            ready_for_application: boolean;
+            /** Format: date-time */
+            consented_at: string | null;
+            /** Format: date-time */
+            expires_at: string;
+            notice: string;
+            invitation_path?: string;
+        };
+        PrivateDocument: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            purpose: string;
+            status: string;
+            size: number;
+            /** Format: date-time */
+            created_at: string;
+            provenance: string;
+        };
+        CheckoutLink: {
+            /** Format: uuid */
+            payment_id: string;
+            checkout_url: string;
+            /** Format: date-time */
+            expires_at: string | null;
+            status: string;
+        };
+        PaymentReview: {
+            /** Format: uuid */
+            loan_id: string;
+            /** @enum {string} */
+            mode: "installment" | "payoff" | "partial";
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            amount: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            principal_balance: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            accrued_interest: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            payoff_amount: number;
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            next_installment_due: number;
+            /** Format: date */
+            next_due_date: string | null;
+            /** @enum {string} */
+            currency: "PHP";
+            test_mode: boolean;
+            allocation_note: string;
+        };
+        PixelFlowEvent: {
+            id: string;
+            /** @enum {string} */
+            api_version: "2026-10-24";
+            /** @enum {string} */
+            environment: "test" | "live";
+            project_id: string;
+            tenant_id: string;
+            type: string;
+            /** Format: date-time */
+            created_at?: string;
+            data: {
+                id: string;
+                external_id: string;
+                /**
+                 * Format: int64
+                 * @description Exact PHP centavos. Never a floating-point peso amount.
+                 */
+                amount: number;
+                /** @enum {string} */
+                currency: "PHP";
+                version: number;
+                payable_version: string;
+                /** Format: date-time */
+                paid_at?: string;
+            };
+            refund?: {
+                id: string;
+                /**
+                 * Format: int64
+                 * @description Exact PHP centavos. Never a floating-point peso amount.
+                 */
+                amount: number;
+                /** Format: date-time */
+                succeeded_at?: string;
+                /** Format: date-time */
+                updated_at?: string;
+            };
+        };
+        VerificationCase: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            member_id: string;
+            member_name: string;
+            member: components["schemas"]["PublicIdentity"] & {
+                /** Format: uuid */
+                id: string;
+            };
+            kind: string;
+            status: string;
+            reason: string;
+            /** Format: date-time */
+            expires_at: string | null;
+            version: number;
+            provenance: string;
+            /** Format: uuid */
+            document_id: string | null;
+        };
+        LenderRegistration: {
+            /** Format: uuid */
+            id: string;
+            status: string;
+            authority: string;
+            evidence_ref: string;
+            reason: string;
+            version: number;
+            legal_authorization: boolean;
+        };
+        InvestmentPosition: {
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            contributed: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            allocated: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            unallocated: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            principal_collected: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            earnings: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            principal_returned: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            earnings_paid: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            principal_due: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            earnings_due: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            recorded_loss: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            capital_exposure: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            platform_fee: string;
+            simulated: boolean;
+        };
+        InvestmentPayout: {
+            /** Format: uuid */
+            id: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            principal: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            earnings: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            unused_capital: string;
+            status: string;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: date-time */
+            confirmed_at: string | null;
+        };
+        InvestmentFund: {
+            /** Format: uuid */
+            id: string;
+            status: string;
+            /** Format: date-time */
+            confirmed_at: string;
+            position: components["schemas"]["InvestmentPosition"];
+            payouts: components["schemas"]["InvestmentPayout"][];
+            allocations: {
+                /** Format: uuid */
+                id: string;
+                loan_reference: string;
+                /** @description Exact PHP centavos serialized as a decimal integer string. */
+                amount: string;
+                status: string;
+            }[];
+        };
+        InvestmentAgreement: {
+            /** Format: uuid */
+            id: string;
+            hash: string;
+            terms: components["schemas"]["InvestmentTerms"];
+            body: string;
+            accepted: boolean;
+            approvals: {
+                /** Format: uuid */
+                member_id: string;
+                kind: string;
+                /** Format: date-time */
+                created_at: string;
+            }[];
+            fund: components["schemas"]["InvestmentFund"] | null;
+            download_url: string;
+        };
+        InvestmentTerms: {
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            amount: number;
+            share_bps: number;
+            basis: string;
+            risk_model: string;
+            fee_policy: {
+                bps: number;
+                version: string;
+                payer: string;
+                timing: string;
+            };
+            allocation_policy: string;
+            capital_return: string;
+            /** Format: uuid */
+            lender_id: string;
+            /** Format: uuid */
+            investor_id: string;
+            /** Format: uuid */
+            offer_id: string;
+            /** Format: uuid */
+            room_id: string;
+            /** @enum {string} */
+            currency: "PHP";
+            /**
+             * Format: int64
+             * @description Exact PHP centavos. Never a floating-point peso amount.
+             */
+            platform_fee: number;
+            test_mode: boolean;
+            template_version: string;
+        };
+        SupportCase: {
+            /** Format: uuid */
+            id: string;
+            kind: string;
+            status: string;
+            /** Format: uuid */
+            loan_id: string | null;
+            body: string;
+            version: number;
+            /** Format: date-time */
+            created_at: string;
+            assigned: boolean;
+            legal_remedy_reviewed: boolean;
+            legal_remedy_notice: string;
+            decisions: {
+                /** Format: uuid */
+                id: string;
+                decision: string;
+                reason: string;
+                /** Format: date-time */
+                created_at: string;
+            }[];
+            responses: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                author_id: string;
+                body: string;
+                /** Format: date-time */
+                created_at: string;
+            }[];
+        };
+        CaseQueueItem: {
+            /** Format: uuid */
+            id: string;
+            kind: string;
+            status: string;
+            version: number;
+            /** Format: date-time */
+            created_at: string;
+        };
+        Amendment: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            loan_id: string;
+            terms: components["schemas"]["Terms"];
+            disclosures: components["schemas"]["Disclosure"] & {
+                /**
+                 * Format: int64
+                 * @description Exact PHP centavos. Never a floating-point peso amount.
+                 */
+                preserved_accrued_interest: number;
+                /**
+                 * Format: int64
+                 * @description Exact PHP centavos. Never a floating-point peso amount.
+                 */
+                total_remaining_obligation: number;
+                preserved_interest_due: string;
+            };
+            original_agreement_hash: string;
+            proposal_hash: string;
+            reason: string;
+            status: string;
+            version: number;
+            acceptance_count: number;
+            signing_mode: string;
+        };
+        NoticePreferences: {
+            preferences: {
+                /** @enum {string} */
+                channel: "in_app" | "email" | "sms";
+                debt_reminders: boolean;
+            };
+            notices: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                loan_id: string;
+                body: string;
+                status: string;
+                channel: string;
+                /** Format: date */
+                local_date: string;
+            }[];
+            delivery_adapter: string;
+            quiet_hours: string;
+        };
+        ReportingPeriod: {
+            /** Format: date-time */
+            start: string;
+            /** Format: date-time */
+            end: string;
+            timezone: string;
+            basis: string;
+        };
+        ReportingMetrics: {
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            principal_disbursed: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            confirmed_collections: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            collection_reversals: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            net_collections: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            interest_accrued: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            interest_collected: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            principal_outstanding: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            interest_outstanding: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            contractual_future_interest: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            overdue_contractual_amount: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            loss_recorded: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            closed_with_loss_count: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            settlement_unknown_count: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            settlement_confirmed_count: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            commission_earned: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            commission_collected: string;
+            /** @description Exact PHP centavos serialized as a decimal integer string. */
+            commission_reversed: string;
+        };
+        ReportingActivity: {
+            /** @enum {string} */
+            granularity: "day" | "month";
+            points: {
+                /** Format: date */
+                date: string;
+                /** @description Exact PHP centavos serialized as a decimal integer string. */
+                principal_collected: string;
+                /** @description Exact PHP centavos serialized as a decimal integer string. */
+                interest_collected: string;
+                /** @description Exact PHP centavos serialized as a decimal integer string. */
+                confirmed_collections: string;
+                /** @description Exact PHP centavos serialized as a decimal integer string. */
+                collection_reversals: string;
+                /** @description Exact PHP centavos serialized as a decimal integer string. */
+                net_collections: string;
+                /** @description Exact PHP centavos serialized as a decimal integer string. */
+                collection_count: string;
+                /** @description Exact PHP centavos serialized as a decimal integer string. */
+                principal_disbursed: string;
+                /** @description Exact PHP centavos serialized as a decimal integer string. */
+                interest_accrued: string;
+            }[];
+            repayment_breakdown: {
+                /** @description Exact PHP centavos serialized as a decimal integer string. */
+                principal: string;
+                /** @description Exact PHP centavos serialized as a decimal integer string. */
+                interest: string;
+                /** @description Exact PHP centavos serialized as a decimal integer string. */
+                other_charges: string;
+                /** @description Exact PHP centavos serialized as a decimal integer string. */
+                total: string;
+            };
+            current_annual_rates_bps: number[];
+            /** @description Metric-definition text keyed by the named metric, never an unconstrained financial value. */
+            definitions: {
+                [key: string]: string;
+            };
+        };
+        MemberMetrics: {
+            period: components["schemas"]["ReportingPeriod"];
+            /** @enum {string} */
+            role: "borrower" | "lender";
+            /** @enum {string} */
+            currency: "PHP";
+            /** @enum {string} */
+            unit: "centavos_as_decimal_strings";
+            metrics: components["schemas"]["ReportingMetrics"];
+            /** @description Metric-definition text keyed by the named metric, never an unconstrained financial value. */
+            definitions: {
+                [key: string]: string;
+            };
+            activity: components["schemas"]["ReportingActivity"];
+            /**
+             * @description Currently null; no invented prior-period comparison.
+             * @enum {unknown|null}
+             */
+            comparison: null;
+            test_mode: boolean;
+        };
+        PlazaPoint: {
+            x: number;
+            y: number;
+        };
+        PlazaTrajectory: {
+            start: components["schemas"]["PlazaPoint"];
+            target: components["schemas"]["PlazaPoint"];
+            started_at_ms: number;
+            duration_ms: number;
+            sequence: number;
+        };
+        PlazaRoom: {
+            slug: string;
+            name: string;
+            area: components["schemas"]["Area"];
+            capacity: number;
+            width: number;
+            height: number;
+        };
+        PlazaBubble: {
+            /** Format: uuid */
+            id: string;
+            text: string;
+            expires_at_ms: number;
+            /** Format: uuid */
+            offer_id: string | null;
+        };
+        PlazaParticipant: {
+            /** Format: uuid */
+            participant_id: string;
+            person: components["schemas"]["PublicIdentity"];
+            trajectory: components["schemas"]["PlazaTrajectory"];
+            bubble: components["schemas"]["PlazaBubble"] | null;
+        };
+        PlazaSnapshot: {
+            room: components["schemas"]["PlazaRoom"];
+            revision: string;
+            server_time_ms: number;
+            self: {
+                /** Format: uuid */
+                participant_id: string;
+                owned: boolean;
+                sequence: number;
+            } | null;
+            participants: components["schemas"]["PlazaParticipant"][];
+            offers: components["schemas"]["DiscoveryOffer"][];
+            own_offers: components["schemas"]["DiscoveryOffer"][];
+            offers_next_cursor: string | null;
+        };
+        PlazaCommand: {
+            /** Format: uuid */
+            instance_id: string;
+            lease: string;
+            /** @enum {string} */
+            action: "heartbeat";
+        } | {
+            /** Format: uuid */
+            instance_id: string;
+            lease: string;
+            /** @enum {string} */
+            action: "move";
+            sequence: number;
+            target: components["schemas"]["PlazaPoint"];
+        } | {
+            /** Format: uuid */
+            instance_id: string;
+            lease: string;
+            /** @enum {string} */
+            action: "stop";
+            sequence: number;
+        } | {
+            /** Format: uuid */
+            instance_id: string;
+            lease: string;
+            /** @enum {string} */
+            action: "bubble";
+            body: string;
+            /** Format: uuid */
+            operation_id: string;
+            /** Format: uuid */
+            offer_id?: string | null;
+        } | {
+            /** Format: uuid */
+            instance_id: string;
+            lease: string;
+            /** @enum {string} */
+            action: "clear_bubble";
+        } | {
+            /** Format: uuid */
+            instance_id: string;
+            lease: string;
+            /** @enum {string} */
+            action: "leave";
+        };
+        PlazaCommandResult: {
+            recorded: boolean;
+            trajectory?: components["schemas"]["PlazaTrajectory"];
+            server_time_ms?: number;
+        };
+        PlazaModeration: {
+            /** Format: uuid */
+            id: string;
+            body: string;
+            room_slug: string;
+            author_handle: string;
+            status: string;
+            version: number;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: date-time */
+            visible_until: string;
+            reports: {
+                /** Format: uuid */
+                id: string;
+                reason: string;
+            }[];
+        };
+    };
     responses: never;
     parameters: never;
     requestBodies: never;
@@ -1743,10 +4697,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        holds: {
+                            /** Format: uuid */
+                            id: string;
+                            /** Format: uuid */
+                            member_id: string;
+                            reason: string;
+                            /** Format: date-time */
+                            created_at: string;
+                        }[];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -1754,7 +4770,10 @@ export interface operations {
     post_api_v1_admin_achievement_holds_hold_id_resolve: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 hold_id: string;
             };
@@ -1763,7 +4782,7 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    reason: string;
                 };
             };
         };
@@ -1774,10 +4793,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: uuid */
+                        id: string;
+                        resolved: boolean;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -1797,10 +4872,73 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
+                        /** Format: uuid */
+                        id: string;
+                        action: string;
+                        /** Format: uuid */
+                        subject_id: string | null;
+                        /** Format: uuid */
+                        actor_id: string | null;
+                        reason: string;
+                        /** Format: date-time */
+                        created_at: string;
                     }[];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -1820,10 +4958,65 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        unassigned: components["schemas"]["CaseQueueItem"][];
+                        assigned: components["schemas"]["SupportCase"][];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -1844,11 +5037,67 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["SupportCase"] | (components["schemas"]["CaseQueueItem"] & {
+                        assigned: boolean;
+                        /** @enum {string} */
+                        access: "assignment_required";
+                    });
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -1856,7 +5105,10 @@ export interface operations {
     post_api_v1_admin_cases_case_id_assign: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 case_id: string;
             };
@@ -1864,9 +5116,7 @@ export interface operations {
         };
         requestBody?: {
             content: {
-                "application/json": {
-                    [key: string]: unknown;
-                };
+                "application/json": Record<string, never>;
             };
         };
         responses: {
@@ -1875,11 +5125,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["SupportCase"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -1887,7 +5189,10 @@ export interface operations {
     post_api_v1_admin_cases_case_id_decision: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 case_id: string;
             };
@@ -1896,7 +5201,10 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    expected_version: number;
+                    /** @enum {string} */
+                    decision: "needs_information" | "resolved" | "dismissed" | "substantiated";
+                    reason: string;
                 };
             };
         };
@@ -1906,11 +5214,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["SupportCase"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -1918,7 +5278,10 @@ export interface operations {
     post_api_v1_admin_cases_case_id_legal_remedy_review: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 case_id: string;
             };
@@ -1927,7 +5290,8 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    expected_version: number;
+                    reason: string;
                 };
             };
         };
@@ -1937,11 +5301,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["SupportCase"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -1961,10 +5377,84 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        commissions: {
+                            /** Format: uuid */
+                            id: string;
+                            /** Format: uuid */
+                            loan_id: string;
+                            /** @description Exact PHP centavos serialized as a decimal integer string. */
+                            amount: string;
+                            /** @description Exact PHP centavos serialized as a decimal integer string. */
+                            collected_amount: string;
+                            status: string;
+                            policy_version: string;
+                            /** Format: uuid */
+                            payer_id: string;
+                            /** Format: date-time */
+                            created_at: string;
+                        }[];
+                        /** @description Metric-definition text keyed by the named metric, never an unconstrained financial value. */
+                        definitions: {
+                            [key: string]: string;
+                        };
+                        test_mode: boolean;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -1972,7 +5462,10 @@ export interface operations {
     post_api_v1_admin_documents_document_id_scan: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 document_id: string;
             };
@@ -1980,9 +5473,7 @@ export interface operations {
         };
         requestBody?: {
             content: {
-                "application/json": {
-                    [key: string]: unknown;
-                };
+                "application/json": Record<string, never>;
             };
         };
         responses: {
@@ -1991,11 +5482,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["PrivateDocument"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2015,10 +5558,73 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        reviews: components["schemas"]["PrivateReview"][];
+                        contributions: components["schemas"]["Contribution"][];
+                        reports: {
+                            /** Format: uuid */
+                            id: string;
+                            content_type: string;
+                            /** Format: uuid */
+                            content_id: string;
+                            reason: string;
+                        }[];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2026,7 +5632,10 @@ export interface operations {
     post_api_v1_admin_moderation_content_id: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 content_id: string;
             };
@@ -2035,7 +5644,12 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    expected_version: number;
+                    /** @enum {string} */
+                    decision: "approved" | "held" | "rejected" | "response_approved" | "response_rejected";
+                    reason: string;
+                    /** @enum {string} */
+                    content_type?: "review" | "contribution";
                 };
             };
         };
@@ -2046,15 +5660,251 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: uuid */
+                        id: string;
+                        status: string;
+                        version: number;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
     };
     get_api_v1_admin_offer_comments: {
+        parameters: {
+            query?: {
+                offer_id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        comments: (components["schemas"]["OfferComment"] & {
+                            /** Format: uuid */
+                            offer_id: string;
+                            version: number;
+                            reports: {
+                                /** Format: uuid */
+                                id: string;
+                                reason: string;
+                            }[];
+                        })[];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    post_api_v1_admin_offer_comments_comment_id_review: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path: {
+                comment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    expected_version: number;
+                    /** @enum {string} */
+                    decision: "approved" | "held" | "rejected";
+                    reason: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OfferComment"] & {
+                        version: number;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    get_api_v1_admin_plaza_bubbles: {
         parameters: {
             query?: never;
             header?: never;
@@ -2069,27 +5919,88 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        bubbles: components["schemas"]["PlazaModeration"][];
+                        limit: number;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
     };
-    post_api_v1_admin_offer_comments_comment_id_review: {
+    post_api_v1_admin_plaza_bubbles_bubble_id_decision: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
-                comment_id: string;
+                bubble_id: string;
             };
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    expected_version: number;
+                    /** @enum {string} */
+                    decision: "remove" | "keep";
+                    reason: string;
                 };
             };
         };
@@ -2100,10 +6011,67 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: uuid */
+                        id: string;
+                        status: string;
+                        version: number;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2123,10 +6091,70 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
+                        /** Format: uuid */
+                        id: string;
+                        version: string;
+                        environment: string;
+                        approved: boolean;
+                        evidence_ref: string;
+                        rules: components["schemas"]["ProductRules"];
                     }[];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2134,28 +6162,90 @@ export interface operations {
     post_api_v1_admin_policies: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    version: string;
+                    evidence_ref: string;
+                    rules: components["schemas"]["ProductRules"];
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: uuid */
+                        id: string;
+                        version: string;
+                        environment: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2175,10 +6265,86 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        operations: {
+                            /** Format: uuid */
+                            id: string;
+                            /** Format: uuid */
+                            loan_id: string | null;
+                            kind: string;
+                            status: string;
+                            /** @description Exact PHP centavos serialized as a decimal integer string. */
+                            amount: string;
+                            payment_id: string;
+                            /** Format: date-time */
+                            created_at: string;
+                        }[];
+                        inbox: {
+                            /** Format: uuid */
+                            id: string;
+                            event_id: string;
+                            state: string;
+                            attempts: number;
+                            reason: string;
+                        }[];
+                        settlement_notice: string;
+                        test_mode: boolean;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2197,11 +6363,71 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": (components["schemas"]["LenderRegistration"] & {
+                        /** Format: uuid */
+                        member_id: string;
+                        member_name: string;
+                        member: components["schemas"]["PublicIdentity"] & {
+                            /** Format: uuid */
+                            id: string;
+                        };
+                    })[];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2222,11 +6448,67 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["LenderRegistration"] & {
+                        /** Format: uuid */
+                        member_id: string;
+                        member_name: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2234,7 +6516,10 @@ export interface operations {
     post_api_v1_admin_registrations_registration_id: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 registration_id: string;
             };
@@ -2243,7 +6528,10 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    expected_version: number;
+                    /** @enum {string} */
+                    outcome: "evidence_reviewed" | "needs_information" | "rejected" | "suspended" | "revoked";
+                    reason: string;
                 };
             };
         };
@@ -2253,11 +6541,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["LenderRegistration"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2278,11 +6618,67 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["LenderRegistration"] & {
+                        /** Format: uuid */
+                        member_id: string;
+                        member_name: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2290,7 +6686,10 @@ export interface operations {
     post_api_v1_admin_registrations_registration_id_review: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 registration_id: string;
             };
@@ -2299,7 +6698,10 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    expected_version: number;
+                    /** @enum {string} */
+                    outcome: "evidence_reviewed" | "needs_information" | "rejected" | "suspended" | "revoked";
+                    reason: string;
                 };
             };
         };
@@ -2309,18 +6711,75 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["LenderRegistration"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
     };
     get_api_v1_admin_reporting: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Inclusive Manila date. */
+                start?: string;
+                /** @description Exclusive Manila date, at most 366 days after start. */
+                end?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -2333,10 +6792,80 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        period: components["schemas"]["ReportingPeriod"];
+                        /** @enum {string} */
+                        currency: "PHP";
+                        unit: string;
+                        metrics: components["schemas"]["ReportingMetrics"];
+                        /** @description Metric-definition text keyed by the named metric, never an unconstrained financial value. */
+                        definitions: {
+                            [key: string]: string;
+                        };
+                        activity: components["schemas"]["ReportingActivity"];
+                        queues: {
+                            open_cases: number;
+                            verification_pending: number;
+                        };
+                        /** @enum {unknown|null} */
+                        comparison: null;
+                        test_mode: boolean;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2356,10 +6885,71 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        templates: {
+                            version: string;
+                            reviewed: boolean;
+                            environment: string;
+                            status: string;
+                        }[];
+                        live_activation_available: boolean;
+                        explanation: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2378,11 +6968,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["VerificationCase"][];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2403,11 +7045,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["VerificationCase"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2415,7 +7109,10 @@ export interface operations {
     post_api_v1_admin_verifications_case_id: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 case_id: string;
             };
@@ -2424,7 +7121,10 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    expected_version: number;
+                    /** @enum {string} */
+                    outcome: "approved" | "rejected" | "needs_information";
+                    reason: string;
                 };
             };
         };
@@ -2434,11 +7134,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["VerificationCase"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2459,11 +7211,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["VerificationCase"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2471,7 +7275,10 @@ export interface operations {
     post_api_v1_admin_verifications_case_id_review: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 case_id: string;
             };
@@ -2480,7 +7287,10 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    expected_version: number;
+                    /** @enum {string} */
+                    outcome: "approved" | "rejected" | "needs_information";
+                    reason: string;
                 };
             };
         };
@@ -2490,11 +7300,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["VerificationCase"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2513,11 +7375,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Agreement"][];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2538,11 +7452,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Agreement"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2550,7 +7516,10 @@ export interface operations {
     post_api_v1_agreements_agreement_id_accept: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 agreement_id: string;
             };
@@ -2559,7 +7528,9 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    expected_hash: string;
+                    /** Format: uuid */
+                    operation_id: string;
                 };
             };
         };
@@ -2570,10 +7541,68 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: uuid */
+                        agreement_id: string;
+                        /** Format: uuid */
+                        loan_id: string | null;
+                        state: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2594,11 +7623,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/pdf": string;
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2617,11 +7698,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Application"][];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2642,11 +7775,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Application"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2654,7 +7839,10 @@ export interface operations {
     post_api_v1_applications_application_id_decline: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 application_id: string;
             };
@@ -2662,9 +7850,7 @@ export interface operations {
         };
         requestBody?: {
             content: {
-                "application/json": {
-                    [key: string]: unknown;
-                };
+                "application/json": Record<string, never>;
             };
         };
         responses: {
@@ -2673,11 +7859,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Application"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2685,7 +7923,10 @@ export interface operations {
     post_api_v1_applications_application_id_select: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 application_id: string;
             };
@@ -2694,7 +7935,9 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** Format: uuid */
+                    operation_id: string;
+                    expected_offer_version: number;
                 };
             };
         };
@@ -2705,10 +7948,70 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: uuid */
+                        id: string;
+                        status: string;
+                        /** Format: date-time */
+                        expires_at: string;
+                        /** Format: uuid */
+                        agreement_id: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2716,7 +8019,10 @@ export interface operations {
     post_api_v1_applications_application_id_withdraw: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 application_id: string;
             };
@@ -2724,9 +8030,7 @@ export interface operations {
         };
         requestBody?: {
             content: {
-                "application/json": {
-                    [key: string]: unknown;
-                };
+                "application/json": Record<string, never>;
             };
         };
         responses: {
@@ -2735,11 +8039,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Application"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2759,10 +8115,77 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: email */
+                        email: string;
+                        mobile_number: string;
+                        email_verified: boolean;
+                        mobile_verified: boolean;
+                        verification: {
+                            status: string;
+                            current: boolean;
+                            provenance: string | null;
+                            /** Format: date-time */
+                            expires_at: string | null;
+                        };
+                        delivery_available: boolean;
+                        notice: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2770,14 +8193,19 @@ export interface operations {
     patch_api_v1_auth_contacts: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** Format: email */
+                    email?: string;
+                    mobile_number?: string;
                 };
             };
         };
@@ -2788,10 +8216,159 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: email */
+                        email: string;
+                        mobile_number: string;
+                        email_verified: boolean;
+                        mobile_verified: boolean;
+                        verification: {
+                            status: string;
+                            current: boolean;
+                            provenance: string | null;
+                            /** Format: date-time */
+                            expires_at: string | null;
+                        };
+                        delivery_available: boolean;
+                        notice: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    post_api_v1_auth_presence: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Recorded"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2799,14 +8376,22 @@ export interface operations {
     patch_api_v1_auth_profile: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    display_name?: string;
+                    area?: string;
+                    bio?: string;
+                    avatar_key?: string;
+                    /** @enum {string} */
+                    photo_mode?: "avatar" | "photo";
                 };
             };
         };
@@ -2816,11 +8401,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Member"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2828,7 +8465,10 @@ export interface operations {
     post_api_v1_auth_profile_photo: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -2841,21 +8481,239 @@ export interface operations {
             };
         };
         responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Member"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    delete_api_v1_auth_profile_photo: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Member"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    post_api_v1_auth_recovery: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** Format: email */
+                    email: string;
+                };
+            };
+        };
+        responses: {
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        message: string;
+                        test_mode: boolean;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
     };
-    delete_api_v1_auth_profile_photo: {
+    get_api_v1_auth_recovery_email: {
         parameters: {
             query?: never;
             header?: never;
@@ -2870,25 +8728,174 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        verified: boolean;
+                        /** Format: email */
+                        email: string;
+                        delivery_available: boolean;
+                        /** @enum {string} */
+                        delivery_mode: "local_capture" | "email";
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
     };
-    post_api_v1_auth_register: {
+    post_api_v1_auth_recovery_email: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        sent: boolean;
+                        message: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    post_api_v1_auth_recovery_email_member_id_verify: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path: {
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    token: string;
                 };
             };
         };
@@ -2899,10 +8906,247 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        verified: boolean;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    post_api_v1_auth_recovery_recovery_id: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path: {
+                recovery_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    token: string;
+                    /** Format: password */
+                    password: string;
+                    /** Format: password */
+                    password_confirm: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        changed: boolean;
+                        message: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    post_api_v1_auth_register: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** Format: email */
+                    email: string;
+                    /** Format: password */
+                    password: string;
+                    accepted_policy_version: string;
+                    display_name: string;
+                    mobile_number: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Session"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2921,11 +9165,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Session"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2933,14 +9229,20 @@ export interface operations {
     post_api_v1_auth_sign_in: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** Format: email */
+                    email: string;
+                    /** Format: password */
+                    password: string;
                 };
             };
         };
@@ -2950,11 +9252,72 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Session"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            /** @description Invalid credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2962,15 +9325,16 @@ export interface operations {
     post_api_v1_auth_sign_out: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
-                "application/json": {
-                    [key: string]: unknown;
-                };
+                "application/json": Record<string, never>;
             };
         };
         responses: {
@@ -2980,10 +9344,64 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        signed_out: boolean;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -2991,14 +9409,18 @@ export interface operations {
     post_api_v1_auth_step_up: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** Format: password */
+                    password: string;
                 };
             };
         };
@@ -3009,10 +9431,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: date-time */
+                        expires_at: string;
+                        provenance: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3032,10 +9510,64 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        cases: components["schemas"]["SupportCase"][];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3043,28 +9575,89 @@ export interface operations {
     post_api_v1_cases: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** Format: uuid */
+                    loan_id?: string | null;
+                    /** @enum {string} */
+                    kind: "hardship" | "complaint" | "dispute" | "privacy" | "appeal" | "disclosure";
+                    body: string;
+                    /** Format: uuid */
+                    operation_id: string;
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["SupportCase"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3085,11 +9678,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["SupportCase"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3097,7 +9742,10 @@ export interface operations {
     post_api_v1_cases_case_id_responses: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 case_id: string;
             };
@@ -3106,7 +9754,7 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    body: string;
                 };
             };
         };
@@ -3116,11 +9764,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["SupportCase"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3140,10 +9840,64 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        amendments: components["schemas"]["Amendment"][];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3151,28 +9905,88 @@ export interface operations {
     post_api_v1_cases_amendments: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** Format: uuid */
+                    loan_id: string;
+                    /** Format: uuid */
+                    case_id?: string;
+                    terms: components["schemas"]["Terms"];
+                    reason: string;
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Amendment"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3180,7 +9994,10 @@ export interface operations {
     post_api_v1_cases_amendments_proposal_id_accept: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 proposal_id: string;
             };
@@ -3189,7 +10006,7 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    proposal_hash: string;
                 };
             };
         };
@@ -3199,11 +10016,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Amendment"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3211,7 +10080,10 @@ export interface operations {
     post_api_v1_cases_amendments_proposal_id_withdraw: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 proposal_id: string;
             };
@@ -3219,9 +10091,7 @@ export interface operations {
         };
         requestBody?: {
             content: {
-                "application/json": {
-                    [key: string]: unknown;
-                };
+                "application/json": Record<string, never>;
             };
         };
         responses: {
@@ -3230,11 +10100,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Amendment"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3242,7 +10164,10 @@ export interface operations {
     post_api_v1_commissions_accrual_id_checkout: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 accrual_id: string;
             };
@@ -3251,7 +10176,8 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** Format: uuid */
+                    operation_id: string;
                 };
             };
         };
@@ -3261,11 +10187,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["CheckoutLink"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3285,10 +10263,64 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        catalog: components["schemas"]["AwardDefinition"][];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3308,10 +10340,73 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        posts: {
+                            /** Format: uuid */
+                            id: string;
+                            title: string;
+                            lender: components["schemas"]["PublicIdentity"];
+                            area: components["schemas"]["Area"];
+                            /** Format: date-time */
+                            created_at: string;
+                        }[];
+                        revision: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3335,6 +10430,69 @@ export interface operations {
                     "text/event-stream": string;
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DomainError"];
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DomainError"];
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DomainError"];
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
         };
     };
     get_api_v1_community_areas: {
@@ -3352,10 +10510,65 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        areas: components["schemas"]["Area"][];
+                        map_source: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3375,10 +10588,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        awards: components["schemas"]["Award"][];
+                        community_level: string;
+                        catalog: components["schemas"]["AwardDefinition"][];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3386,15 +10655,16 @@ export interface operations {
     post_api_v1_community_awards: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
-                "application/json": {
-                    [key: string]: unknown;
-                };
+                "application/json": Record<string, never>;
             };
         };
         responses: {
@@ -3404,10 +10674,69 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        awards: components["schemas"]["Award"][];
+                        community_level: string;
+                        catalog: components["schemas"]["AwardDefinition"][];
+                    } & {
+                        changed_award_ids: string[];
+                        review_pending: boolean;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3427,10 +10756,64 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        contributions: components["schemas"]["Contribution"][];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3438,35 +10821,107 @@ export interface operations {
     post_api_v1_community_contributions: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    title: string;
+                    body: string;
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: uuid */
+                        id: string;
+                        status: string;
+                        version: number;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
     };
     get_api_v1_community_discovery: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Supported city name or code; not a private address. */
+                area?: string;
+                /** @description Desired integer-centavo amount. */
+                amount?: number;
+                frequency?: string;
+                term?: number;
+                /** @description Cost ranking is currently unavailable; inspect the response notice. */
+                sort?: "recent" | "cost";
+                /** @description Use next_cursor unchanged. */
+                cursor?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -3478,18 +10933,78 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Discovery"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
     };
     get_api_v1_community_leaderboard: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Name/handle filter. */
+                q?: string;
+                /** @description Repeat badge=key for each selected achievement. */
+                badge?: string[];
+                limit?: number;
+                /** @description Signed snapshot cursor; expires after 15 minutes. Restart on 409. */
+                cursor?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -3502,10 +11017,167 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        entries: components["schemas"]["LeaderboardEntry"][];
+                        next_cursor: string | null;
+                        summary: {
+                            participants: number;
+                            learning_completed: number;
+                            approved_contributions: number;
+                            total_xp: number;
+                            lending_sharing_members: number;
+                            /** @description Exact PHP centavos serialized as a decimal integer string. */
+                            total_lent: string;
+                            loans_funded: number;
+                        };
+                        rules: {
+                            literacy_points: number;
+                            contribution_points: number;
+                            contribution_cap: number;
+                        };
+                        notice: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    get_api_v1_community_offers_offer_id_investors: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                offer_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        people: {
+                            anonymous: boolean;
+                            person: components["schemas"]["Person"] | null;
+                        }[];
+                        total: number;
+                        more: number;
+                        capped: boolean;
+                        test_mode: boolean;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3529,6 +11201,62 @@ export interface operations {
                     "image/jpeg": string;
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
         };
     };
     get_api_v1_community_profile: {
@@ -3545,11 +11273,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["OwnProfile"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3557,14 +11337,29 @@ export interface operations {
     patch_api_v1_community_profile: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    display_name?: string;
+                    bio?: string;
+                    area?: string;
+                    avatar_key?: string;
+                    photo_mode?: string;
+                    public_award_ids?: string[];
+                    avatar_frame?: string;
+                    /** Format: uuid */
+                    avatar_flair_id?: string | null;
+                    show_reputation?: boolean;
+                    leaderboard_opt_in?: boolean;
+                    show_lending_totals?: boolean;
+                    show_activity?: boolean;
                 };
             };
         };
@@ -3574,11 +11369,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["OwnProfile"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3599,18 +11446,72 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Profile"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
     };
     get_api_v1_community_repayment_summary_member_id: {
         parameters: {
-            query?: never;
+            query?: {
+                purpose?: "own_dashboard" | "existing_relationship";
+            };
             header?: never;
             path: {
                 member_id: string;
@@ -3625,10 +11526,77 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: uuid */
+                        member_id: string;
+                        purpose: string;
+                        basis: string;
+                        loan_count: number;
+                        completed_count: number;
+                        closed_with_loss_count: number;
+                        /** @description Exact PHP centavos serialized as a decimal integer string. */
+                        confirmed_collections: string;
+                        /** @description Exact PHP centavos serialized as a decimal integer string. */
+                        confirmed_reversals: string;
+                        currency: string;
+                        unit: string;
+                        notice: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3636,28 +11604,91 @@ export interface operations {
     post_api_v1_community_reports: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** @enum {string} */
+                    content_type: "review" | "message";
+                    /** Format: uuid */
+                    content_id: string;
+                    reason: string;
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: uuid */
+                        id: string;
+                        status: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3676,11 +11707,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["ReputationWorkspace"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3700,10 +11783,64 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        reviews: components["schemas"]["PrivateReview"][];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3711,28 +11848,92 @@ export interface operations {
     post_api_v1_community_reviews: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** Format: uuid */
+                    loan_id: string;
+                    ratings: {
+                        [key: string]: number;
+                    };
+                    body?: string;
+                    /** Format: uuid */
+                    operation_id: string;
+                    /** @enum {string|null} */
+                    recommendation?: "up" | "down" | null;
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["PrivateReview"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3740,7 +11941,10 @@ export interface operations {
     post_api_v1_community_reviews_review_id_appeal: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 review_id: string;
             };
@@ -3749,21 +11953,77 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    reason: string;
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: uuid */
+                        id: string;
+                        status: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3771,7 +12031,10 @@ export interface operations {
     post_api_v1_community_reviews_review_id_response: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 review_id: string;
             };
@@ -3780,7 +12043,7 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    body: string;
                 };
             };
         };
@@ -3790,11 +12053,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["PrivateReview"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3814,10 +12129,64 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        threads: components["schemas"]["Thread"][];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3825,35 +12194,102 @@ export interface operations {
     post_api_v1_community_threads: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** Format: uuid */
+                    loan_id?: string;
+                    /** Format: uuid */
+                    application_id?: string;
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: uuid */
+                        id: string;
+                        /** Format: uuid */
+                        loan_id: string | null;
+                        /** Format: uuid */
+                        application_id: string | null;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
     };
     get_api_v1_community_threads_thread_id_messages: {
         parameters: {
-            query?: never;
+            query?: {
+                cursor?: string;
+            };
             header?: never;
             path: {
                 thread_id: string;
@@ -3868,10 +12304,65 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        messages: components["schemas"]["Message"][];
+                        next_cursor: string | null;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3879,7 +12370,10 @@ export interface operations {
     post_api_v1_community_threads_thread_id_messages: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 thread_id: string;
             };
@@ -3888,21 +12382,75 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    body: string;
+                    /** Format: uuid */
+                    operation_id: string;
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Message"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3922,10 +12470,64 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        invitations: components["schemas"]["CoBorrowerInvitation"][];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3933,28 +12535,93 @@ export interface operations {
     post_api_v1_connections_co_borrowers: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    display_name: string;
+                    /** Format: email */
+                    email: string;
+                    mobile_number?: string;
+                    facebook_url?: string;
+                    /** @enum {string} */
+                    relationship?: "family" | "friend" | "colleague" | "other";
+                    /** @enum {boolean} */
+                    permission_confirmed: true;
+                    /** Format: uuid */
+                    operation_id: string;
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["CoBorrowerInvitation"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -3962,7 +12629,10 @@ export interface operations {
     post_api_v1_connections_co_borrowers_invitation_id_action: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 invitation_id: string;
             };
@@ -3971,7 +12641,12 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** @enum {string} */
+                    decision: "accept" | "decline" | "revoke";
+                    expected_version: number;
+                    consent?: boolean;
+                    mobile_number?: string;
+                    facebook_url?: string;
                 };
             };
         };
@@ -3981,11 +12656,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["CoBorrowerInvitation"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4006,11 +12733,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["CoBorrowerInvitation"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4029,18 +12808,73 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["PrivateDocument"][];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
     };
     get_api_v1_documents_document_id_content: {
         parameters: {
-            query?: never;
+            query: {
+                /** @description Actor-bound short-lived signed grant. */
+                token: string;
+            };
             header?: never;
             path: {
                 document_id: string;
@@ -4054,14 +12888,74 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": string;
+                    "application/pdf": string;
+                    "image/png": string;
+                    "image/jpeg": string;
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
     };
     get_api_v1_documents_document_id_download: {
         parameters: {
-            query?: never;
+            query?: {
+                purpose?: "owner" | "review";
+            };
             header?: never;
             path: {
                 document_id: string;
@@ -4076,10 +12970,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        url: string;
+                        /** Format: date-time */
+                        expires_at: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4087,7 +13037,10 @@ export interface operations {
     post_api_v1_documents_upload: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -4097,21 +13050,73 @@ export interface operations {
                     /** Format: binary */
                     file: string;
                     /** @enum {string} */
-                    purpose: "identity" | "income" | "address" | "funding_account" | "registration";
+                    purpose: "identity" | "income" | "address" | "funding_account" | "registration" | "room_evidence";
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["PrivateDocument"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4119,7 +13124,10 @@ export interface operations {
     delete_api_v1_engagement_comments_comment_id: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 comment_id: string;
             };
@@ -4133,10 +13141,64 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        deleted: boolean;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4144,7 +13206,10 @@ export interface operations {
     post_api_v1_engagement_comments_comment_id_report: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 comment_id: string;
             };
@@ -4153,28 +13218,87 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    reason: string;
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: uuid */
+                        id: string;
+                        status: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
     };
     get_api_v1_engagement_offers_offer_id: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Comment offset, 0 to 10000. */
+                cursor?: number;
+            };
             header?: never;
             path: {
                 offer_id: string;
@@ -4188,18 +13312,75 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["OfferSocial"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
     };
     get_api_v1_engagement_offers_offer_id_calculator: {
         parameters: {
-            query?: never;
+            query: {
+                /** @description Integer PHP centavos within currently usable capacity. */
+                principal: number;
+                frequency?: "weekly" | "twice_monthly" | "monthly" | "maturity";
+                installment_count?: number;
+            };
             header?: never;
             path: {
                 offer_id: string;
@@ -4213,11 +13394,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["CalculatorPreview"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4225,7 +13458,10 @@ export interface operations {
     post_api_v1_engagement_offers_offer_id_comments: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 offer_id: string;
             };
@@ -4234,21 +13470,75 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    body: string;
+                    /** Format: uuid */
+                    operation_id: string;
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["OfferComment"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4256,7 +13546,10 @@ export interface operations {
     put_api_v1_engagement_offers_offer_id_like: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 offer_id: string;
             };
@@ -4265,7 +13558,7 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    liked: boolean;
                 };
             };
         };
@@ -4276,10 +13569,65 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        count: number;
+                        liked: boolean;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4287,7 +13635,10 @@ export interface operations {
     put_api_v1_engagement_offers_offer_id_reaction: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 offer_id: string;
             };
@@ -4296,7 +13647,615 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** Format: uuid */
+                    award_id: string | null;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OfferSocial"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    get_api_v1_hub_actions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        actions: components["schemas"]["ActionUpdate"][];
+                        unread: number;
+                        limit: number;
+                        /** Format: date-time */
+                        server_time: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    post_api_v1_hub_actions: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    keys: string[];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Recorded"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    get_api_v1_hub_calendar: {
+        parameters: {
+            query?: {
+                /** @description Inclusive date in Asia/Manila. */
+                start?: string;
+                /** @description Exclusive date, within 366 days of start. */
+                end?: string;
+                role?: "borrower" | "lender";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        events: components["schemas"]["CalendarEvent"][];
+                        /** Format: date */
+                        start: string;
+                        /** Format: date */
+                        end: string;
+                        timezone: string;
+                        role: string;
+                        loan_limit: number;
+                        notice: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    get_api_v1_hub_calendar_export: {
+        parameters: {
+            query?: {
+                /** @description Inclusive date in Asia/Manila. */
+                start?: string;
+                /** @description Exclusive date, within 366 days of start. */
+                end?: string;
+                role?: "borrower" | "lender";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/calendar": string;
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    get_api_v1_hub_decisions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        applications: {
+                            /** Format: uuid */
+                            id: string;
+                            title: string;
+                            offer_title: string;
+                            borrower: components["schemas"]["Person"];
+                            /** @description Exact PHP centavos serialized as a decimal integer string. */
+                            amount: string;
+                            status: string;
+                            /** Format: date-time */
+                            created_at: string;
+                            /** Format: date-time */
+                            reservation_expires_at: string | null;
+                            /** Format: date-time */
+                            offer_expires_at: string;
+                            href: string;
+                        }[];
+                        meetings: {
+                            /** Format: uuid */
+                            id: string;
+                            person: components["schemas"]["Person"];
+                            title: string;
+                            /** Format: date-time */
+                            scheduled_at: string | null;
+                            state: string;
+                            href: string;
+                        }[];
+                        limit: number;
+                        /** Format: date-time */
+                        server_time: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    get_api_v1_hub_saved_offers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        saved: components["schemas"]["SavedOffer"][];
+                        limit: number;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    put_api_v1_hub_saved_offers_offer_id: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path: {
+                offer_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    saved: boolean;
                 };
             };
         };
@@ -4307,10 +14266,151 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        saved: boolean;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    post_api_v1_hub_threads_thread_id_read: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path: {
+                thread_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** Format: date-time */
+                    through: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Recorded"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4318,7 +14418,11 @@ export interface operations {
     post_api_v1_integrations_pixelflow_routing_id_events: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Provider-generated timestamp and signature; never a browser credential. */
+                "Pixelflow-Signature": string;
+                "Pixelflow-Event-ID": string;
+            };
             path: {
                 routing_id: string;
             };
@@ -4326,11 +14430,88 @@ export interface operations {
         };
         requestBody?: {
             content: {
-                "application/json": {
-                    [key: string]: unknown;
+                "application/json": components["schemas"]["PixelFlowEvent"];
+            };
+        };
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        inbox_id: string;
+                        state: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
+    };
+    get_api_v1_investments_portfolio: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             200: {
                 headers: {
@@ -4338,10 +14519,75 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        funds: (components["schemas"]["InvestmentFund"] & {
+                            /** @enum {string} */
+                            role: "investor" | "lender";
+                            person: components["schemas"]["Person"];
+                            offer_title: string;
+                            /** Format: uuid */
+                            room_id: string;
+                            share_bps: number;
+                        })[];
+                        test_mode: boolean;
+                        limit: number;
+                        notice: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4360,11 +14606,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["LenderRegistration"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4372,14 +14670,18 @@ export interface operations {
     post_api_v1_lender_registration: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    authority: string;
+                    evidence_ref: string;
                 };
             };
         };
@@ -4389,11 +14691,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["LenderRegistration"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4413,10 +14767,68 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        completed: boolean;
+                        questions: {
+                            prompt: string;
+                            options: string[];
+                        }[];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4424,14 +14836,17 @@ export interface operations {
     post_api_v1_literacy_complete: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    answers: number[];
                 };
             };
         };
@@ -4442,10 +14857,64 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        completed: boolean;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4464,11 +14933,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["LoanDocument"][];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4487,11 +15008,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Loan"][];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4512,11 +15085,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Loan"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4524,7 +15149,10 @@ export interface operations {
     post_api_v1_loans_loan_id_checkout: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 loan_id: string;
             };
@@ -4533,7 +15161,15 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** Format: uuid */
+                    operation_id: string;
+                    /** @enum {string} */
+                    mode?: "installment" | "payoff" | "partial";
+                    /**
+                     * Format: int64
+                     * @description Exact PHP centavos. Never a floating-point peso amount.
+                     */
+                    requested_amount?: number;
                 };
             };
         };
@@ -4543,11 +15179,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["CheckoutLink"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4569,10 +15257,82 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: uuid */
+                        id: string | null;
+                        status: string;
+                        /**
+                         * Format: int64
+                         * @description Exact PHP centavos. Never a floating-point peso amount.
+                         */
+                        amount: number;
+                        /**
+                         * Format: int64
+                         * @description Exact PHP centavos. Never a floating-point peso amount.
+                         */
+                        collected_amount: number;
+                        policy_version?: string;
+                        currency: string;
+                        /** Format: uuid */
+                        payer_id: string;
+                        checkout_path?: string;
+                        test_mode: boolean;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4580,7 +15340,10 @@ export interface operations {
     post_api_v1_loans_loan_id_disburse: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 loan_id: string;
             };
@@ -4589,7 +15352,8 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** Format: uuid */
+                    operation_id: string;
                 };
             };
         };
@@ -4600,10 +15364,69 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        /** Format: uuid */
+                        transfer_id: string;
+                        /** Format: uuid */
+                        loan_id: string;
+                        status: string;
+                        test_mode: boolean;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4624,18 +15447,74 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["LoanDocument"][];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
     };
     get_api_v1_loans_loan_id_payment_preview: {
         parameters: {
-            query?: never;
+            query?: {
+                mode?: "installment" | "payoff" | "partial";
+                /** @description Required for partial mode only. */
+                amount?: number;
+            };
             header?: never;
             path: {
                 loan_id: string;
@@ -4649,11 +15528,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["PaymentReview"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4674,11 +15605,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["LedgerEvent"][];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4700,11 +15683,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/pdf": string;
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4712,7 +15747,10 @@ export interface operations {
     post_api_v1_loans_loan_id_renew_effective_date: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 loan_id: string;
             };
@@ -4721,21 +15759,76 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** Format: date */
+                    effective_date: string;
+                    /** Format: uuid */
+                    operation_id: string;
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Agreement"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4756,11 +15849,1005 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
+                    "application/json": components["schemas"]["LedgerEvent"][];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    get_api_v1_meetings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        rooms: components["schemas"]["MeetingSummary"][];
+                        limit: number;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    post_api_v1_meetings: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    kind: "borrowing";
+                    /** Format: uuid */
+                    offer_id: string;
+                    /** Format: uuid */
+                    application_id: string;
+                    /** Format: uuid */
+                    operation_id: string;
+                } | {
+                    /** @enum {string} */
+                    kind: "investment";
+                    /** Format: uuid */
+                    offer_id: string;
+                    /**
+                     * Format: int64
+                     * @description Exact PHP centavos. Never a floating-point peso amount.
+                     */
+                    amount: number;
+                    share_bps: number;
+                    /** Format: uuid */
+                    operation_id: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    get_api_v1_meetings_room_id: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                room_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Meeting"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    post_api_v1_meetings_room_id: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path: {
+                room_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["RoomCommandHeartbeat"] | components["schemas"]["RoomCommandLobbyHeartbeat"] | components["schemas"]["RoomCommandLeave"] | components["schemas"]["RoomCommandPing"] | components["schemas"]["RoomCommandMessage"] | components["schemas"]["RoomCommandCounter"] | components["schemas"]["RoomCommandSchedule"] | components["schemas"]["RoomCommandAcceptSchedule"] | components["schemas"]["RoomCommandCheckIn"] | components["schemas"]["RoomCommandPrepare"] | components["schemas"]["RoomCommandClose"] | components["schemas"]["RoomCommandAgenda"] | components["schemas"]["RoomCommandPropose"] | components["schemas"]["RoomCommandApprove"] | components["schemas"]["RoomCommandReviewEvidence"] | components["schemas"]["RoomCommandAcceptContract"] | components["schemas"]["RoomCommandConfirmTestFunding"] | components["schemas"]["RoomCommandPreparePayout"] | components["schemas"]["RoomCommandConfirmPayout"] | components["schemas"]["RoomCommandCancelPayout"] | components["schemas"]["RoomCommandVisibility"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Meeting"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    get_api_v1_meetings_room_id_call: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                room_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomCall"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    post_api_v1_meetings_room_id_call: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path: {
+                room_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    action: "invite";
+                } | {
+                    /** @enum {string} */
+                    action: "accept" | "decline" | "end" | "heartbeat";
+                    /** Format: uuid */
+                    call_id: string;
+                } | {
+                    /** @enum {string} */
+                    action: "description";
+                    /** Format: uuid */
+                    call_id: string;
+                    description: components["schemas"]["CallDescription"];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomCall"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    post_api_v1_meetings_room_id_evidence: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path: {
+                room_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                    /** @enum {string} */
+                    category: "redacted_evidence" | "transfer_proof";
+                    /** @enum {string} */
+                    consent: "share_with_counterparty";
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id: string;
+                        status: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    get_api_v1_meetings_room_id_evidence_evidence_id: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                evidence_id: string;
+                room_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": string;
+                    "image/png": string;
+                    "image/jpeg": string;
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    delete_api_v1_meetings_room_id_evidence_evidence_id: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path: {
+                evidence_id: string;
+                room_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        revoked: boolean;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    get_api_v1_meetings_room_id_investment_agreement: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                room_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    get_api_v1_meetings_room_id_stream: {
+        parameters: {
+            query?: {
+                format?: "event-stream" | "json";
+            };
+            header?: never;
+            path: {
+                room_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": string;
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DomainError"];
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DomainError"];
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DomainError"];
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4779,11 +16866,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["NoticePreferences"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4791,14 +16930,19 @@ export interface operations {
     patch_api_v1_notices: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** @enum {string} */
+                    channel?: "in_app" | "email" | "sms";
+                    debt_reminders?: boolean;
                 };
             };
         };
@@ -4808,11 +16952,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["NoticePreferences"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4831,11 +17027,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Offer"][];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4843,28 +17091,113 @@ export interface operations {
     post_api_v1_offers: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    title: string;
+                    area: string;
+                    /**
+                     * Format: int64
+                     * @description Exact PHP centavos. Never a floating-point peso amount.
+                     */
+                    declared_amount: number;
+                    /**
+                     * Format: int64
+                     * @description Exact PHP centavos. Never a floating-point peso amount.
+                     */
+                    principal: number;
+                    annual_rate_bps: number;
+                    /** @enum {string} */
+                    frequency: "weekly" | "twice_monthly" | "monthly" | "maturity";
+                    installment_count: number;
+                    /** Format: date */
+                    effective_date: string;
+                    /**
+                     * Format: int64
+                     * @description Exact PHP centavos. Never a floating-point peso amount.
+                     */
+                    min_amount?: number;
+                    /**
+                     * Format: int64
+                     * @description Exact PHP centavos. Never a floating-point peso amount.
+                     */
+                    max_amount?: number;
+                    policy_version?: string;
+                    /** Format: uuid */
+                    operation_id: string;
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Offer"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4885,11 +17218,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Offer"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4897,7 +17282,10 @@ export interface operations {
     post_api_v1_offers_offer_id_applications: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 offer_id: string;
             };
@@ -4906,21 +17294,87 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /**
+                     * Format: int64
+                     * @description Exact PHP centavos. Never a floating-point peso amount.
+                     */
+                    principal: number;
+                    purpose: string;
+                    summary?: {
+                        employment_type?: string;
+                        income_band?: string;
+                        repayment_experience?: string;
+                    };
+                    /** Format: uuid */
+                    operation_id: string;
+                    /** Format: uuid */
+                    co_borrower_invitation_id?: string;
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Application"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4928,7 +17382,10 @@ export interface operations {
     post_api_v1_offers_offer_id_publish: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path: {
                 offer_id: string;
             };
@@ -4936,9 +17393,7 @@ export interface operations {
         };
         requestBody?: {
             content: {
-                "application/json": {
-                    [key: string]: unknown;
-                };
+                "application/json": Record<string, never>;
             };
         };
         responses: {
@@ -4947,11 +17402,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Offer"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4971,10 +17478,80 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
+                        /** Format: uuid */
+                        id: string;
+                        /** Format: uuid */
+                        loan_id: string | null;
+                        kind: string;
+                        /**
+                         * Format: int64
+                         * @description Exact PHP centavos. Never a floating-point peso amount.
+                         */
+                        amount: number;
+                        currency: string;
+                        status: string;
+                        checkout_url: string;
+                        settlement_status: string;
+                        /** Format: date-time */
+                        created_at: string;
+                        test_mode: boolean;
                     }[];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -4993,26 +17570,422 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["Person"][];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
     };
-    post_api_v1_reporting_exports: {
+    post_api_v1_plaza_bubbles_bubble_id_reports: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path: {
+                bubble_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    reason: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id: string;
+                        status: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    get_api_v1_plaza_rooms: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        rooms: {
+                            slug: string;
+                            name: string;
+                            area: components["schemas"]["Area"];
+                            capacity: number;
+                            width: number;
+                            height: number;
+                            online: number;
+                        }[];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    get_api_v1_plaza_rooms_slug: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlazaSnapshot"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    post_api_v1_plaza_rooms_slug_commands: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PlazaCommand"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlazaCommandResult"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    post_api_v1_plaza_rooms_slug_join: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** Format: uuid */
+                    instance_id: string;
+                    /** Format: uuid */
+                    operation_id: string;
                 };
             };
         };
@@ -5023,10 +17996,248 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        lease: string;
+                        snapshot: components["schemas"]["PlazaSnapshot"];
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    get_api_v1_plaza_rooms_slug_stream: {
+        parameters: {
+            query?: {
+                format?: "event-stream" | "json";
+            };
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": string;
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DomainError"];
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DomainError"];
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["DomainError"];
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+        };
+    };
+    post_api_v1_reporting_exports: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    purpose?: "member_statement" | "operations_summary";
+                    /** @enum {string} */
+                    role?: "borrower" | "lender";
+                    /** Format: date */
+                    start?: string;
+                    /** Format: date */
+                    end?: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id: string;
+                        /** Format: date-time */
+                        expires_at: string;
+                        download_path: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -5047,14 +18258,76 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": string;
+                    "text/csv": string;
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
     };
     get_api_v1_reporting_member: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Inclusive Manila date. */
+                start?: string;
+                /** @description Exclusive Manila date, at most 366 days after start. */
+                end?: string;
+                role?: "borrower" | "lender";
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -5066,11 +18339,63 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["MemberMetrics"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -5090,10 +18415,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                        cases: components["schemas"]["VerificationCase"][];
+                        required_checks: string[];
+                        environment: string;
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };
@@ -5101,28 +18482,87 @@ export interface operations {
     post_api_v1_verification: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Current CSRF token from session bootstrap. Browser session cookie is HttpOnly. */
+                "X-CSRFToken": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    [key: string]: unknown;
+                    /** @enum {string} */
+                    kind: "identity" | "income" | "contact" | "funding_account";
+                    /** Format: uuid */
+                    document_id?: string;
+                    notes?: string;
                 };
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    } | {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": components["schemas"]["VerificationCase"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"] | components["schemas"]["FieldErrors"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"] | components["schemas"]["DetailError"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailError"] | components["schemas"]["DomainError"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainError"];
                 };
             };
         };

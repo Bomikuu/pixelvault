@@ -14,3 +14,13 @@ graphify-out/
 *.log
 .impeccable/review/
 .runtime/
+apps/api/config/static/api-docs/reference.js
+apps/api/config/static/api-docs/manrope.woff2
+apps/api/config/static/api-docs/logo.svg
+.hallmark/
+
+# Recreated from the selected source manifest by npm run assets:mobile.
+apps/mobile/public/illustrations/
+apps/mobile/public/brand/
+apps/mobile/android/
+apps/mobile/ios/

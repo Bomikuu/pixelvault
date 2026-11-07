@@ -125,3 +125,9 @@
 - [ ] Commit only the final documentation/coverage changes: `docs(api): record reference coverage and release checks`. No deployment or push is implied.
 
 **Done means:** Staff-protected reference and raw schema; complete inventoried contracts; useful guides; compatible generated types; permission/contract evidence from authorized checks. A polished shell with generic JSON is an intermediate milestone.
+
+## Implementation record · 2026-10-30
+
+The approved source work is implemented. Mobile feature files are consolidated by feature under `apps/mobile/src/features`; the protected renderer, explicit domain schema modules, source inventory and generated contracts are in place. See `docs/mobile/release-checklist.md` for the precise source/evidence boundary and `docs/mobile/development.md` for startup. Mobile preview uses 5185 because existing web previews occupy 5178–5184.
+
+The original verification/commit checkboxes remain unclaimed: no builds, automated tests, type/UI checks or detector scripts were run under the visual-only instruction. Export/type generation and asset copies are authoring operations, not a passing test suite. Native device validation, packaging, store delivery and iOS remain explicit later gates. Existing uncommitted audit work was preserved; implementation has not been pushed.

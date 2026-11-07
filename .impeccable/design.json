@@ -462,6 +462,21 @@
         "name": "The Offer Detail Rule",
         "body": "Offer detail uses the reference-led main calculator/cost/schedule/lender column and 300px sticky side summary at the wide breakpoint, with full-width discussion below. Titles are 24px on phones and 28px on desktop; section titles are 16px with icons and no section numbers. One exact server preview drives every estimate; alternate plans stay comparison-only and lender statistics come from actual public records. Narrow schedules retain a named focusable scroller and visible hint.",
         "section": "components"
+      },
+      {
+        "name": "The Private Member Tools Rule",
+        "body": "Action updates, saved comparisons, lender decisions and Manila payment dates derive from permission-scoped current records. Reading never dismisses an obligation. Compare one amount, frequency and count with visible proposed start dates; alternate previews never replace actual application terms. Narrow tables use named keyboard-scroll regions. Financial labels are at least 12px; expanded definitions are 14px. Errors preserve values and associate with unique per-form controls.",
+        "section": "components"
+      },
+      {
+        "name": "The Mutual Call and Contribution Rule",
+        "body": "Calls require both participants and explicit device choices; camera starts off and capture stops on leaving or hiding. Investment contract acceptance, simulated funding, capital attribution and simulated payouts remain separate factual steps with exact frozen terms. Public circles count distinct confirmed test contributors and honor anonymity. No real transfer, wallet balance or legal/provider approval is implied.",
+        "section": "components"
+      },
+      {
+        "name": "The Delivery and Recovery Rule",
+        "body": "Keep original PNG artwork and provenance, serving responsive WebP delivery variants. Lazy route loading has a visible pending state and the shared error boundary. Recovery email ownership is separately verified; reviewed contact evidence is not password-reset authority. Local test email capture and missing SMTP/TURN configuration stay explicit.",
+        "section": "components"
       }
     ],
     "overview": "The existing blue PixelVault identity frames an information-rich community and lending workspace. Manrope, cool white or navy surfaces, and thin-ink isometric artwork remain the incumbent visual world. The connected-shell revision expands usable space and makes displayed podium positions distinct while preserving factual amounts, visible XP and member-controlled sharing.",

@@ -5,6 +5,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
+      "@pixelvault/api-client": fileURLToPath(new URL("./packages/api-client/src/index.ts", import.meta.url)),
+      "@mobile": fileURLToPath(new URL("./apps/mobile/src", import.meta.url)),
       "@": fileURLToPath(new URL("./apps/web/src", import.meta.url)),
       "@pixelvault/ui": fileURLToPath(
         new URL("./packages/ui/src/index.ts", import.meta.url),
@@ -18,6 +20,6 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: ["./apps/web/src/test-setup.ts"],
-    include: ["apps/web/src/**/*.test.{ts,tsx}", "packages/**/*.test.{ts,tsx}"],
+    include: ["apps/web/src/**/*.test.{ts,tsx}", "apps/mobile/src/**/*.test.{ts,tsx}", "packages/**/*.test.{ts,tsx}"],
   },
 });

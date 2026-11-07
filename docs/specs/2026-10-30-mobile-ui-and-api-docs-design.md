@@ -1,6 +1,6 @@
 # PixelVault mobile UI and developer documentation
 
-**Status:** Proposed design for review, 2026-10-30. No mobile application or documentation portal is implemented by this document.
+**Status:** Approved for implementation, 2026-10-30. Source implementation now exists; release evidence and pending gates are recorded in [release checklist](../mobile/release-checklist.md). This specification describes the agreed design, not a native-release certification.
 
 **Intent:** Give members a distinct, convenient phone interface while keeping one lending system and a modest development setup. Give developers a useful, searchable API reference backed by accurate contracts.
 
@@ -17,7 +17,7 @@
 
 Implement the reference and core mobile contracts first. Mobile screen development can then proceed in a browser without native tooling. Package Android only after session, uploads, private downloads and foreground communication work on a physical device. Nothing requires a second backend or repository.
 
-The repository already has React 19, React Router, TanStack Query, Tailwind, Shadcn, shared UI/contracts packages and drf-spectacular. It does not have `apps/mobile` or Capacitor. The current `/api/schema` export uses generic JSON for many operations; replacing its viewer alone will not make a useful mobile contract.
+At planning time, the repository had React 19, React Router, TanStack Query, Tailwind, Shadcn, shared UI/contracts packages and drf-spectacular. The implementation adds `apps/mobile` and gated Capacitor preparation. The current `/api/schema` export uses generic JSON for many operations; replacing its viewer alone will not make a useful mobile contract.
 
 ## 2. Architecture and reuse
 

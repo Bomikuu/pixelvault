@@ -144,6 +144,14 @@ export function AuthPage({ register = false }: { register?: boolean }) {
                   : undefined
               }
             />
+            {!register && (
+              <Link
+                className="inline-flex min-h-11 items-center text-sm font-semibold text-primary!"
+                to="/forgot-password"
+              >
+                Forgot your password?
+              </Link>
+            )}
             {register && (
               <Field
                 name="mobile_number"

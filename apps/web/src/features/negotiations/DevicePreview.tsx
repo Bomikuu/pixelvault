@@ -280,8 +280,9 @@ export function DevicePreview({ person }: { person: Person }) {
       )}
       <p className="flex items-start gap-2 text-[11px] leading-relaxed text-muted-foreground">
         <ShieldCheck size={15} className="mt-0.5 shrink-0" />
-        Entering the room stops this preview. Text chat is available; private
-        live audio/video is not configured yet.
+        Entering the room stops this preview. Text chat is always available.
+        Inside, both people can choose to join a private audio call; camera
+        starts off.
       </p>
     </section>
   );

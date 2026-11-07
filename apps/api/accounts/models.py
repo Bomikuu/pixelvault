@@ -40,3 +40,24 @@ class Member(AbstractUser):
 
     def __str__(self):
         return self.display_name or self.username
+
+
+class RecoveryEmail(models.Model):
+    member = models.OneToOneField(Member, on_delete=models.CASCADE, primary_key=True)
+    verified_email = models.EmailField(blank=True)
+    verified_at = models.DateTimeField(null=True)
+    pending_email = models.EmailField(blank=True)
+    challenge_digest = models.CharField(max_length=64, blank=True)
+    challenge_expires_at = models.DateTimeField(null=True)
+    requested_at = models.DateTimeField(null=True)
+
+
+class PasswordRecovery(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    token_digest = models.CharField(max_length=64)
+    password_fingerprint = models.CharField(max_length=64)
+    email_at_issue = models.EmailField()
+    expires_at = models.DateTimeField()
+    used_at = models.DateTimeField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)

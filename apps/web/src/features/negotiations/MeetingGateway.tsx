@@ -9,10 +9,16 @@ import { useMeeting } from "./useMeeting";
 export function MeetingGateway() {
   const { id } = useParams();
   const { session } = useSession();
-  const [entry, setEntry] = useState<{ id: string; schedule: number } | null>(
-    null,
+  const [entry, setEntry] = useState<{
+    id: string;
+    schedule: number;
+    mode: "live" | "record";
+  } | null>(null);
+  const query = useMeeting(
+    id,
+    entry?.id === id && entry.mode === "live",
+    entry?.id === id && entry.mode === "record",
   );
-  const query = useMeeting(id, entry?.id === id);
   useEffect(() => {
     if (
       entry &&
@@ -39,7 +45,12 @@ export function MeetingGateway() {
     return (
       <AgreementRoom
         query={query}
+        readOnly={entry.mode === "record"}
         onLeave={() => {
+          if (entry.mode === "record") {
+            setEntry(null);
+            return;
+          }
           void query
             .act({ action: "leave" })
             .then(() => setEntry(null))
@@ -52,13 +63,29 @@ export function MeetingGateway() {
       <MeetingLobby
         query={query}
         memberId={session!.member!.id}
+        viewRecord={() =>
+          setEntry({
+            id: room.id,
+            schedule: room.schedule_version,
+            mode: "record",
+          })
+        }
         enter={async () => {
           try {
             const result =
-              room.state === "negotiating"
+              room.state === "negotiating" ||
+              (room.kind === "investment" && room.state === "agreed")
                 ? await query.act({ action: "check_in" })
                 : room;
-            setEntry({ id: result.id, schedule: result.schedule_version });
+            setEntry({
+              id: result.id,
+              schedule: result.schedule_version,
+              mode:
+                room.state === "closed" ||
+                (room.kind === "borrowing" && room.state === "agreed")
+                  ? "record"
+                  : "live",
+            });
           } catch {
             /* The shared query presents the authoritative rejection. */
           }

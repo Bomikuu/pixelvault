@@ -1,3 +1,5 @@
+import { InvestmentContractPanel } from "../investments/InvestmentContractPanel";
+import { RoomCall } from "./RoomCall";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -64,9 +66,11 @@ const clock = (value: string) =>
 export function AgreementRoom({
   query,
   onLeave,
+  readOnly = false,
 }: {
   query: ReturnType<typeof useMeeting>;
   onLeave: () => void;
+  readOnly?: boolean;
 }) {
   const { session } = useSession();
   const [body, setBody] = useState(""),
@@ -82,10 +86,11 @@ export function AgreementRoom({
         retry={() => void query.refetch()}
       />
     );
-  const room = query.data,
+  const room = readOnly ? { ...query.data, both_here: false } : query.data,
     memberId = session?.member?.id,
     lender = room.lender.id === memberId;
   const act = async (data: Record<string, unknown>) => {
+    if (readOnly) return null;
     setLocalError(null);
     try {
       return await query.act(data);
@@ -110,7 +115,7 @@ export function AgreementRoom({
           <span className="lg:sr-only">Meeting rooms</span>
         </Link>
         <div className="col-start-2 row-start-1 flex items-center gap-1 lg:col-start-3">
-          <span className="mr-2 text-[10px] text-muted-foreground">
+          <span className="mr-2 text-xs text-muted-foreground">
             Test room · No real funds
           </span>
           <ThemeToggle />
@@ -135,14 +140,27 @@ export function AgreementRoom({
             <Radio
               className={`size-3.5 ${query.connection === "live" ? "text-[#047857] dark:text-[#6ee7b7]" : "text-muted-foreground"}`}
             />
-            {query.connection === "live"
-              ? "Live room"
-              : query.connection === "connecting"
-                ? "Connecting…"
-                : "Reconnecting · updates may be delayed"}
+            {readOnly
+              ? "Meeting record"
+              : query.connection === "live"
+                ? "Live room"
+                : query.connection === "connecting"
+                  ? "Connecting…"
+                  : "Reconnecting · updates may be delayed"}
           </div>
         </header>
       </div>
+      {readOnly ? (
+        <p
+          className="mb-4 rounded-xl border border-border bg-accent p-4 text-sm text-accent-foreground"
+          role="status"
+        >
+          Viewing records only. Return to the waiting room to check in for
+          calls, messages or mutual decisions.
+        </p>
+      ) : (
+        <RoomCall room={room} />
+      )}
       <div className="mb-4 grid shrink-0 gap-4 rounded-[14px] border border-border bg-card p-3 lg:grid-cols-[minmax(0,1fr)_auto]">
         <div className="grid grid-cols-2 items-center gap-x-3 gap-y-4 sm:flex sm:flex-wrap sm:gap-x-6">
           {room.participants.map((person) => (
@@ -159,7 +177,7 @@ export function AgreementRoom({
                   {person.display_name}
                   {person.id === memberId ? " (you)" : ""}
                 </strong>
-                <span className="mt-1 block text-[11px] text-muted-foreground">
+                <span className="mt-1 block text-xs text-muted-foreground">
                   {label(person.role)} ·{" "}
                   {person.here
                     ? "Here now"
@@ -174,17 +192,20 @@ export function AgreementRoom({
           ))}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {room.scheduled_at && self?.schedule_accepted && !self.checked_in && (
-            <Button
-              variant="outline"
-              disabled={query.busy || room.state === "closed"}
-              onClick={() => void act({ action: "check_in" })}
-            >
-              <CheckCheck size={16} />
-              I'm here
-            </Button>
-          )}
-          {self?.checked_in && (
+          {!readOnly &&
+            room.scheduled_at &&
+            self?.schedule_accepted &&
+            !self.checked_in && (
+              <Button
+                variant="outline"
+                disabled={query.busy || room.state === "closed"}
+                onClick={() => void act({ action: "check_in" })}
+              >
+                <CheckCheck size={16} />
+                I'm here
+              </Button>
+            )}
+          {!readOnly && self?.checked_in && (
             <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <Check size={16} />
               {room.both_here ? "Both here" : "Waiting for the other person"}
@@ -212,12 +233,17 @@ export function AgreementRoom({
           <RoomSchedule
             room={room}
             lender={lender}
-            busy={query.busy}
+            busy={query.busy || readOnly}
             act={act}
           />
           <Checklist room={room} />
           <div className="px-4 pb-4">
-            <Proposal room={room} lender={lender} busy={query.busy} act={act} />
+            <Proposal
+              room={room}
+              lender={lender}
+              busy={query.busy || readOnly}
+              act={act}
+            />
           </div>
         </aside>
         <section className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded-[14px] border border-border bg-card">
@@ -235,7 +261,10 @@ export function AgreementRoom({
                   variant={room.agenda === key ? "default" : "outline"}
                   aria-pressed={room.agenda === key}
                   disabled={
-                    !lender || query.busy || room.state !== "negotiating"
+                    readOnly ||
+                    !lender ||
+                    query.busy ||
+                    room.state !== "negotiating"
                   }
                   onClick={() => void act({ action: "agenda", agenda: key })}
                 >
@@ -252,21 +281,21 @@ export function AgreementRoom({
           >
             <TabsList className="m-3! grid! h-auto! w-auto! shrink-0 grid-cols-3! p-1!">
               <TabsTrigger
-                className="min-h-10! gap-1! px-1! text-[11px]!"
+                className="min-h-10! gap-1! px-1! text-xs!"
                 value="conversation"
               >
                 <MessageSquare className="size-3.5" />
                 Conversation
               </TabsTrigger>
               <TabsTrigger
-                className="min-h-10! gap-1! px-1! text-[11px]!"
+                className="min-h-10! gap-1! px-1! text-xs!"
                 value="agreement"
               >
                 <FileText className="size-3.5" />
                 Agreement
               </TabsTrigger>
               <TabsTrigger
-                className="min-h-10! gap-1! px-1! text-[11px]!"
+                className="min-h-10! gap-1! px-1! text-xs!"
                 value="documents"
               >
                 <ShieldCheck className="size-3.5" />
@@ -281,7 +310,7 @@ export function AgreementRoom({
                 <h2 className="text-base! font-extrabold!">
                   Your conversation
                 </h2>
-                <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                <span className="flex items-center gap-1 text-xs text-muted-foreground">
                   <LockKeyhole size={12} />
                   Two participants
                 </span>
@@ -314,21 +343,21 @@ export function AgreementRoom({
                       <div
                         className={`max-w-[85%] rounded-xl p-3 ${message.sender.id === memberId ? "bg-accent" : "bg-card border border-border"}`}
                       >
-                        <strong className="block text-[11px]">
+                        <strong className="block text-xs">
                           {message.sender.display_name}
                         </strong>
                         <p className="mt-1.5! whitespace-pre-wrap text-sm leading-relaxed! [overflow-wrap:anywhere]">
                           {message.body}
                         </p>
                         <time
-                          className="mt-2 block text-[10px] text-muted-foreground"
+                          className="mt-2 block text-xs text-muted-foreground"
                           dateTime={message.created_at}
                         >
                           {clock(message.created_at)}
                         </time>
                         {message.sender.id !== memberId && (
                           <Link
-                            className="mt-2 block text-[10px] text-muted-foreground! hover:underline"
+                            className="mt-2 block text-xs text-muted-foreground! hover:underline"
                             to={`/reports/new?type=message&id=${message.id}`}
                           >
                             Report concern
@@ -363,7 +392,7 @@ export function AgreementRoom({
                 memberId={memberId}
                 lender={lender}
                 canConfirm={canConfirm}
-                busy={query.busy}
+                busy={query.busy || readOnly}
                 act={act}
               />
             </TabsContent>
@@ -373,6 +402,7 @@ export function AgreementRoom({
             >
               <RoomDocuments
                 room={room}
+                readOnly={readOnly}
                 memberId={memberId}
                 onReview={() =>
                   void act({
@@ -383,7 +413,7 @@ export function AgreementRoom({
               />
             </TabsContent>
           </Tabs>
-          {tab === "conversation" && (
+          {tab === "conversation" && !readOnly && (
             <form
               noValidate
               className="grid shrink-0 gap-2 border-t border-border bg-card p-4 pt-3"
@@ -487,8 +517,12 @@ export function AgreementRoom({
                 </dl>
                 <p className="mt-4! text-xs leading-relaxed! text-muted-foreground">
                   You bear allocated losses. Capital and earnings are not
-                  guaranteed. The lender pays a separate platform fee; its rate
-                  is not configured.
+                  guaranteed. The lender pays a separate test platform fee of{" "}
+                  {room.proposal.fee_policy
+                    ? `${(room.proposal.fee_policy.bps / 100).toFixed(2)}%`
+                    : "an amount to be republished"}
+                  . Capital allocation and return rules are disclosed in the
+                  agreement.
                 </p>
                 {memberId === room.participant.id && (
                   <div className="mt-5 border-t border-border pt-4">
@@ -499,7 +533,7 @@ export function AgreementRoom({
                       <Checkbox
                         id="investor-anonymous"
                         checked={room.visibility === "anonymous"}
-                        disabled={query.busy}
+                        disabled={query.busy || readOnly}
                         onCheckedChange={(v) =>
                           void act({
                             action: "visibility",
@@ -509,7 +543,7 @@ export function AgreementRoom({
                       />
                       Appear anonymously if this contribution is later confirmed
                     </Label>
-                    <p className="mt-2! text-[11px] text-muted-foreground">
+                    <p className="mt-2! text-xs text-muted-foreground">
                       Your legal identity remains known to the lender. No
                       investor circle is published for a pending pitch.
                     </p>
@@ -561,7 +595,7 @@ export function AgreementRoom({
                 ? "You agreed to this proposal"
                 : "Agree to this proposal"}
             </Button>
-            <p className="mt-2! text-[11px] leading-relaxed! text-muted-foreground">
+            <p className="mt-2! text-xs leading-relaxed! text-muted-foreground">
               {!room.both_here
                 ? "Both people must accept the meeting time and check in before agreeing."
                 : "This records proposal agreement only. Contract acceptance is a separate action."}
@@ -578,7 +612,7 @@ export function AgreementRoom({
                     <strong className="block font-semibold">
                       {label(e.kind.replaceAll(".", " "))}
                     </strong>
-                    <span className="mt-1 block text-[11px] text-muted-foreground">
+                    <span className="mt-1 block text-xs text-muted-foreground">
                       {e.actor} · {clock(e.created_at)}
                     </span>
                   </li>
@@ -608,15 +642,27 @@ function Checklist({ room }: { room: Meeting }) {
           : "Agree repayments",
       done: room.both_approved,
     },
-    { text: "Review contract & fees", done: !!room.agreement },
+    {
+      text: "Review contract & fees",
+      done: !!room.agreement || !!room.investment,
+    },
     {
       text: "Both accept this version",
-      done: room.agreement?.acceptances.length === 2,
+      done:
+        room.investment?.accepted || room.agreement?.acceptances.length === 2,
     },
-    { text: "Verify transfer", done: false },
-    { text: "Activate & track", done: false },
+    {
+      text: "Confirm test transfer",
+      done: !!room.investment?.fund || room.funding.status === "confirmed",
+    },
+    {
+      text: "Activate & track",
+      done:
+        !!room.investment?.fund ||
+        (!!room.loan_id && room.funding.status === "confirmed"),
+    },
   ];
-  const visibleSteps = room.kind === "investment" ? steps.slice(0, 4) : steps;
+  const visibleSteps = steps;
   return (
     <section className="rounded-[14px] border border-border bg-card p-4">
       <h2 className="hidden text-sm! font-extrabold! lg:block">
@@ -641,7 +687,7 @@ function Checklist({ room }: { room: Meeting }) {
         {visibleSteps.map((step, index) => (
           <li key={step.text} className="flex gap-2.5 text-xs">
             <span
-              className={`grid size-6 shrink-0 place-items-center rounded-full border text-[10px] font-bold ${step.done ? "border-primary bg-primary text-primary-foreground" : "border-border bg-muted text-muted-foreground"}`}
+              className={`grid size-6 shrink-0 place-items-center rounded-full border text-xs font-bold ${step.done ? "border-primary bg-primary text-primary-foreground" : "border-border bg-muted text-muted-foreground"}`}
             >
               {step.done ? <Check className="size-3.5" /> : index + 1}
             </span>
@@ -650,14 +696,14 @@ function Checklist({ room }: { room: Meeting }) {
         ))}
       </ol>
       {room.kind === "investment" && (
-        <p className="mt-4! flex items-start gap-2 border-t border-border pt-3 text-[11px] leading-relaxed! text-muted-foreground">
+        <p className="mt-4! flex items-start gap-2 border-t border-border pt-3 text-xs leading-relaxed! text-muted-foreground">
           <LockKeyhole className="mt-0.5 size-3.5 shrink-0" />
-          Investment contracts, transfers and activation are not available in
-          this phase.
+          Investment agreements, funding and payouts are simulations only. No
+          real funds move.
         </p>
       )}
       <p
-        className={`mt-4! border-t border-border pt-3 text-[10px] leading-relaxed! text-muted-foreground lg:block ${expanded ? "block" : "hidden"}`}
+        className={`mt-4! border-t border-border pt-3 text-xs leading-relaxed! text-muted-foreground lg:block ${expanded ? "block" : "hidden"}`}
       >
         A checklist tick is not evidence of identity, a signature or settlement.
       </p>
@@ -687,7 +733,7 @@ function Proposal({
         <strong className="text-sm">
           {agendas.find((a) => a.key === room.agenda)?.name}
         </strong>
-        <span className="text-[10px] text-muted-foreground">
+        <span className="text-xs text-muted-foreground">
           Proposal v{room.proposal_version}
         </span>
       </div>
@@ -700,7 +746,7 @@ function Proposal({
               : "Review the reducing-balance interest, full cost and exact repayment dates before accepting."
             : "Use the Documents tab for evidence and Agreement for the exact version you will accept."}
       </p>
-      {lender && !room.agreement && (
+      {lender && !room.agreement && !room.investment && (
         <form
           noValidate
           className="mt-4 grid gap-3 sm:grid-cols-2"
@@ -777,6 +823,16 @@ function Contract({
   useEffect(() => setAccepted(false), [room.agreement?.hash]);
   const agreement = room.agreement,
     hasAccepted = agreement?.acceptances.some((a) => a.member_id === memberId);
+  if (room.kind === "investment")
+    return (
+      <InvestmentContractPanel
+        room={room}
+        memberId={memberId}
+        lender={lender}
+        busy={busy}
+        act={act}
+      />
+    );
   return (
     <section className="grid gap-4">
       <div>
@@ -788,50 +844,7 @@ function Contract({
           contract. Each person accepts the same exact version separately.
         </p>
       </div>
-      {room.kind === "investment" ? (
-        <>
-          <div className="rounded-xl bg-muted p-5">
-            <h3 className="text-sm! font-bold!">
-              Investment discussion summary
-            </h3>
-            <dl className="mt-4 grid gap-3 text-sm">
-              <div className="flex flex-wrap justify-between gap-2">
-                <dt>Proposed contribution</dt>
-                <dd className="font-bold">{money(room.proposal.amount)}</dd>
-              </div>
-              <div className="flex flex-wrap justify-between gap-2">
-                <dt>Share of attributable collected interest</dt>
-                <dd className="font-bold">
-                  {((room.proposal.share_bps || 0) / 100).toFixed(2)}%
-                </dd>
-              </div>
-              <div>
-                <dt className="font-bold">Capital at risk</dt>
-                <dd className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                  Investor bears allocated borrower losses. No guaranteed
-                  capital. Return timing, exit terms and fee policy still
-                  require an approved agreement.
-                </dd>
-              </div>
-            </dl>
-          </div>
-          <div className="rounded-xl border border-border p-4">
-            <h3 className="flex items-center gap-2 text-sm! font-bold!">
-              <LockKeyhole className="size-4" />
-              Contract and funding are not available yet
-            </h3>
-            <ul className="mt-3! ml-4! list-disc! space-y-2 text-xs leading-relaxed text-muted-foreground">
-              {room.funding.blockers.map((b) => (
-                <li key={b}>{b}</li>
-              ))}
-            </ul>
-            <p className="mt-3! text-xs text-muted-foreground">
-              No capital has been credited and no investor earnings or payouts
-              have been created.
-            </p>
-          </div>
-        </>
-      ) : agreement ? (
+      {agreement ? (
         <>
           <div className="rounded-xl bg-muted p-4">
             <h3 className="text-sm! font-bold!">
@@ -844,7 +857,7 @@ function Contract({
               Total repayment:{" "}
               <strong>{money(agreement.disclosure.total_repayment)}</strong>
             </p>
-            <p className="mt-3! break-all text-[10px] leading-relaxed! text-muted-foreground">
+            <p className="mt-3! break-all text-xs leading-relaxed! text-muted-foreground">
               Exact document hash: {agreement.hash}
             </p>
             <ActionLink
@@ -948,8 +961,9 @@ function CallInfo() {
       <DialogContent aria-describedby="call-info">
         <DialogTitle>Keep the conversation connected</DialogTitle>
         <DialogDescription id="call-info">
-          Text chat is available. A private audio/video service isn't configured
-          yet.
+          Calls use an independently accepted private browser connection. Start
+          an audio call from the call panel; each person controls their camera.
+          A configured relay is needed for reliable calls across networks.
         </DialogDescription>
         <ContextIllustration
           scene="shared-plan"

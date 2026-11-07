@@ -52,7 +52,7 @@ function walk(dir) {
           : [],
     );
 }
-const files = ["apps/web/src", "packages/ui/src"].flatMap((dir) =>
+const files = ["apps/web/src", "apps/mobile/src", "packages/ui/src"].flatMap((dir) =>
   fs.existsSync(dir) ? walk(dir) : [],
 );
 const errors = files.flatMap((f) => checkSource(f, fs.readFileSync(f, "utf8")));

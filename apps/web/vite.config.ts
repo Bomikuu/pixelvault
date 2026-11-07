@@ -12,6 +12,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
+        "@pixelvault/api-client": fileURLToPath(new URL("../../packages/api-client/src/index.ts", import.meta.url)),
         "@": fileURLToPath(new URL("./src", import.meta.url)),
         "@pixelvault/ui": fileURLToPath(
           new URL("../../packages/ui/src/index.ts", import.meta.url),

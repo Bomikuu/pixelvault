@@ -127,6 +127,7 @@ export function AvatarArt({
       viewBox="0 0 128 128"
       width={size}
       height={size}
+      style={{ width: size, height: size }}
       role="img"
       aria-label={
         label ??

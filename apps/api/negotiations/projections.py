@@ -1,4 +1,5 @@
 from datetime import timedelta
+from django.conf import settings
 
 from accounts.presence import coarse_activity
 from agreements.views import agreement_data
@@ -85,8 +86,12 @@ def snapshot(room, actor_id):
         .order_by("-created_at")
         .first()
     )
+    from investments.projections import agreement_data as investment_data
+
+    investment = investment_data(room) if room.kind == "investment" else None
     return {
         **summary(room),
+        "investment": investment,
         "pings": {
             "last_sent_at": sent_ping.created_at.isoformat() if sent_ping else None,
             "next_allowed_at": (sent_ping.created_at + timedelta(seconds=60)).isoformat()
@@ -124,6 +129,7 @@ def snapshot(room, actor_id):
         "loan_id": str(room.agreement.loan.id)
         if room.agreement_id and hasattr(room.agreement, "loan")
         else None,
+        "thread_id": str(room.thread_id),
         "messages": [
             {
                 "id": str(m.id),
@@ -163,10 +169,26 @@ def snapshot(room, actor_id):
             "note": "A status is a recorded check, not a guarantee or permission to invest.",
         },
         "funding": {
-            "status": "blocked" if room.kind == "investment" else "separate_disbursement",
-            "confirmed_amount": 0,
+            "status": (
+                "simulated_confirmed"
+                if investment and investment["fund"]
+                else "awaiting_mutual_test_confirmation"
+                if investment and investment["accepted"]
+                else "agreement_required"
+            )
+            if room.kind == "investment"
+            else room.agreement.loan.disbursement_status
+            if room.agreement_id and hasattr(room.agreement, "loan")
+            else "separate_disbursement",
+            "confirmed_amount": int(investment["fund"]["position"]["contributed"])
+            if investment and investment["fund"]
+            else int(room.agreement.terms["principal"])
+            if room.agreement_id
+            and hasattr(room.agreement, "loan")
+            and room.agreement.loan.disbursement_status == "confirmed"
+            else 0,
             "blockers": [
-                "Platform fee rate and capital-return policy are not approved.",
+                "Only the disclosed demonstration fee and synthetic capital-return policy are implemented.",
                 "No approved contribution settlement or investor payout provider is configured.",
                 "Uploaded receipts are evidence only; no capital is added automatically.",
             ]
@@ -174,8 +196,8 @@ def snapshot(room, actor_id):
             else [],
         },
         "calls": {
-            "available": False,
-            "reason": "A private, access-controlled audio/video provider isn't configured yet.",
+            "available": settings.WEBRTC_ENABLED,
+            "reason": "Mutually accepted private WebRTC calls; reliable cross-network connections require a configured relay.",
         },
         "server_time": timezone.now().isoformat(),
     }

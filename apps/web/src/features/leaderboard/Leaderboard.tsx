@@ -171,7 +171,9 @@ export function Leaderboard() {
         </div>
         <img
           className="block h-auto w-full min-w-0 object-contain"
-          src="/illustrations/community-podium.png"
+          src="/illustrations/community-podium-960.webp"
+          srcSet="/illustrations/community-podium-480.webp 480w, /illustrations/community-podium-960.webp 960w, /illustrations/community-podium-1440.webp 1440w"
+          sizes="(max-width: 640px) 100vw, 50vw"
           width="1774"
           height="887"
           alt=""

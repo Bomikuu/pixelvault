@@ -1,7 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @source '../../../../apps/web/src';
-@source '../components';
+@source '../../../../apps/mobile/src';
+@source '../';
 @custom-variant dark (&:is(.dark *));
 :root {
   --background: #f8fafc;
@@ -39,8 +40,20 @@
   --chart-3: #7c3aed;
   --chart-4: #92400e;
   --chart-5: #52637b;
+  --podium-first: #fff6d9;
+  --podium-first-ink: #503800;
+  --podium-second: #edf4fc;
+  --podium-second-ink: #243f60;
+  --podium-third: #fff0e7;
+  --podium-third-ink: #5b2e1b;
 }
 .dark {
+  --podium-first: #352b16;
+  --podium-first-ink: #f4c64d;
+  --podium-second: #1b2b40;
+  --podium-second-ink: #c6d9ef;
+  --podium-third: #38261f;
+  --podium-third-ink: #e6b197;
   --background: #0b1428;
   --foreground: #f8fafc;
   --card: #111e35;
@@ -66,6 +79,12 @@
   --danger-background: #4b2530;
 }
 @theme inline {
+  --color-podium-first: var(--podium-first);
+  --color-podium-first-ink: var(--podium-first-ink);
+  --color-podium-second: var(--podium-second);
+  --color-podium-second-ink: var(--podium-second-ink);
+  --color-podium-third: var(--podium-third);
+  --color-podium-third-ink: var(--podium-third-ink);
   --font-sans: "Manrope", sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);

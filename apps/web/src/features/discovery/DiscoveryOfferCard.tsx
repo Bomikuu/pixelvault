@@ -1,3 +1,5 @@
+import { InvestorCircles } from "../investments/InvestorCircles";
+import { SaveOfferButton } from "../memberhub/shared";
 import { Link } from "react-router-dom";
 import { ArrowRight, ArrowUpRight, MapPin } from "lucide-react";
 import { PersonName, Status } from "../../components";
@@ -10,7 +12,10 @@ export function DiscoveryOfferCard({ offer }: { offer: DiscoveryOffer }) {
     <article className="rounded-2xl border border-border bg-card p-4 text-card-foreground transition-colors hover:border-primary/60 sm:p-6">
       <div className="flex items-center justify-between gap-3 [&_.person_small]:text-muted-foreground!">
         <PersonName person={offer.lender} subtitle={offer.area} />
-        <Status value={offer.status} />
+        <div className="flex items-center gap-2">
+          <SaveOfferButton offerId={offer.id} compact />
+          <Status value={offer.status} />
+        </div>
       </div>
       <Link
         to={`/offers/${offer.id}`}
@@ -47,14 +52,21 @@ export function DiscoveryOfferCard({ offer }: { offer: DiscoveryOffer }) {
         <span className="block text-[11px] text-muted-foreground">
           Cost example
         </span>
-        <strong className="mt-1 block text-sm tabular-nums">
-          {money(offer.disclosure.principal)} →{" "}
-          {money(offer.disclosure.total_repayment)}
-        </strong>
-        <span className="mt-1 block text-[11px] text-muted-foreground">
+        {offer.disclosure.principal !== undefined ? (
+          <strong className="mt-1 block text-sm tabular-nums">
+            {money(offer.disclosure.principal)} →{" "}
+            {money(offer.disclosure.total_repayment)}
+          </strong>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            No amount is currently available within this offer’s minimum.
+          </p>
+        )}
+        <span className="mt-1 block text-xs text-muted-foreground">
           Principal → total repayment · exact dates in full terms
         </span>
       </div>
+      <InvestorCircles offerId={offer.id} />
       <OfferLikeButton offerId={offer.id} initial={offer.likes} />
       <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
         <span className="flex items-center gap-1.5 text-muted-foreground">

@@ -175,7 +175,7 @@ export function OfferCostPanels({
                   })}
                 </svg>
                 <figcaption className="min-w-0">
-                  <span className="block text-[11px] text-muted-foreground">
+                  <span className="block text-xs text-muted-foreground">
                     Total repayment
                   </span>
                   <strong className="mt-1 block text-lg font-extrabold tabular-nums">
@@ -183,7 +183,7 @@ export function OfferCostPanels({
                   </strong>
                 </figcaption>
               </div>
-              <ul className="mt-4 space-y-3 text-[11px]">
+              <ul className="mt-4 space-y-3 text-xs">
                 {parts.map((part) => (
                   <li
                     key={part.name}
@@ -236,7 +236,7 @@ export function OfferCostPanels({
           Icon={CalendarDays}
         />
         {d?.schedule?.length && (
-          <p className="mb-3 text-[11px] text-muted-foreground min-[700px]:hidden">
+          <p className="mb-3 text-xs text-muted-foreground min-[700px]:hidden">
             Scroll horizontally to see all payment amounts.
           </p>
         )}
@@ -285,7 +285,7 @@ export function OfferCostPanels({
               : "Your schedule appears after a valid calculation."}
           </p>
         )}
-        <p className="mt-3 flex items-start gap-2 text-[11px] leading-relaxed text-muted-foreground">
+        <p className="mt-3 flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
           <Info size={14} className="mt-0.5 shrink-0" />
           Equal-principal payments can vary. Dates and costs require final
           agreement review.

@@ -89,3 +89,18 @@ def offer_data(offer):
         "test_mode": True,
         "capacity_label": "Declared offer capacity; not cash held by PixelVault",
     }
+
+
+def available_cost_example(offer):
+    """Current original-plan example; never quote more than usable capacity."""
+    from agreements.disclosures import build_disclosure
+    from .offers import terms_for_amount
+
+    amount = min(
+        offer.max_amount, offer.declared_amount - offer.reserved_amount - offer.committed_amount
+    )
+    if amount < offer.min_amount:
+        return {}
+    principal = min(int(offer.terms["principal"]), amount)
+    principal = max(principal, offer.min_amount)
+    return build_disclosure(terms_for_amount(offer, principal))

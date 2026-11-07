@@ -224,9 +224,9 @@ export function InvestmentPitch({
             </div>
             <p className="flex items-start gap-2 rounded-lg bg-muted p-3 text-xs leading-relaxed text-muted-foreground">
               <ShieldCheck className="mt-0.5 size-4 shrink-0" />
-              Capital is at risk. No guaranteed repayment. Funding remains
-              unavailable until pricing, agreement and settlement requirements
-              are configured.
+              Capital is at risk. No guaranteed repayment. In test mode,
+              agreement and funding confirmations are simulations. Live funding
+              requires an approved provider and routing arrangement.
             </p>
             {error && <ErrorNotice error={error} />}
             <Button type="submit" disabled={busy}>

@@ -115,6 +115,11 @@ export function Dashboard() {
       ? l.borrower.id === member?.id
       : l.lender.id === member?.id,
   );
+  const scopedApplications = (applications.data || []).filter((application) =>
+    role === "borrowing"
+      ? application.borrower?.id === member?.id
+      : application.lender?.id === member?.id,
+  );
   const next = scoped
     .filter((l) => l.next_due_date)
     .sort((a, b) =>
@@ -133,6 +138,17 @@ export function Dashboard() {
         pending={loans.isPending}
         failed={!!loans.error}
       />
+      <div className="my-4 flex flex-wrap gap-2">
+        <ActionLink variant="outline" to="/activity">
+          Action center
+        </ActionLink>
+        <ActionLink
+          variant="outline"
+          to={role === "lending" ? "/lender-desk" : "/calendar"}
+        >
+          {role === "lending" ? "Open lender desk" : "Payment calendar"}
+        </ActionLink>
+      </div>
       <div className="grid min-w-0 items-start gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div>
           {loans.isPending ? (
@@ -249,28 +265,41 @@ export function Dashboard() {
             <Loading />
           ) : applications.error ? (
             <ErrorNotice error={applications.error} />
-          ) : applications.data?.length ? (
+          ) : scopedApplications.length ? (
             <div className="surface flush">
-              {applications.data.slice(0, 3).map((a) => (
+              {scopedApplications.slice(0, 3).map((a) => (
                 <Link
                   to={`/applications/${a.id}`}
                   className="record-row"
                   key={a.id}
                 >
                   <div className="application-person">
-                    {a.borrower && (
+                    {(role === "lending" ? a.borrower : a.lender) && (
                       <MemberAvatar
-                        name={a.borrower.display_name}
-                        avatarKey={a.borrower.avatar_key}
-                        photoUrl={a.borrower.photo_url}
-                        reputation={a.borrower.reputation}
+                        name={
+                          (role === "lending" ? a.borrower : a.lender)!
+                            .display_name
+                        }
+                        avatarKey={
+                          (role === "lending" ? a.borrower : a.lender)!
+                            .avatar_key
+                        }
+                        photoUrl={
+                          (role === "lending" ? a.borrower : a.lender)!
+                            .photo_url
+                        }
+                        reputation={
+                          (role === "lending" ? a.borrower : a.lender)!
+                            .reputation
+                        }
                       />
                     )}
                     <div>
                       <strong>{a.purpose || "Private application"}</strong>
                       <p>
                         {money(a.principal)} ·{" "}
-                        {a.borrower?.display_name || "Your request"}
+                        {(role === "lending" ? a.borrower : a.lender)
+                          ?.display_name || "Private application"}
                       </p>
                     </div>
                   </div>

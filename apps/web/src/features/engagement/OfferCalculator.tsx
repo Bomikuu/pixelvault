@@ -144,7 +144,7 @@ export function OfferCalculator({
             />
             <p
               id="preview-amount-limits"
-              className="text-[10px] leading-relaxed text-muted-foreground"
+              className="text-xs leading-relaxed text-muted-foreground"
             >
               {money(offer.min_amount)}–{money(maximum)} currently available
             </p>
@@ -197,7 +197,7 @@ export function OfferCalculator({
             </Select>
           </div>
         </div>
-        <p className="mt-4 text-[11px] leading-relaxed text-muted-foreground">
+        <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
           Annual reducing-balance interest:{" "}
           <strong className="text-foreground">
             {(offer.annual_rate_bps / 100).toFixed(2)}%
@@ -247,7 +247,7 @@ export function OfferCalculator({
               ],
             ].map(([name, value]) => (
               <div key={name} className="flex min-w-0 flex-col">
-                <dt className="order-2 mt-1 text-[10px] leading-relaxed text-muted-foreground">
+                <dt className="order-2 mt-1 text-xs leading-relaxed text-muted-foreground">
                   {name}
                 </dt>
                 <dd className="order-1 break-words text-sm font-extrabold tabular-nums">
@@ -258,7 +258,7 @@ export function OfferCalculator({
           </dl>
         </div>
         <p
-          className={`mt-3 flex items-start gap-2 rounded-lg p-3 text-[11px] leading-relaxed ${preview?.simulation_only ? "bg-[var(--warning-background)] text-[var(--warning)]" : "bg-accent text-accent-foreground"}`}
+          className={`mt-3 flex items-start gap-2 rounded-lg p-3 text-xs leading-relaxed ${preview?.simulation_only ? "bg-[var(--warning-background)] text-[var(--warning)]" : "bg-accent text-accent-foreground"}`}
         >
           <Info size={15} className="mt-0.5 shrink-0" />
           <span>

@@ -155,8 +155,8 @@ export function MeetingList({
       )}
       <p className="mt-5! flex items-start gap-2 text-xs leading-relaxed! text-muted-foreground">
         <MessageSquare className="mt-0.5 size-4 shrink-0" />A meeting, proposal
-        approval or uploaded receipt does not transfer funds. Investment funding
-        and earnings payouts are not enabled.
+        approval or uploaded receipt does not transfer funds. Contribution
+        funding and payout confirmations are test simulations only.
       </p>
     </div>
   );
